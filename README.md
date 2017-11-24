@@ -16,7 +16,7 @@ CONTENTFUL_PREVIEW_TOKEN
 
 ### For Deploys:
 #### Use your personal keys if you must deploy locally.
-These are stored securely in Travis for the user help_deploy.
+These are stored securely in Travis for the user `help_deploy`.
 ```
 AWS_DEPLOY_ACCESS_ID=
 AWS_DEPLOY_SECRET_KEY=
