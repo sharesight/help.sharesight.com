@@ -1,0 +1,12 @@
+<script
+  src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"
+  data-apikey="b35549b5136201e2a08a995e36465cda"></script>
+<script>
+  if (typeof Bugsnag !== 'undefined') {
+    var online =  /help\.sharesight\.com/.exec(location.hostname);
+    var stage = /^([^\-]{1,})\-help\.sharesight\.com/.exec(location.hostname);
+    var env = online && (stage && stage[1] || 'production') || 'development';
+
+    Bugsnag.releaseStage = <% if env_name %>'<%= env_name %>'<% else %>env<% end %>;
+  }
+</script>

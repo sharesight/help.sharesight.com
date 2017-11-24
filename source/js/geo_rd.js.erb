@@ -1,0 +1,21 @@
+<% require_asset "./_ui/ui.geo_cleaner" %>
+<% require_asset "./_ui/ui.cookie_manager" %>
+<% require_asset "./_ui/ui.redirect_manager" %>
+<% require_asset "./_ui/ui.url_manager" %>
+
+(function(){
+  window.utils = {
+    geoCleaner: geoCleaner,
+    cookieManager: cookieManager,
+    urlManager: urlManager,
+    redirectManager: redirectManager
+  }
+
+
+  addEventListener('DOMContentLoaded', function(){
+    utils.redirectManager.updateUrl();
+    utils.urlManager.updateSpecificPageUrls();
+    utils.urlManager.updateSelector();
+    utils.urlManager.updateLogoUrl();
+  });
+})();

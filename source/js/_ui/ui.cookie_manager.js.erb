@@ -1,0 +1,44 @@
+var cookieManager = {
+  cookie: null,
+  cookieArray: [],
+  cookieCount: 0,
+  getCookie: function(cookieName){
+    var tempArray = [];
+    this.readCookies();
+
+    var pattern = RegExp("^\\s*"+cookieName+"=\\s*(.*?)\\s*$"),
+        i = 0;
+    for (i; i<this.cookieCount; i++){
+        var f = this.cookieArray[i].match(pattern);
+        f && tempArray.push(f[1]);
+    }
+    return tempArray.toString().toLowerCase();
+  },
+  setCookie: function(cookieName, cvalue){
+    var d = new Date();
+    d.setTime(d.getTime() + (180*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cookieName + "=" + cvalue + ";path=/;" + expires;
+  },
+  hasCookie: function(cookieName){
+    this.readCookies();
+    var i = 0;
+    for (i; i<this.cookieCount; i++) {
+      var currentCookie = this.cookieArray[i];
+      while (currentCookie.charAt(0) == ' ') {
+        currentCookie = currentCookie.substring(1);
+      }
+      if (currentCookie.indexOf(cookieName+"=") == 0) {
+        return true;
+      }
+    }
+    return false;
+  },
+  readCookies: function(){
+    this.cookieArray = document.cookie.split(';');
+    this.cookieCount = this.cookieArray.length;
+  },
+  editCookie: function(cookieName){
+    return this.getCookie(cookieName).toString().replace('gb', 'uk').replace('global','').toLowerCase();
+  }
+}

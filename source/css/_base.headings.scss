@@ -1,0 +1,17 @@
+.heading {}
+.heading_important {font-weight:bold;}
+.heading_page {font-weight:300;}
+.heading_normal {font-weight:normal;}
+.heading_light {font-weight:300;}
+
+.heading_complex {font-weight:bold; font-size:1rem;
+  @media(min-width:1185px){
+    font-size:0.85rem;
+  }
+}
+
+.table_compact .heading_complex {
+  @media(max-width:1185px){
+    font-weight:bold; font-size:1rem;
+  }
+}

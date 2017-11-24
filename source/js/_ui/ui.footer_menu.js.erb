@@ -1,0 +1,64 @@
+(function(){
+
+  var selector = document.querySelector('.selector.redirect select'),
+      pathname = window.location.pathname,
+      cname,
+      locales = <%= data.locale_urls.map {|a| a[:id] } %>,
+      pathname_locale = pathname.split('/')[1];
+
+  for(var i=0; i < selector.options.length; i++){
+      item = selector.options[i];
+
+      // home - global
+      if(pathname_locale == '' && pathname.split('/').length == 2){
+        selector.options[5].setAttribute('selected', true);
+      }
+
+      // content - global
+      if(pathname_locale.length == 2) {
+        if(item.value && item.value.replace('/','') === pathname_locale.replace('/','')){
+          item.setAttribute('selected', true);
+        }
+      } else {
+        selector.options[5].setAttribute('selected', true);
+      }
+
+      // home - not global
+      if(pathname.split('/').length == 3 && pathname_locale.length > 2 ) {
+        selector.options[5].setAttribute('selected', true);
+      }
+
+      // content - not global
+      if(pathname.split('/').length == 4) {
+        if(item.value && item.value.replace('/','') === pathname_locale){
+          item.setAttribute('selected', true);
+        }
+      }
+
+
+  }
+
+  selector.onchange = function(e){
+
+    for(var i = 0; i < locales.length; i++){
+      tiny_locale = locales[i].toLowerCase();
+
+      if(this.value == "/" + tiny_locale && this.value != '/global') {
+          setCookie("ss_geo_redir", this.value.replace('/', '').toUpperCase());
+          window.location = "/"+tiny_locale+"/";
+      }
+      else if(this.value == '/global') {
+        setCookie("ss_geo_redir", "GLOBAL");
+        window.location = "/";
+      }
+    }
+  };
+
+  function setCookie(cookie_name, cvalue) {
+    var d = new Date();
+    d.setTime(d.getTime() + (180*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cookie_name + "=" + cvalue + ";path=/;" + expires;
+  }
+
+})();

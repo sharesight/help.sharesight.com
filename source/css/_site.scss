@@ -1,0 +1,38 @@
+/*
+	Our documents should be placed in the following order:
+	Tools - Functions and mixins
+	Base - Unclassed HTML elements (type selectors)
+	Objects - Unstyled design patterns (media object)
+	Components - Styled objects, chunks of UI
+	Trumps - Helpers and overrides, e.g. .float-left { float:left !important;}
+*/
+
+@import "__config";
+@import "tools.typography";
+@import "tools.mixins";
+@import "tools.headings";
+@import "tools.shapes";
+@import "base.elements";
+@import "base.headings";
+@import "objects.layout";
+@import "objects.images";
+@import "objects.tile";
+@import "components.alerts";
+@import "components.buttons";
+@import "components.layout";
+@import "components.colours";
+@import "components.typography";
+@import "components.icons";
+@import "components.footer";
+@import "components.tiles";
+@import "components.lists";
+@import "components.feature";
+@import "components.form_search";
+@import "components.styled_menu";
+@import "components.side_menu";
+@import "components.breadcrumbs";
+@import "components.dropdown_select";
+@import "themes";
+@import "trumps";
+@import "pages.pages";
+@import "pages.404";

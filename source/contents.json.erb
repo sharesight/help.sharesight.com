@@ -1,0 +1,39 @@
+<%
+pages = data&.help_pages&.page
+entries = []
+
+if data.respond_to?(:help_pages)
+  pages.each_with_index do |tuple, index|
+    if tuple.present? && tuple.length == 2 && tuple[1].present?
+      page_data = tuple[1]
+
+      if (
+        page_data &&
+        page_data.dig('category') &&
+        page_data.dig('meta_description', 'en') &&
+        page_data.dig('title', 'en') &&
+        page_data.dig('content')&.keys && # has content (en, or otherwise)
+        ConfigHelper.help_page_url_slug(page_data) # has a url
+      )
+        category = page_data.category.dig('en', 'sys', 'id')
+        category_page = ConfigHelper::space_slugify(data.help_categories.category.detect {|x| x.first == category }.last.name.en)
+        page_parent = ConfigHelper::space_slugify(page_data.title.en.downcase) == category_page ? category_page : ''
+
+        entry = {
+          :id                     => index,
+          :title                  => page_data.title.en,
+          :page_slug              => ConfigHelper.help_page_url_slug(page_data),
+          :page_meta_description  => page_data.meta_description.en,
+          :page_parent            => page_parent,
+          :page_locales           => page_data.content.keys,
+          :content                => SearchHelper::condense_content(page_data.content.to_s.gsub(%r{[\[\]#\*<>\/]}, ' '))
+        }
+        entries << entry
+      end
+    else
+      raise "Unknown data found in contents.json ~ data.help_pages[#{index}]."
+    end
+  end
+end
+
+%><%= entries.to_json %>

@@ -1,0 +1,11 @@
+.styled-menu {
+  > div {border-top: 1px solid #D9D9D9; padding: 20px;
+    @media(min-width:677px){border-color:transparent; padding-left:0;}
+    &:last-child {margin-bottom:40px;}
+    li {font-size:0.875rem;}
+    > ul {margin-left:0;}
+  }
+  > ul {list-style:none; padding-left:0;
+    a {display:inline-block; padding-bottom:10px; font-size: 1.125rem;}
+  }
+}

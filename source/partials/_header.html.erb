@@ -1,0 +1,45 @@
+<% url = current_page.url.split("/")%>
+<%curr_url_path = url.length%>
+
+
+<header class="header_primary">
+  <div class="container">
+    <span class="site_logo">
+      <a href="/<% if url.length >= 2 && url[1].length == 2%><%=url[1]%>/<%end%>" id="site_logo">
+        <img src="<%=image_path('logos/logo2.svg')%>" alt="<% if url.length >= 2 && url[1].length == 2%><% if url[1] == 'nz' || url[1] == 'au'%>Share Portfolio Tracker - Sharesight Help<%else%>Stock Portfolio Tracker - Sharesight Help<%end%><%end%>" class="logo">
+      </a>
+      <span class="help">Help</span>
+    </span>
+    <span class="hamburger" role="menu" id="js-hamburger" tabindex="0"></span>
+    <a href="<%= config[:login]%>" class="login">Login</a>
+    <a href="https://www.sharesight.com/<% if url.length >= 2 && url[1].length == 2%><%=url[1]%>/<% end %>" id="external_url" class="external-link">Go to sharesight.com
+      <span class="triangle"></span>
+    </a>
+  </div>
+  <div class="mask" id="menu_mask"></div>
+  <nav class="menu" role="navigation" id="js-sliding-menu" data-menu-visibility="0">
+    <span class="close" id="js-close" tabindex="0">Close</span>
+    <ul>
+      <% data.help_categories.category.each_slice(3) do |tiles| %>
+
+          <% tiles.each do |key, tile| %>
+            <% next if tile.nil? %>
+            <% default_page = CategoryHelper::pages_in_category(data, tile).first %>
+            <% next if default_page.nil? %>
+            <li>
+
+              <a href="/<% if url.length >= 2 && url[1].length == 2%><%=url[1]%>/<%end%><%= default_page[:page_url] %>/">
+                <%=tile[:name][:en]%>
+              </a>
+
+            </li>
+          <% end %>
+
+
+      <% end %>
+    </ul>
+
+
+    <a href="https://www.sharesight.com/<% if url.length >= 2 && url[1].length == 2%><%=url[1]%>/<% end %>" id="external_url_mobile" class="button button_inverse">Go to Sharesight.com</a>
+  </nav>
+</header>

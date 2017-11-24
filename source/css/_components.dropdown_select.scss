@@ -1,0 +1,62 @@
+.content.selector select {
+  display:inline-block;
+}
+
+.selector {
+  display: block;
+  height: 35px;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.selector select {
+  outline:none;
+  background: transparent;
+  border: none;
+  font-size: 0.8125rem;
+  padding: 5px 15px;
+  width: 100%;
+  color:#fff;
+  font-family: 'Open Sans', helvetica, sans-serif;
+  font-weight:300;
+  text-align: left;
+  line-height: 35px;
+  border-radius: 0;
+  letter-spacing: 1px;
+  height:45px;
+
+  appearance: none;
+  -moz-appearance: none; // firefo/gecko
+  -webkit-appearance: none; // webkit, blink, maybe even ie?
+
+  &:focus {
+    background: image-url("img/icons/caret_line.svg") no-repeat right 15px center #343434;
+  }
+
+  &:-moz-focusring,
+  &::-moz-focus-inner { // hack to hide the mozilla-specific focus 'outline'
+    color: transparent;
+    text-shadow: 0 0 0 #fff; // NOTE: same as color above!
+    border: 0;
+  }
+
+  @media(min-width:375px){
+    font-size: 0.9375rem;
+  }
+}
+
+.selector.locale {
+  background: image-url("img/icons/caret_line.svg") no-repeat right 15px center #343434;
+  height: 45px;
+  width: 100%;
+  border:none;
+}
+
+.selector_redirect {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (min-width: 678px){
+    display:none;
+  }
+}

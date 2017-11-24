@@ -1,0 +1,73 @@
+html {
+  font-size: 16px;
+  font-family: 'Open Sans', helvetica, sans-serif;
+  webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-size:1rem;
+}
+
+body, h1 {
+  margin: 0;
+}
+body {color: $colour_primary;}
+
+h1 + h2, h1 + h3, h1 + h4, h1 + h5, h1 + h6 {padding-top:55px;}
+h1 {margin-top:0;font-size:1.875rem; font-weight:400; color:#2C2C2C; margin-bottom:20px;}
+
+h6+h3, ul + h4 {padding-top:40px;}
+
+.article h3+p {padding-top:25px;}
+h2 {font-size:1.5rem; margin-top:0; font-weight:400;}
+
+h3 + h4 {padding-top:30px;}
+
+h4 {font-size:1.125rem; margin-top:0;}
+
+h5 {
+
+}
+
+// special alert for h6's
+h6 {
+  font-size: 1rem;
+  font-weight: 300;
+  padding: 10px 16px 8px 16px !important;
+  margin: 30px 0;
+  border-radius: 3px;
+  line-height: 1.5;
+  border: 1px solid #f9efaf;
+  background-color: #fffbdd;
+  color: #8a6d3b;
+}
+
+a {
+  color: $colour_accent;
+  text-decoration: none;
+  font-weight: 600;
+  &:hover {
+    cursor: pointer;
+  }
+  img {
+    border: none;
+  }
+}
+p {
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+img {max-width:100%;}
+
+input:not([type="radio"]):not([type="checkbox"]){ -webkit-appearance:none; border-radius:0;}
+
+/*
+ * iOS 9.3 fix
+*/
+[data-ember-action] {
+  cursor: pointer;
+}

@@ -1,0 +1,77 @@
+<% url = current_page.url.split("/")
+
+if url[1] && url[1].length == 2
+  locale_id = url[1]
+else
+  locale_id = 'global'
+end
+%>
+
+
+<div class="section page_footer" id="footer">
+  <div class="container">
+  <img src="<%=image_path('logos/logo2.svg')%>" class="logo2" alt="<%=locale_cert_type.to_s.capitalize%> Portfolio Tracker - Sharesight">
+    <p class="footer_intro" role="contentinfo">Simply the best portfolio management tool for DIY investors.</p>
+
+    <div class="footer_container">
+      <label for="selector" class="selector redirect locale">
+        <select>
+          <%data.locale_urls.each do |locale_url|%>
+
+            <%if locale_url.id == 'GLOBAL'%><option value='-' disabled>――――</option><% end %>
+            <option value="/<%=locale_url.id.downcase%>" <%if url.last == locale_url.id.downcase.to_s%>selected<%elsif url.last.blank?%>selected<% end %>>Region: <%=locale_url.name.upcase%></option>
+
+          <% end %>
+        </select>
+      </label>
+      <div class="buttons">
+        <a href="<%= config[:login]%>" class="button btn">LOGIN</a>
+        <a href="<%= config[:signup]%>" class="button btn">SIGN UP</a>
+      </div>
+
+      <section class="images_app_logos">
+        <%data.locale_urls.each do |lu|%>
+          <% if lu.id.downcase == locale_id %>
+            <a href="<%=config[:google_store_url]%>"><img src="<%= image_path('icons/google-play-badge.svg')%>" alt="<%=lu.id == locale_id.upcase ? lu.footer_android : ''%>"></a>
+            <a href="<%=config[:ios_store_url]%>"><img src="<%= image_path('icons/download-on-the-app-store-apple.svg')%>" alt="<%=lu.id == locale_id.upcase ? lu.footer_ios_alt : ''%>"></a>
+          <%end%>
+        <%end%>
+
+      </section>
+
+      <div class="icons">
+        <% data.icons.social_media_icons.each do |smi| %>
+          <a href="<%= smi.url %>">
+            <%= image_tag "/img/icons/#{smi.image}", class: "icon" %>
+          </a>
+        <% end %>
+      </div>
+    </div>
+    <ul class="links" id="main-menu" tabindex="0" role="menubar" aria-label="Full Website Menu">
+      <li class="link_item" role="menuitem">
+        <a href="https://www.sharesight.com" class="link" title="Sharesight Home" tabindex="0"  id="sharesight_url">
+          www.sharesight.com
+        </a>
+      </li>
+      <li class="link_item" role="menuitem">
+        <a href="https://community.sharesight.com" class="link" title="Visit our forums">
+          Community Forum
+        </a>
+      </li>
+      <li class="link_item" role="menuitem">
+        <a href="https://www.sharesight.com/<% if url.length >= 2 && url[1].length == 2%><%=url[1]%>/<% end %>privacy-policy/" class="link" id="privacy_url" title="Privacy Policy – <%=locale_cert_type.to_s.capitalize%> Portfolio Tracker">
+          Privacy Policy
+        </a>
+      </li>
+    </ul>
+
+
+  </div>
+</div>
+<footer class="section_footer">
+  <p class="free">
+    <a href="mailto:sales@sharesight.com" class="free email">sales@sharesight.com</a>
+    <br>
+    © <%=Date.today.year%> Sharesight. All rights reserved.
+  </p>
+</footer>

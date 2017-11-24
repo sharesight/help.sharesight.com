@@ -1,0 +1,15 @@
+var geoCleaner = {
+  tidyRegionPath: function(region){
+    region = region.toLowerCase();
+    if(region === 'gb'){
+      return '/uk/';
+    } else if(region === 'global') {
+      return '/';
+    } else {
+      return '/'+region+'/';
+    }
+  },
+  cleanGeoCode: function(item){
+    return item.replace('uk','gb');
+  },
+}

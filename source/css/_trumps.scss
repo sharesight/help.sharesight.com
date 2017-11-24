@@ -1,0 +1,18 @@
+.show-mobile {
+  @media (max-width: 768px) {
+    display: block !important;
+  }
+}
+
+.hide-desktop {
+  @media (min-width: 768px) {
+    display: none !important;
+  }
+}
+
+.embedly-card-hug {width:100% !important;
+  iframe{width:100% !important;
+  }
+}
+
+.rouge-gutter {width:10px !important;}

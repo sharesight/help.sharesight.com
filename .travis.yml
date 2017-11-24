@@ -1,0 +1,43 @@
+branches:
+  only:
+    - master
+    - develop
+    - /^release\/.*$/
+    - /^hotfix\/.*$/
+
+language: ruby
+
+sudo: false
+
+rvm:
+  - 2.3.3
+
+cache:
+  - apt
+  - bundler
+
+before_script:
+  - if [[ "$TRAVIS_BRANCH" = "master" ]]; then export APP_ENV=production; fi
+  - if [[ "$TRAVIS_BRANCH" != "master" ]]; then export APP_ENV=staging; fi
+
+script:
+  - echo "BRANCH is $TRAVIS_BRANCH"
+  - echo "APP_ENV is $APP_ENV"
+  - echo "TRAVIS_PULL_REQUEST is $TRAVIS_PULL_REQUEST"
+  - echo "TRAVIS_COMMIT_MESSAGE is $TRAVIS_COMMIT_MESSAGE"
+  - bundle exec middleman contentful
+  - bundle exec middleman build
+  - APP_ENV='development' bundle exec rake test # tests run as development, regardless of the destination
+
+after_success:
+  - if [[ "$TRAVIS_COMMIT_MESSAGE" == *FORCE_SYNC* ]]; then FORCE="--force"; fi
+  - echo "FORCE is $FORCE"
+  - RESULT="no sync done (default)"
+  - if [[ "$TRAVIS_BRANCH" = "master" && "$TRAVIS_PULL_REQUEST" = "false" ]]; then bundle exec middleman s3_sync $FORCE && RESULT="synced ok to production"; fi
+  - if [[ "$TRAVIS_BRANCH" = "develop" && "$TRAVIS_PULL_REQUEST" = "false" ]]; then bundle exec middleman s3_sync $FORCE && RESULT="synced ok to staging"; fi
+  - echo "Sync result is $RESULT"
+
+notifications:
+  slack: # see: https://docs.travis-ci.com/user/notifications/#Configuring-slack-notifications
+    rooms:
+      secure: # needs to be set via `travis-encrypt`

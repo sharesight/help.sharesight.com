@@ -1,0 +1,68 @@
+---
+page_classes: 'page_home'
+page_description: 'Help pages for Sharesight'
+include_geo_redirect: true
+---
+<% fetch_locale = current_page.url.split('/')%>
+<%= partial "partials/header" %>
+
+<%= partial "partials/search" %>
+
+<section class="section">
+  <div class="container">
+    <h1>Browse Sharesight Help Topics</h1>
+  </div>
+  <div class="tiles-wrapper">
+    <div class="container">
+      <% data.help_categories.category.each_slice(3) do |tiles| %>
+        <div class="tiles">
+          <% tiles.each do |key, tile| %>
+            <% next if tile.nil? %>
+            <% default_page = CategoryHelper::pages_in_category(data, tile).first %>
+            <% next if default_page.nil? %>
+            <a href="<% if fetch_locale[1] && fetch_locale[1].length == 2%>/<%=fetch_locale[1]%><%else%><%end%>/<%= default_page[:page_url] %>/" class="tile">
+              <h2><%=tile[:name][:en]%></h2>
+              <p><%=tile[:description][:en]%></p>
+            </a>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<div class="feature theme-sand">
+  <div class="container">
+    <div class="twin">
+      <h2>Sharesight Community</h2>
+      <p>Ask questions, request features and report bugs on our community forum. We are always working on Sharesight and your suggestions help us decide what to work on next.</p>
+      <a href="https://community.sharesight.com" class="button button_feature">Visit our Forum</a>
+    </div>
+    <div class="twin">
+      <h2>Videos &amp; Guides</h2>
+      <ul class="video_guide">
+        <li class="video_item">
+          <a href="https://www.youtube.com/watch?v=QnJkX9_2IvE">
+            <img src="<%= image_path 'video_thumb_1.jpg' %>" alt="Video on Using Broker Import">
+            <span>Using Broker Import</span>
+          </a>
+
+        </li>
+        <li class="img-split-trio">
+          <a href="https://www.youtube.com/watch?v=LQMhYDlHZCM">
+            <img src="<%= image_path 'video_thumb_2.jpg' %>" alt="Video on Connecting Sharesight to Xero">
+            <span>Connecting to Xero</span>
+          </a>
+        </li>
+        <li class="img-split-trio">
+          <a href="https://www.youtube.com/watch?v=M9gNGSJatD0">
+            <img src="<%= image_path 'video_thumb_3.jpg' %>" alt="Video on Importing Contract Notes via Email">
+            <span>Forwarding Contract Notes</span>
+          </a>
+        </li>
+      </ul>
+      <a href="https://www.youtube.com/user/sharesightTV/videos?view=0&sort=p&flow=grid" class="button button_feature">View all Videos</a>
+    </div>
+  </div>
+</div>
+<%= partial "partials/footer" %>

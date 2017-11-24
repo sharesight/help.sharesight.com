@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<%
+  page_classes = locals[:page_classes] || current_page.data.page_classes
+  section_class = locals[:section_class] || current_page.data.section_class
+  include_geo_redirect = locals[:include_geo_redirect] || current_page.data.include_geo_redirect
+  include_blog_geo_redirect = locals[:include_blog_geo_redirect] || current_page.data.include_blog_geo_redirect
+  first_word_path = request.path.split('/').first
+  tiny_locale = locale.gsub('en-', '').downcase
+  page = page.present? ? page : ""
+  featured_img = page.present? ? page.last.featured_img : 'https://www.sharesight.com/img/featured_sharesight-hero-8c0782c5.png'
+%>
+    <% if first_word_path == 'index.html' || first_word_path.length > 2%>
+  <html lang="en" class="no-js">
+    <%else%>
+      <% if first_word_path.split.length > 2%>
+  <html lang='<%="en-#{first_word_path.gsub('uk','gb')}"%>' class="no-js">
+      <% end %>
+    <% end %>
+  <head>
+    <%= partial "layouts/partials/bugsnag" %>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer', "<%=config[:google_tag_manager]%>");</script>
+    <!-- End Google Tag Manager -->
+    <% page_title = config[:page_title] || current_page.data.page_title %>
+    <% page_description = config[:page_description] || current_page.data.page_description %>
+
+    <% if include_geo_redirect %>
+    <script src="<%= asset_path(:js, "geo_rd") %>"></script>
+    <% end %>
+    <meta charset="utf-8">
+
+    <% if RegionHelper::locale_from_url(current_page.url).gsub('/','').blank? %>
+    <% page_info = RegionHelper::page_meta_by_region(data.locale_pages, 'usa', ConfigHelper::help_page_name(current_page.path))%>
+    <%else%>
+    <% page_info = RegionHelper::page_meta_by_region(data.locale_pages, RegionHelper::locale_from_url(current_page.url).gsub('/', ''), ConfigHelper::help_page_name(current_page.path))%>
+    <%end%>
+
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title><%= page_info.first[:page_title] %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="<%= page_info.first[:page_description]&.gsub(/"/, "'") %>">
+
+  <% fetch_locale = current_page.url.split('/')%>
+  <link rel="canonical" href="<%=url_root%><%=current_page.url == '/' ? current_page.url.gsub('/','') : current_page.url %>">
+
+  <% if fetch_locale.length == 0 || fetch_locale.length == 2 && fetch_locale.last.length == 2%>
+    <% data.locale_urls.each do |lu|%>
+      <link rel="alternate" href="<%=url_root%><%=locale_str_correction(lu)%>" hreflang="<%= alternative_locale(lu) == 'en' ? 'x-default' : alternative_locale(lu).gsub('UK', 'GB')%>">
+    <% end %>
+  <%elsif fetch_locale.length == 2 && fetch_locale.last.length > 2 || fetch_locale.length == 3%>
+    <% CategoryHelper::navigation_menu_structure(data).each do |cat| %>
+      <% category = cat.first.last%>
+      <% category[:pages].each do |page| %>
+        <% if page[:page_url] == fetch_locale.last%>
+          <% data.locale_urls.each do |lu|%>
+          <%if page[:content][alternative_locale(lu)] && page[:content][alternative_locale(lu)] != "\n\n" || defined?(page[:content][alternative_locale(lu)]) && page[:content]["en"] && page[:content]["en"] != "\n\n"%>
+            <link rel="alternate" href="<%=url_root%><%= alternative_locale(lu).count('-') > 0 ? "/#{lu.id.downcase}" : ""%>/<%=fetch_locale.last%>/" hreflang="<%= alternative_locale(lu) == 'en' ? 'x-default' : alternative_locale(lu)%>">
+          <% end %>
+        <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+    <!-- Social Metadata -->
+    <meta property="og:site_name" content=Sharesight>
+    <meta property="og:title" content="<%= page_info.first[:page_title]&.gsub(/"/, "'") %>">
+    <meta property="fb:app_id" content=1028405463915894>
+    <meta property="og:description" content="<%= page_info.first[:page_description]&.gsub(/"/, "'") %>">
+    <meta property="og:image" content="<%=featured_img%>">
+    <meta property="og:url" content="<%=url_root%><%= current_page.url %>">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:site:id" content=109123696>
+    <meta content=summary name="twitter:card">
+    <meta name="twitter:card" content=summary_large_image>
+    <meta name="twitter:site" content="@sharesight">
+    <meta name="twitter:title" content="<%= page_info.first[:page_title]&.gsub(/"/, "'") %>">
+    <meta name="twitter:image" content="<%=featured_img%>">
+    <meta name="twitter:description" content="<%= page_info.first[:page_description]&.gsub(/"/, "'") %>">
+
+    <% if env_name == 'production' %>
+    <meta name="robots" content="Index,Follow">
+    <% else %>
+
+    <meta name="robots" content="noindex">
+    <% end %>
+    <%= stylesheet_link_tag "all.css" %>
+    <link rel="shortcut icon" href="<%= url_root %>/favicon.ico?v=2" type="image/x-icon">
+    <script src="https://cdn.optimizely.com/js/<%= config[:optimizely]%>.js" async></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script>document.documentElement.className = 'js';</script>
+  </head>
+
+  <body class="<% if section_class %> <%= section_class %><% end %><% if page_classes %> <%= page_classes %><% end %>">
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<%=config[:google_tag_manager]%>"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <script>document.body.className += ' js_menu_closed';</script>
+    <nav class="a11y" role="navigation" tabindex="1">
+      <ul role="menu">
+        <li role="menuitem"><a href="#main-menu">Skip to main menu</a></li>
+        <li role="menuitem"><a href="#main-area">Skip to main content</a></li>
+      </ul>
+    </nav>
+
+    <main id="main-area" aria-label="Start on main content" role="main">
+      <%= yield %>
+    </main>
+
+
+    <% if content_for?(:javascript) %>
+      <%= yield_content :javascript %>
+    <% end %>
+
+    <script>
+      window.onload = function(){
+        var s = document.createElement('script');
+        s.async = 1;
+        s.src = '<%= asset_path(:js, "site") %>';
+        document.body.appendChild(s);
+      }
+    </script>
+    <script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.js" type="text/javascript"></script>
+    <script src="<%= asset_path(:js, "lunr.min") %>" type="text/javascript"></script>
+    <script src="<%= asset_path(:js, "search") %>" type="text/javascript"></script>
+  </body>
+</html>
