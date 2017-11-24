@@ -40,4 +40,4 @@ after_success:
 notifications:
   slack: # see: https://docs.travis-ci.com/user/notifications/#Configuring-slack-notifications
     rooms:
-      secure: # needs to be set via `travis-encrypt`
+      secure: 1ub00lCcP/3qD9IFy+6NZWx8oQoFE/6UPq3a+TrRDzbulRKlWsIa5+maU/Loz2Av9ahhIMHBaQk2JFmQpUHD3V4X4/ATwl1LjEcf3LhmDphs5YkGGzSmEwQujHaUigWeP3qnkRkVQDvn/8MUzOP+02/wuocCqkaEeNO6GUDnpRErd2iFTLGRR2CYiUFt9z0gM6+4dPjr8wOfxyP3jdmaRfPLixlV9hSJ2RHr3XsSIcvPemltpt5NX3aAMV5CTGEuL7NeOUpo5CoG06iEXmXoXRD+6oHu5NkZWFnZc0b1k432HMJxSM+sF6ZwdGu/hzR6qd7NgEHF1WbmHx84KEKLhR095E19sg4E4zK7qoK+bXMiycOgEZ+tmnzbsAFrLqE0XqMqfeJ7+16uTeRwyI/s74HQfwGfzI9rNXR05uJIMog+4y3QjgRUAAduMwXJUtBPEJXDSMwSg435uYeUGbNhUHsVNNLth6dB6o6Itho7f1AB59aE5SUh2vWt2mETZ6lvv8ijfKDcmi9Gs4E/oYl0SEUDkpU0JJ7vr8uW1YsfOYkv+e7feNYv2qdvwdju4bXvJkkMX4Sq0UJdAy6aOVM4I82MVxbA+Y+d8NdihfgTbJ3MY0RMirzMiOEz5w/lqsNNqvRmfoeJb/udxGOJtjE4AAc8lJ2AcaLEX2LSz7buCNA=
