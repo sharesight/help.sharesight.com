@@ -7,7 +7,7 @@
   first_word_path = request.path.split('/').first
   tiny_locale = locale.gsub('en-', '').downcase
   page = page.present? ? page : ""
-  featured_img = page.present? ? page.last.featured_img : 'https://www.sharesight.com/img/featured_sharesight-hero-8c0782c5.png'
+  featured_img = page.present? ? page.last.featured_img : image_path('sharesight-social-image@1200w.png')
 %>
     <% if first_word_path == 'index.html' || first_word_path.length > 2%>
   <html lang="en" class="no-js">
@@ -68,21 +68,18 @@
   <% end %>
 
     <!-- Social Metadata -->
-    <meta property="og:site_name" content=Sharesight>
+    <meta property="fb:app_id" content="1028405463915894">
+
+    <meta property="og:site_name" content="Sharesight">
     <meta property="og:title" content="<%= page_info.first[:page_title]&.gsub(/"/, "'") %>">
-    <meta property="fb:app_id" content=1028405463915894>
     <meta property="og:description" content="<%= page_info.first[:page_description]&.gsub(/"/, "'") %>">
-    <meta property="og:image" content="<%=featured_img%>">
+    <meta property="og:image" content="<%= featured_img %>">
     <meta property="og:url" content="<%=url_root%><%= current_page.url %>">
     <meta property="og:type" content="website">
 
-    <meta name="twitter:site:id" content=109123696>
-    <meta content=summary name="twitter:card">
-    <meta name="twitter:card" content=summary_large_image>
+    <meta name="twitter:site:id" content="109123696">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@sharesight">
-    <meta name="twitter:title" content="<%= page_info.first[:page_title]&.gsub(/"/, "'") %>">
-    <meta name="twitter:image" content="<%=featured_img%>">
-    <meta name="twitter:description" content="<%= page_info.first[:page_description]&.gsub(/"/, "'") %>">
 
     <% if env_name == 'production' %>
     <meta name="robots" content="Index,Follow">
