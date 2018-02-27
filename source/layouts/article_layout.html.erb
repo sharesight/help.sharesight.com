@@ -9,7 +9,6 @@
   page = page.present? ? page : ""
   article_title = page.present? ? "#{page.last.title.en} | Sharesight Help" : "Sharesight Help"
   article_descr = page.present? ? page.last.meta_description.en : "Articles and tutorial videos to help you get started with Sharesight, as well as to help troubleshoot common issues you may be experiencing."
-  featured_img = 'https://www.sharesight.com/img/featured_sharesight-hero-8c0782c5.png'
 %>
     <% if first_word_path == 'index.html' || first_word_path.length > 2%>
   <html lang="en" class="no-js">
@@ -76,21 +75,18 @@
   <% end %>
 
     <!-- Social Metadata -->
-    <meta property="og:site_name" content=Sharesight>
+    <meta property="fb:app_id" content="1028405463915894">
+
+    <meta property="og:site_name" content="Sharesight">
     <meta property="og:title" content="<%= article_title&.gsub(/"/, "'") %> | Sharesight <% if page_info[:id] != 'usa'%><%=page_info[:country]%> Help<%else%>Help<%end%>">
-    <meta property="fb:app_id" content=1028405463915894>
     <meta property="og:description" content="<%= article_descr&.gsub(/"/, "'") %>">
-    <meta property="og:image" content="<%=featured_img%>">
+    <meta property="og:image" content="<%= image_path('sharesight-social-image@1200w.png') %>">
     <meta property="og:url" content="<%=url_root%><%=current_page.url%>">
     <meta property="og:type" content="website">
 
-    <meta name="twitter:site:id" content=109123696>
-    <meta content=summary name="twitter:card">
-    <meta name="twitter:card" content=summary_large_image>
+    <meta name="twitter:site:id" content="109123696">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@sharesight">
-    <meta property="og:title" content="<%= article_title&.gsub(/"/, "'") %> | Sharesight <% if page_info[:id] != 'usa'%><%=page_info[:country]%> Help<%else%>Help<%end%>">
-    <meta name="twitter:image" content="<%= featured_img %>">
-    <meta name="twitter:description" content="<%= article_descr&.gsub(/"/, "'") %>">
 
     <% if env_name == 'production' %>
     <meta name="robots" content="Index,Follow">
