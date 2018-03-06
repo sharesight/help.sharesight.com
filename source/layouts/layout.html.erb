@@ -6,6 +6,7 @@
   include_blog_geo_redirect = locals[:include_blog_geo_redirect] || current_page.data.include_blog_geo_redirect
   first_word_path = request.path.split('/').first
   tiny_locale = locale.gsub('en-', '').downcase
+  page = page.present? ? page : ""
 
   featured_img   = page.present? && page&.last&.featured_img
   featured_img ||= url_root + image_path('sharesight-social-image@1200w.png')
