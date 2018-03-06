@@ -73,7 +73,7 @@
     <meta property="og:site_name" content="Sharesight">
     <meta property="og:title" content="<%= page_info.first[:page_title]&.gsub(/"/, "'") %>">
     <meta property="og:description" content="<%= page_info.first[:page_description]&.gsub(/"/, "'") %>">
-    <meta property="og:image" content="<%= featured_img %>">
+    <meta property="og:image" content="<%= url_root %><%= featured_img %>">
     <% if featured_img == image_path('sharesight-social-image@1200w.png') %>
       <meta property="og:image:type" content="image/png">
       <meta property="og:image:width" content="1200">

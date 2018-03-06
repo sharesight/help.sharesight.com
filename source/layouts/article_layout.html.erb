@@ -80,7 +80,7 @@
     <meta property="og:site_name" content="Sharesight">
     <meta property="og:title" content="<%= article_title&.gsub(/"/, "'") %> | Sharesight <% if page_info[:id] != 'usa'%><%=page_info[:country]%> Help<%else%>Help<%end%>">
     <meta property="og:description" content="<%= article_descr&.gsub(/"/, "'") %>">
-    <meta property="og:image" content="<%= image_path('sharesight-social-image@1200w.png') %>">
+    <meta property="og:image" content="<%= url_root %><%= image_path('sharesight-social-image@1200w.png') %>">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
