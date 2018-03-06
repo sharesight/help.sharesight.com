@@ -7,8 +7,13 @@
   first_word_path = request.path.split('/').first
   tiny_locale = locale.gsub('en-', '').downcase
   page = page.present? ? page : ""
+
   article_title = page.present? ? "#{page.last.title.en} | Sharesight Help" : "Sharesight Help"
   article_descr = page.present? ? page.last.meta_description.en : "Articles and tutorial videos to help you get started with Sharesight, as well as to help troubleshoot common issues you may be experiencing."
+
+  featured_img   = page.present? && page&.last&.featured_img
+  featured_img ||= url_root + image_path('sharesight-social-image@1200w.png')
+  featured_img   = "https:#{featured_img}" if featured_img&.start_with?('//') # converts //images.contentful.com to https://images.contentful.com for Facebook to not complain.
 %>
     <% if first_word_path == 'index.html' || first_word_path.length > 2%>
   <html lang="en" class="no-js">
@@ -80,12 +85,15 @@
     <meta property="og:site_name" content="Sharesight">
     <meta property="og:title" content="<%= article_title&.gsub(/"/, "'") %> | Sharesight <% if page_info[:id] != 'usa'%><%=page_info[:country]%> Help<%else%>Help<%end%>">
     <meta property="og:description" content="<%= article_descr&.gsub(/"/, "'") %>">
-    <meta property="og:image" content="<%= image_path('sharesight-social-image@1200w.png') %>">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
     <meta property="og:url" content="<%=url_root%><%=current_page.url%>">
     <meta property="og:type" content="website">
+
+    <meta property="og:image" content="<%= featured_img %>">
+    <% if featured_img.include?(image_path('sharesight-social-image@1200w.png')) %>
+      <meta property="og:image:type" content="image/png">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+    <% end %>
 
     <meta name="twitter:site:id" content="109123696">
     <meta name="twitter:card" content="summary_large_image">
