@@ -1,10 +1,17 @@
 # robotstxt.org/
+<% if env_name == 'staging' %>
+User-agent: Twitterbot
+Disallow:
+Allow: /
+<% end %>
+
 User-agent: *
 <% if env_name == 'staging' || env_name == 'development' %>
 Disallow: /
 <% else %>
 Disallow:
 <% end %>
+
 <% if env_name == 'staging' %>
 Sitemap: http://sharesight-help-staging.s3-website-us-east-1.amazonaws.com/sitemap.xml
 <% elsif env_name == 'development' %>
