@@ -26,12 +26,10 @@ class SanityCheckTest < Minitest::Test
       au_dir = list("build/au")
       assert au_dir.include? "index.html"
       assert au_dir.include? "capital_gains"
-      refute au_dir.include? "fif_income_summary_page"
 
       # check ca stuff
       ca_dir = list("build/ca")
       assert ca_dir.include? "index.html"
-      refute ca_dir.include? "fif_income_summary_page"
 
       # check nz stuff
       nz_dir = list("build/nz")
@@ -41,7 +39,6 @@ class SanityCheckTest < Minitest::Test
       # check uk stuff
       uk_dir = list("build/uk")
       assert uk_dir.include? "index.html"
-      refute uk_dir.include? "fif_income_summary_page"
     end
 
     should "include zero git conflict markers in source" do
