@@ -27,7 +27,7 @@ gem 'maxitest'
 gem 'shoulda-context'
 
 # support whitelist-sanitizing content (remove script-tags, etc.)
-gem 'rails-html-sanitizer'
+gem 'rails-html-sanitizer', '~> 1.0.4' # 1.0.3 has a CVE
 
 gem 'stopwords-filter', require: 'stopwords'
 
