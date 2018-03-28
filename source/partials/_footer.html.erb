@@ -40,8 +40,8 @@ end
       </section>
 
       <div class="icons">
-        <% data.icons.social_media_icons.each do |smi| %>
-          <a href="<%= smi.url %>">
+        <% data.social_media_icons.each do |smi| %>
+          <a href="<%= smi.url %>" title="Check us out on <%= smi.name %>">
             <%= image_tag "/img/icons/#{smi.image}", class: "icon" %>
           </a>
         <% end %>
