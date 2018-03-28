@@ -11,9 +11,10 @@ gem 'middleman-sprockets'
 gem 'uglifier'
 gem 'jquery-middleman'
 gem 'middleman-jasmine'
-gem "contentful_middleman", '~> 1.3.2'
+gem "contentful_middleman", '~> 2.1.2'
 gem 'middleman-pagination'
 gem 'middleman-syntax'
+
 # support re-writing in the middleman configuration
 gem 'rack-rewrite'
 gem 'string-urlize'
