@@ -19,7 +19,6 @@
 .DS_Store
 
 # Ignore personal files
-.ruby-version
 .ruby-gemset
 .envrc
 

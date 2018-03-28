@@ -5,12 +5,10 @@ branches:
     - /^release\/.*$/
     - /^hotfix\/.*$/
 
-language: ruby
-
 sudo: false
 
-rvm:
-  - 2.3.3
+language: ruby
+rvm: 2.4.2
 
 cache:
   - apt
