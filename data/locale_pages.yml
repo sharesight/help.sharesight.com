@@ -13,12 +13,6 @@
       page: "404"
       page_title: "Page not found | Sharesight Help"
       page_description: "The leading online share portfolio tracker & reporting tool for DIY investors. Track share prices, trades, dividends, performance and tax!"
-
-    # -
-    #   page: "styleguide"
-    #   page_title: "Search | Sharesight Help"
-    #   page_description: "The leading online share portfolio tracker & reporting tool for DIY investors. Track share prices, trades, dividends, performance and tax!"
-
     -
       page: "search"
       page_title: "Search | Sharesight Help"
@@ -37,10 +31,6 @@
       page: "404"
       page_title: "Page not found | Sharesight New Zealand Help"
       page_description: "The leading online share portfolio tracker & reporting tool for DIY investors. Track share prices, trades, dividends, performance and tax!"
-    # -
-    #   page: "styleguide"
-    #   page_title: "search | Sharesight Portfolio Tracker"
-    #   page_description: "The leading online share portfolio tracker & reporting tool for DIY investors. Track share prices, trades, dividends, performance and tax!"
     -
       page: "search"
       page_title: "Search | Sharesight New Zealand Help"
@@ -59,10 +49,6 @@
       page: "404"
       page_title: "Page not found | Sharesight Canada Help"
       page_description: "The leading online share portfolio tracker & reporting tool for DIY investors. Track share prices, trades, dividends, performance and tax!"
-    # -
-    #   page: "styleguide"
-    #   page_title: "search | Sharesight Portfolio Tracker"
-    #   page_description: "The leading online share portfolio tracker & reporting tool for DIY investors. Track share prices, trades, dividends, performance and tax!"
     -
       page: "search"
       page_title: "Search | Sharesight Canada Help"
@@ -81,10 +67,6 @@
       page: "404"
       page_title: "Page not found | Sharesight Australia Help"
       page_description: "The leading online share portfolio tracker & reporting tool for DIY investors. Track share prices, trades, dividends, performance and tax!"
-    # -
-    #   page: "styleguide"
-    #   page_title: "search | Sharesight Portfolio Tracker"
-    #   page_description: "The leading online share portfolio tracker & reporting tool for DIY investors. Track share prices, trades, dividends, performance and tax!"
     -
       page: "search"
       page_title: "Search | Sharesight Australia Help"
@@ -103,10 +85,6 @@
       page: "404"
       page_title: "Page not found | Sharesight UK Help"
       page_description: "The leading online share portfolio tracker & reporting tool for DIY investors. Track share prices, trades, dividends, performance and tax!"
-    # -
-    #   page: "styleguide"
-    #   page_title: "search | Sharesight Portfolio Tracker"
-    #   page_description: "The leading online share portfolio tracker & reporting tool for DIY investors. Track share prices, trades, dividends, performance and tax!"
     -
       page: "search"
       page_title: "Search | Sharesight UK Help"
