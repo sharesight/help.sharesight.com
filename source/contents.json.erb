@@ -1,39 +1,32 @@
 <%
-pages = data&.help_pages&.page
-entries = []
+  entries = []
 
-if data.respond_to?(:help_pages)
-  pages.each_with_index do |tuple, index|
-    if tuple.present? && tuple.length == 2 && tuple[1].present?
-      page_data = tuple[1]
+  page_collection(locale_obj[:lang]) do |page|
+    if (
+      page &&
+      page[:category] &&
+      page[:meta_description] &&
+      page[:title] &&
+      page[:content] && # has content (en, or otherwise)
+      ConfigHelper.help_page_url_slug(page) # has a url
+    )
+      raw_page = data.help.pages.find{ |id, _page| _page[:id] == page[:id] }
 
-      if (
-        page_data &&
-        page_data.dig('category') &&
-        page_data.dig('meta_description', 'en') &&
-        page_data.dig('title', 'en') &&
-        page_data.dig('content')&.keys && # has content (en, or otherwise)
-        ConfigHelper.help_post_url_slug(page_data) # has a url
-      )
-        category = page_data.category.dig('en', 'sys', 'id')
-        category_page = ConfigHelper::space_slugify(data.help_categories.category.detect {|x| x.first == category }.last.name.en)
-        page_parent = ConfigHelper::space_slugify(page_data.title.en.downcase) == category_page ? category_page : ''
+      entries << {
+        :id                     => page[:id],
+        :title                  => page[:title],
+        :page_slug              => ConfigHelper.help_page_url_slug(page),
+        :page_meta_description  => page[:meta_description],
 
-        entry = {
-          :id                     => index,
-          :title                  => page_data.title.en,
-          :page_slug              => ConfigHelper.help_post_url_slug(page_data),
-          :page_meta_description  => page_data.meta_description.en,
-          :page_parent            => page_parent,
-          :page_locales           => page_data.content.keys,
-          :content                => SearchHelper::condense_content(page_data.content.to_s.gsub(%r{[\[\]#\*<>\/]}, ' '))
-        }
-        entries << entry
-      end
-    else
-      raise "Unknown data found in contents.json ~ data.help_pages[#{index}]."
+        # reduce the amount of data downloaded in browsers
+        :content                => SearchHelper::condense_content(page.content.to_s.gsub(%r{[\[\]#\*<>\/]}, ' '))
+
+        # get all locales this is written in, eg. page.content.en = '…'
+        # this is more of a "first-class-page-locales"
+        :page_locales           => raw_page[:content][:keys],
+      }
     end
   end
-end
+%>
 
-%><%= entries.to_json %>
+<%= entries.to_json %>
