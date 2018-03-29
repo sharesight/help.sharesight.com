@@ -35,7 +35,7 @@ module Middleman
         collection.each do |post|
           app.proxy(
             path_for_proxy(ConfigHelper.help_post_url_slug(post), locale_obj[:id]),
-            "post.html",
+            "help-post.html",
             locals: { locale_obj: locale_obj, post: post },
             ignore: true
           )

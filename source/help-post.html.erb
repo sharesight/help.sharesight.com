@@ -1,7 +1,7 @@
 ---
 page_classes: 'category'
 include_geo_redirect: true
-layout: 'article_layout'
+layout: 'post_layout'
 ---
 <% url = current_page.url.split("/") %>
 <% my_locale = url[1] %>
@@ -65,7 +65,7 @@ layout: 'article_layout'
         <%= Kramdown::Document.new(locale_content(page).gsub('.png)', '.png?w=917)').gsub('.jpg)', '.jpg?w=917)')).to_html.html_safe %>
       <%end%>
 
-      <p class="date_modified">Last modified on <%=page.last.last_updated%> UTC</p>
+      <p class="date_modified">Last modified on <%= page.last_updated_at %> UTC</p>
       <script>
         var get_headings = document.getElementsByTagName('table');
       </script>
