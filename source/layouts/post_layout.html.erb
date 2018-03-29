@@ -12,7 +12,7 @@
   article_descr = page.present? ? page.last.meta_description.en : "Articles and tutorial videos to help you get started with Sharesight, as well as to help troubleshoot common issues you may be experiencing."
 
   featured_img   = page.present? && page&.last&.featured_img
-  featured_img ||= url_root + image_path('sharesight-social-image@1200w.png')
+  featured_img ||= image_url('sharesight-social-image@1200w.png')
   featured_img   = "https:#{featured_img}" if featured_img&.start_with?('//') # converts //images.contentful.com to https://images.contentful.com for Facebook to not complain.
 %>
     <% if first_word_path == 'index.html' || first_word_path.length > 2%>
