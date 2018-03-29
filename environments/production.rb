@@ -13,6 +13,10 @@ module ApplicationConfig
     API_KEY = ENV['BUGSNAG_API_KEY']
   end
 
+  module Optimizely
+		ID = 5841851301
+	end
+
   module S3
     BUCKET = 'sharesight-help'
     ACCESS_ID = ENV['AWS_DEPLOY_ACCESS_ID']
