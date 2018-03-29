@@ -54,7 +54,7 @@ module CategoryHelper
       result_pages << {
         "id": page.id,
         "page_title": page.dig("title", locale),
-        "page_url": ConfigHelper.help_page_url_slug(page),
+        "page_url": ConfigHelper.help_post_url_slug(page),
         "subpages": subpages_for_page(data, page, locale),
         "has_parent": !page.dig("parent_page").blank?,
         "content": page.dig("content")
@@ -71,7 +71,7 @@ module CategoryHelper
       result_subpages << [
         "#{subpage.id}",
         "#{subpage.dig("title", locale)}",
-        "#{ConfigHelper.help_page_url_slug(subpage)}"
+        "#{ConfigHelper.help_post_url_slug(subpage)}"
       ]
     end
     result_subpages

@@ -13,7 +13,7 @@ if data.respond_to?(:help_pages)
         page_data.dig('meta_description', 'en') &&
         page_data.dig('title', 'en') &&
         page_data.dig('content')&.keys && # has content (en, or otherwise)
-        ConfigHelper.help_page_url_slug(page_data) # has a url
+        ConfigHelper.help_post_url_slug(page_data) # has a url
       )
         category = page_data.category.dig('en', 'sys', 'id')
         category_page = ConfigHelper::space_slugify(data.help_categories.category.detect {|x| x.first == category }.last.name.en)
@@ -22,7 +22,7 @@ if data.respond_to?(:help_pages)
         entry = {
           :id                     => index,
           :title                  => page_data.title.en,
-          :page_slug              => ConfigHelper.help_page_url_slug(page_data),
+          :page_slug              => ConfigHelper.help_post_url_slug(page_data),
           :page_meta_description  => page_data.meta_description.en,
           :page_parent            => page_parent,
           :page_locales           => page_data.content.keys,

@@ -19,22 +19,22 @@ class ConfigHelperTest < Minitest::Test
       I18n.config.enforce_available_locales = false
     end
 
-    context "help_page_url_slug" do
+    context "help_post_url_slug" do
       should "return manual slug when present" do
         correct_slug = "correct-slug"
         page1 = fake_object(url_slug: { en: "/#{correct_slug}/" }, title: { en: "WRONG!"})
-        assert_equal correct_slug, ConfigHelper.help_page_url_slug(page1)
+        assert_equal correct_slug, ConfigHelper.help_post_url_slug(page1)
       end
 
       should "return slug of title when no manual slug present" do
         correct_slug = "correct-slug"
         page2 = fake_object(url_slug: { en: nil }, title: { en: correct_slug })
-        assert_equal correct_slug, ConfigHelper.help_page_url_slug(page2)
+        assert_equal correct_slug, ConfigHelper.help_post_url_slug(page2)
       end
 
       should "strip slashes, downcase, replace spaces with dashes, make url-safe" do
         page3 = fake_object(url_slug: { en: nil }, title: { en: "/WTF is GoiNg on here?/" })
-        assert_equal "wtf-is-going-on-here", ConfigHelper.help_page_url_slug(page3)
+        assert_equal "wtf-is-going-on-here", ConfigHelper.help_post_url_slug(page3)
       end
     end
 
