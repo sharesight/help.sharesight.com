@@ -29,21 +29,16 @@ module CategoryHelper
   #
 
   def self.navigation_menu_structure(data, locale = "en")
-    menu = []
+    categories = data.help.categories
+
     # first sort categories and add their details
-    data.help_categories.category.each do |id, category|
-      category_entry = {}
-      category_entry["#{id}"] = {
-        "category_name": category["name"][locale],
-        "category_url": ConfigHelper.help_category_url_slug(category),
-        "category_description": category.dig("description", locale),
-        "pages": pages_in_category(data, category, locale),
-        "category_slug": category
-      }
-      menu << category_entry
+    data.help.categories.each do |id, category|
+      category.pages =
+      categories << category
     end
-    menu.sort { |a, b| compare_categories_for_menu(a, b, locale) }
-    return menu
+
+    collection.sort { |a, b| compare_categories_for_menu(a, b, locale) }
+    return collection
   end
 
   def self.pages_in_category(data, category, locale = "en")
@@ -54,7 +49,7 @@ module CategoryHelper
       result_pages << {
         "id": page.id,
         "page_title": page.dig("title", locale),
-        "page_url": ConfigHelper.help_post_url_slug(page),
+        "page_url": ConfigHelper.help_page_url_slug(page),
         "subpages": subpages_for_page(data, page, locale),
         "has_parent": !page.dig("parent_page").blank?,
         "content": page.dig("content")
@@ -69,26 +64,26 @@ module CategoryHelper
     result_subpages = []
     page_subpages.each do |subpage|
       result_subpages << [
-        "#{subpage.id}",
-        "#{subpage.dig("title", locale)}",
-        "#{ConfigHelper.help_post_url_slug(subpage)}"
+        "#{subpage[:id]}",
+        "#{subpage[:title]}",
+        "#{ConfigHelper.help_page_url_slug(subpage)}"
       ]
     end
     result_subpages
   end
 
-  def self.compare_pages_for_menu(a, b, locale = "en")
-    compare_generic(a, b, "title", locale)
+  def self.compare_pages_for_menu(a, b)
+    compare_generic(a, b, "title")
   end
 
-  def self.compare_categories_for_menu(a, b, locale = "en")
-    compare_generic(a, b, "name", locale)
+  def self.compare_categories_for_menu(a, b)
+    compare_generic(a, b, "name")
   end
 
-  def self.compare_generic(a, b, secondary_sort_field, locale = "en")
-    a_order = a["order"] ? a["order"][locale].to_i : 100
-    b_order = b["order"] ? b["order"][locale].to_i : 100
-    return a.dig(secondary_sort_field, locale) <=> b.dig(secondary_sort_field, locale) if a_order == b_order
+  def self.compare_generic(a, b, secondary_sort_field)
+    a_order = a[:order]&.to_i || 100
+    b_order = b[:order]&.to_i || 100
+    return a[secondary_sort_field] <=> b[secondary_sort_field] if a_order == b_order
     a_order <=> b_order
   end
 end

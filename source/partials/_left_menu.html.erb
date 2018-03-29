@@ -7,10 +7,10 @@ reg_url = fetch_locale[1].length == 2 ? "/#{fetch_locale[1]}" : url_root
     <% CategoryHelper::navigation_menu_structure(data).each do |cat| %>
       <% category = cat.first.last%>
       <section>
-        <h4 data-toggle="<% if category_id && category_id == cat.first.first%>1<%else%>0<% end %>"><%=category[:category_name]%></h4>
+        <h4 data-toggle="<% if category_id == category[:id] ? 1 : 0 %>"><%= category[:category_name] %></h4>
         <ul>
           <% category[:pages].each do |page| %>
-            <% category_url = localize_url(page[:page_url], locale_id: locale_obj[:id]) %>
+            <% page_url = localize_url(page[:page_url], locale_id: locale_obj[:id]) %>
 
             <!-- All regions -->
             <% data.locale_urls.each_with_index do |loc, idx|%>

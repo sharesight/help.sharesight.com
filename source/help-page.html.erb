@@ -15,13 +15,11 @@ layout: 'page_layout'
   <div class="content">
 
     <ul class="breadcrumbs">
-      <li><a href="<%=RegionHelper::locale_from_url(current_page.url)%>/">Help</a></li>
-      <% CategoryHelper::navigation_menu_structure(data).each do |cat| %>
-        <% category = cat.first.last%>
-          <% if cat.first.first == page.last.category&.en&.sys&.id %>
-            <li><a href="<% if RegionHelper::locale_from_url(current_page.url)%><%=RegionHelper::locale_from_url(current_page.url)%><%end%>/<%=category[:pages].first[:page_url]%>/"><%=category[:category_name]%></a></li>
-          <%end%>
-      <%end%>
+      <li><a href="<%= localize_url(current_page.url, locale_id: locale_obj[:id]) %>">Help</a></li>
+
+      <!-- TODO -->
+      <li><a href="<%= localize_url(help_category_url_slug(page[:category]) %>"><%= category[:category_name] %></a></li>
+
       <% if page.last[:parent_page]%>
         <li class="breadcrumb-extra">
           <a href="<%=BreadcrumbHelper::parent_slug(data, page, current_page.url)%>">
@@ -37,7 +35,7 @@ layout: 'page_layout'
         <% CategoryHelper::navigation_menu_structure(data).each do |cat| %>
           <% category = cat.first.last%>
 
-          <optgroup label="<%=category[:category_name]%>">
+          <optgroup label="<%= category[:name] %>">
 
             <% category[:pages].each do |page| %>
               <% category_url = "#{my_locale}/#{page[:page_url]}" %>

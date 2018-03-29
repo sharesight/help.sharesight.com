@@ -22,15 +22,13 @@
     <span class="close" id="js-close" tabindex="0">Close</span>
 
     <ul>
-      <% data.help.categories.each_slice(3) do |grouping| %>
-        <% grouping.each do |key, category| %>
-          <% next if category.nil? %>
-          <% pages = CategoryHelper::pages_in_category(data, category) %>
-          <% next if pages.nil? || !pages.length %>
+      <% categories_collection(locale_obj[:lang], with_associations: true).each_slice(3) do |groups| %>
+        <% groups.each do |key, category| %>
+          <% next if category.nil? || category[:pages].nil? || category[:pages].blank? %>
 
-          <% first_page = pages.first %>
+          <% category[:pages] = pages.first %>
           <li>
-            <a href="<%= localize_url(first_page[:page_url], locale_id: locale_obj[:id]) %>" title="<%= category[:name] %>">
+            <a href="<%= localize_url(first_page[:url], locale_id: locale_obj[:id]) %>" title="<%= category[:name] %>">
               <%= category[:name] %>
             </a>
           </li>
