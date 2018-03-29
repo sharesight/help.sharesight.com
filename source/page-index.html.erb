@@ -2,7 +2,6 @@
 page_classes: 'page_home'
 page_description: 'Help pages for Sharesight'
 ---
-<% fetch_locale = current_page.url.split('/')%>
 <%= partial "partials/header" %>
 
 <%= partial "partials/search" %>
@@ -13,15 +12,16 @@ page_description: 'Help pages for Sharesight'
   </div>
   <div class="tiles-wrapper">
     <div class="container">
+      <!-- TODO, unify this -->
       <% data.help_categories.category.each_slice(3) do |tiles| %>
         <div class="tiles">
           <% tiles.each do |key, tile| %>
             <% next if tile.nil? %>
             <% default_page = CategoryHelper::pages_in_category(data, tile).first %>
             <% next if default_page.nil? %>
-            <a href="<% if fetch_locale[1] && fetch_locale[1].length == 2%>/<%=fetch_locale[1]%><%else%><%end%>/<%= default_page[:page_url] %>/" class="tile">
-              <h2><%=tile[:name][:en]%></h2>
-              <p><%=tile[:description][:en]%></p>
+            <a href="<%= localize_url(default_page[:page_url], locale_id: locale_obj[:id]) %>" class="tile">
+              <h2><%= tile[:name] %></h2>
+              <p><%= tile[:description] %></p>
             </a>
           <% end %>
         </div>
@@ -35,7 +35,7 @@ page_description: 'Help pages for Sharesight'
     <div class="twin">
       <h2>Sharesight Community</h2>
       <p>Ask questions, request features and report bugs on our community forum. We are always working on Sharesight and your suggestions help us decide what to work on next.</p>
-      <a href="https://community.sharesight.com" class="button button_feature">Visit our Forum</a>
+      <a href="<%= config[:community_url] %>" class="button button_feature">Visit our Forum</a>
     </div>
     <div class="twin">
       <h2>Videos &amp; Guides</h2>
