@@ -22,7 +22,7 @@
         :content                => SearchHelper::condense_content(page.content.to_s.gsub(%r{[\[\]#\*<>\/]}, ' '))
 
         # get all locales this is written in, eg. page.content.en = '…'
-        # this is more of a "first-class-page-locales"
+        # this is more of a "primary-locales" as it should be available in all locales
         :page_locales           => raw_page[:content][:keys],
       }
     end
