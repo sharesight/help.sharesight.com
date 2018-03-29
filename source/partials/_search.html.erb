@@ -1,10 +1,9 @@
-
 <script id="results-template" type="text/x-handlebars-template">
   <li>
     {{#ifIn current_page_locale page_locales }}
-    <a href="<%=current_locale%>/{{page_slug}}">{{title}}</a>
+    <a href="<%= localize_url(locale_id: locale_obj[:id]) %>/{{page_slug}}">{{title}}</a>
     {{else ifIn "en" page_locales}}
-    <a href="<%=current_locale%>/{{page_slug}}">{{title}}</a>
+    <a href="<%= localize_url(locale_id: locale_obj[:id]) %>/{{page_slug}}">{{title}}</a>
     {{/ifIn}}
   </li>
 </script>
