@@ -12,10 +12,7 @@ Disallow: /
 Disallow:
 <% end %>
 
-<% if env_name == 'staging' %>
-Sitemap: http://sharesight-help-staging.s3-website-us-east-1.amazonaws.com/sitemap.xml
-<% elsif env_name == 'development' %>
-Sitemap: http://localhost:4567/sitemap.xml
-<% else %>
-Sitemap: https://www.help.sharesight.com/sitemap.xml
+Sitemap: <%= base_url('/sitemapindex.xml') %>
+<% data.locales.each do |locale| %>
+Sitemap: <%= localize_url('/sitemap.xml', locale_id: locale[:id] )%>
 <% end %>
