@@ -1,323 +1,107 @@
-set :css_dir, 'stylesheets'
-set :js_dir, 'javascripts'
-set :images_dir, 'images'
+# Configuration
+require 'config/contentful'
 
-helpers do
+# Loading middleman helpers as these may change often.
+load 'helpers/middleman/helpers.rb'
+load 'helpers/config_helper.rb'
+require 'helpers/s3_redirects_helper.rb'
 
-  # locale Helpers
-  def locale_cert_type
-    locale = current_page.url.split("/")
-    if locale.count === 2
-      locale_data = data.locale_pages.detect {|x| x.id == locale.last}
-      if locale_data
-        locale_data["cert_type"].to_s if locale_data["id"] != "usa"
-      end
-    else
-      "stock"
-    end
-  end
+require 'mappers/default'
 
-  def help_pages
-    data.help_pages.page
-  end
+load 'extensions/routing.rb'
+require 'extensions/s3.rb'
 
-  def locale_content(obj)
-    en = obj.last.content.en
+require 'aws/s3'
+require 'rack/rewrite'
+require 'active_support/all'
 
-    #TODO: REFACTOR Me...
+config[:env_name] = ENV['APP_ENV'] || 'development'
+config[:locale_name] = ENV['LOCALE'] || 'NZ'
+config[:locale] = "en-#{config[:locale_name]}"
 
-    nz = obj.last.content["en-NZ"]
-    au = obj.last.content["en-AU"]
-    ca = obj.last.content["en-CA"]
-    gb = obj.last.content["en-GB"]
-    uk = obj.last.content["en-UK"]
-    alt_locale = current_alt_locale
-
-    if !au.nil? && alt_locale == 'en-AU'
-      au
-    elsif !nz.nil? && alt_locale == 'en-NZ'
-      nz
-    elsif !ca.nil? && alt_locale == 'en-CA'
-      ca
-    elsif !gb.nil? && alt_locale == 'en-GB'
-      gb
-    elsif !uk.nil? && alt_locale == 'en-UK'
-      uk
-    else
-      en
-    end
-  end
-
-  def alternative_locale(obj)
-    if obj.id == "GLOBAL"
-      "en"
-    else
-      "en-#{obj.id.upcase.gsub('UK','GB')}"
-    end
-  end
-
-  def locale_str_correction(obj)
-    if obj.id == "GLOBAL"
-      ""
-    else
-      "/#{obj.id.downcase}/"
-    end
-  end
-
-  def current_alt_locale
-    url = current_page.url.split("/")
-    if url[1]
-      if url[1].length != 2
-        "en"
-      else
-        "en-#{url[1].upcase}"
-      end
-    end
-  end
-
-  def current_locale
-    url = current_page.url.split("/")
-
-    # GLOBAL
-    if url.length == 0
-      ""
-    elsif url[1].length == 2
-      "/#{url[1]}"
-    end
-  end
-
-  def page_file_name
-    split_words = current_page.path.split('/')
-    word_len = split_words.first.length
-    return "#{current_page.path.split('/').last}"
-  end
-
-  def meta_helper(prop)
-    current_locale = current_page.path.split("/").first
-    # puts current_locale
-    unless current_locale == "patterns"
-      current_locale = "usa" unless current_locale.length == 2 #FIXME: this removes meta data for patterns, patterns needs its own meta helper
-      # data.locale_pages.find {|x| x[:id] == current_locale}.pages.select {|y| y[:page] == page_file_name}.first[prop]
-      # puts page_file_name
-      # puts current_page.path.split('/').last
-      return "#{prop} | Sharesight #{data.locale_pages.find {|x| x[:id] == current_locale}.country} Help"
-    end
-  end
-
-end
-
-data.locale_pages.each do |locale|
-  config[:data_locale] = locale
-end
-# Set which environment this build is running on
-#
-env_name = ENV['APP_ENV'] || 'development'
-set :env_name, env_name
-require "environments/#{env_name}"
-puts "Helpsite Middleman loading for #{env_name} environment."
-
-config[:ios_store_url] = 'https://itunes.apple.com/nz/app/sharesight-reader/id1147841214?mt=8'
+# Site Configuration
+config[:site_name] = 'Sharesight'
+config[:display_timezone] = 'Sydney' # Time.new.in_time_zone('Sydney')
+config[:font_dir] = 'fonts'
+config[:css_dir] = 'css'
+config[:js_dir] = 'js'
+config[:images_dir] = 'img'
+config[:twitter_site_id] = '109123696'
+config[:facebook_app_id] = '1028405463915894'
+config[:ios_store_url] = 'https://itunes.apple.com/app/sharesight-reader/id1147841214?mt=8'
 config[:google_store_url] = 'https://play.google.com/store/apps/details?id=com.sharesight.reader&hl=en'
 
-locale_name = ENV['LOCALE'] || 'NZ'
+config[:default_locale_id] = data.locales.find{|x| x[:id] == 'global' }[:id] # I understand this is weird, but I want to validate that `global` exists in the data too.
+raise Exception.new("Missing the default locale, should be `global`.") if !config[:default_locale_id]
 
-config[:get_location_host] = 'https://portfolio.sharesight.com'
+require "config/environments/#{config[:env_name]}" # ApplicationConfig comes from this.
 
-set :locale_name, locale_name
-set :locale, "en-#{locale_name}"
-require "rack/rewrite"
-require "helpers/config_helper"
-page '/*.xml', layout: false
-page '/*.json', layout: false
-page '/*.txt', layout: false
-page "google1decda79799cf179.html", directory_index: false
+config[:base_url] = ApplicationConfig::BASE_URL
+config[:portfolio_url] = ApplicationConfig::PORTFOLIO_URL
+config[:marketing_url] = ApplicationConfig::MARKETING_URL
+config[:community_url] = ApplicationConfig::COMMUNITY_URL
 
-set :site_name, 'Sharesight'
-set :font_dir, 'fonts'
-set :css_dir, 'css'
-set :js_dir, 'js'
-set :images_dir, 'img'
+# Auto-generate these from the portfolio url.
+config[:api_url] = "#{config[:portfolio_url]}/api"
+config[:location_url] = "#{config[:portfolio_url]}/locations"
+config[:signup_url] = "#{config[:portfolio_url]}/signup"
+config[:login_url] = "#{config[:portfolio_url]}/login"
+config[:pro_signup_url] = "#{config[:portfolio_url]}/professional_signup"
 
-set :url_root, ApplicationConfig::BASE_URL
-
-#social media
-config[:twitter_site_id] = '109123696'
-# @environments
-if env_name == 'development'
-  config[:signup] = 'https://portfolio.sharesight.com/signup'
-  config[:login] = 'https://portfolio.sharesight.com/login'
-  config[:google_tag_manager] = 'GTM-P2DH5X'
-  config[:optimizely] = '5854941356'
-  set :url_ss, 'https://staging-www.sharesight.com'
-elsif env_name == 'staging'
-  config[:signup] = 'https://test-portfolio.sharesight.com/signup'
-  config[:login] = 'https://test-portfolio.sharesight.com/login'
-  config[:google_tag_manager] = 'GTM-P2DH5X'
-  config[:optimizely] = '5854941356'
-  set :url_ss, 'https://staging-www.sharesight.com'
-elsif env_name == 'production'
-  config[:signup] = 'https://portfolio.sharesight.com/signup'
-  config[:login] = 'https://portfolio.sharesight.com/login'
-  config[:google_tag_manager] = 'GTM-5HSWD9'
-  config[:optimizely] = '5841851301'
-  set :url_ss, 'https://www.sharesight.com'
-end
-
-activate :i18n, :langs => ["en-#{locale_name}"]
+# Activate Middleman Extensions
 activate :syntax, :line_numbers => true
-
-# This section generates the pattern-library based on data/patterns.json
-patterns_prefix = 'page_patterns_'
-patterns_section_class = 'patterns'
-
-# data.patterns.each do |pattern|
-# 	proxy "/patterns/#{pattern[:page_name]}",
-# 	"patterns/template.html",
-# 	:locals => {
-# 		:examples => pattern[:examples],
-# 		:page_name => pattern[:page_name],
-# 		:page_title => pattern[:page_title],
-# 		:page_classes => patterns_prefix + pattern[:page_name],
-# 		:section_class => patterns_section_class,
-# 		:page_description => pattern[:page_description]
-# 	},
-# 	:ignore => true
-# end
-
+activate :es6
 activate :directory_indexes
 activate :automatic_alt_tags
-
-activate :autoprefixer do |config|
-  config.browsers = ['last 2 versions', 'Explorer >= 9']
-  config.cascade  = false
+activate :autoprefixer do |autoprefixer_config|
+  autoprefixer_config.browsers = [
+    'last 5 versions',
+    'Explorer >= 9'
+  ]
+  autoprefixer_config.cascade  = false
 end
 
-# Contentful configuration
-SPACE_ID = 'kw7pc879iryd'
-MASTER_ACCESS_TOKEN  = ENV['CONTENTFUL_MASTER_TOKEN']
-PREVIEW_ACCESS_TOKEN = ENV['CONTENTFUL_PREVIEW_TOKEN']
+# --START Contentful Setup
+space = ContentfulConfig::HelpSpace
+use_preview_api = config[:env_name] != 'production'
+contentful_access_token = (use_preview_api) && space::PREVIEW_ACCESS_TOKEN || space::ACCESS_TOKEN
 
-contentful_access_token = if env_name == 'production'
-  MASTER_ACCESS_TOKEN
-else
-  PREVIEW_ACCESS_TOKEN
-end
-
-if !contentful_access_token
-  raise "Missing the #{env_name} contentful access token environment variable."
-end
-
-use_contentful_preview_mode = env_name != 'production' # show draft articles only for development/staging
-
-puts "Preview mode?: #{use_contentful_preview_mode}"
-
-class PostMapper < ContentfulMiddleman::Mapper::Base
-  def map(context, entry)
-    super
-    context.last_updated = entry.sys[:updatedAt].strftime("%B %-d, %Y")
-  end
-end
-
-# Load help pages from contentful
-# find them in data.help_pages.page[page_id]
+# This pulls the data from contentful and puts it into data[space::NAME][plural_name]
 activate :contentful do |f|
-  f.space = { help_pages: SPACE_ID }
-  f.use_preview_api = use_contentful_preview_mode
-  f.access_token = contentful_access_token
-  f.cda_query     = { content_type: 'post', locale: '*' }
-  f.content_types = { page: { mapper: PostMapper, id: 'post' } }
-  f.all_entries = true
-end
+  f.use_preview_api   = use_preview_api # whether or not to use the drafts + published api
+  f.access_token      = contentful_access_token # which token to use, only one has access to drafts –– redundant
 
-# Load help categories from contentful
-# find them in data.help_categories.category[category_id]
-activate :contentful do |f|
-  f.space = { help_categories: SPACE_ID }
-  f.use_preview_api = use_contentful_preview_mode
-  f.access_token = contentful_access_token
-  f.cda_query     = { content_type: 'category', locale: '*' }
-  f.content_types = { category: 'category' }
-  f.all_entries = true
-end
+  f.space             = { space::NAME => space::SPACE_ID }
+  f.cda_query         = space::CDA_QUERY
+  f.all_entries       = space::ALL_ENTRIES
 
-# dynamic help pages
-if data.respond_to?(:help_pages)
-  data&.help_pages&.page.each do |page|
-    data.locale_urls.each do |locale|
-      if page.last["content"] && !page.last["content"].blank? &&
-         page.last["meta_description"] && !page.last["meta_description"].blank? &&
-         (page.last["content"][alternative_locale(locale)] || (!page.last["content"][alternative_locale(locale)] && page.last["content"]["en"]))
-        proxy "#{locale.path}/#{ConfigHelper.help_page_url_slug(page.last)}.html", "content_template.html", locals: {page: page}, ignore: true
-      end
+  # This maps the content types; takes ['schema', 'array']; returns { 'schemas' => 'schema', 'arrays' => 'array' }
+  f.content_types     = space::SCHEMAS.reduce(Hash.new(0)) { |memo, schema|
+    mapper = ::DefaultMapper
+
+    if schema.is_a?(Array)
+      mapper = schema[1]
+      schema = schema[0]
     end
-  end
+
+    memo[schema.pluralize(2)] = { id: schema, mapper: mapper }
+    memo # return
+  }
 end
 
-# dynamic pages see data/locale_pages.yml
-data.locale_pages.each do |locale|
-  config[:country_id] = locale[:id]
-  config[:locale_obj] = locale
-  locale.pages.each do |page|
-    if page[:page] == 'index'
-      if locale.id == 'usa'
-        proxy "/index.html", "page-index.html", :locals => { locale_obj: locale }, ignore: true
-      else
-        proxy "/#{locale.id}/index.html", "/page-index.html", :locals => { locale_obj: locale }, ignore: true
-      end
-    else
-      if locale.id == 'usa'
-        proxy "/#{page[:page]}/index.html", "page-#{page[:page]}.html", :locals => { locale_obj: locale }, ignore: true
-      else
-        proxy "/#{locale.id}/#{page[:page]}/index.html", "/page-#{page[:page]}.html", :locals => { locale_obj: locale }, ignore: true
-      end
-    end
-  end
-end
+# --END Contentful Setup
 
-activate :sprockets
-
-# Build-specific configuration
-configure :build do
-  activate :remover, :paths => %w(page-index patterns)
-  activate :gzip do |gzip|
-    gzip.exts = %w(.js .css .html .htm .svg .txt .ico)
-  end
-
-  # change the Compass output style for deployment
-  activate :minify_css
-
-  # Minify Javascript on build
-  activate :minify_javascript
-  set :js_compressor, Uglifier.new()
-
-  # Enable cache buster
-  activate :asset_hash, :ignore => [/touch-icon/, /opengraph/]
-
-  activate :minify_html do |html|
-    html.remove_http_protocol    = false
-    html.remove_input_attributes = false
-    html.remove_quotes           = true
-    html.remove_intertag_spaces  = true
-  end
-end
-
-after_build do
-  # now that the build is done, create any 301 redirects needed
-  puts "Environment: #{env_name} and Travis-PR: #{ENV['TRAVIS_PULL_REQUEST']}"
-  if ['staging', 'production'].include?(env_name) && ENV['TRAVIS_PULL_REQUEST'] == "false"
-    puts "after_build: updating 301 redirects"
-    S3RedirectsHelper::make_s3_redirects
-  else
-    puts "after_build: skipping 301 redirect update"
-  end
-end
+# Custom Middleman Extensions
+activate :init_s3
+activate :routing
 
 if ApplicationConfig.const_defined?(:S3) && ['staging', 'production'].include?(env_name)
   activate :s3_sync do |s3_sync|
-    s3_sync.bucket                     = ApplicationConfig::S3::BUCKET
-    s3_sync.region                     = 'us-east-1' # AWS region for your bucket.
+    s3_sync.bucket                     = ApplicationConfig::S3::BUCKET # The name of the S3 bucket you are targeting. This is globally unique.
+    s3_sync.region                     = 'us-east-1'     # The AWS region for your bucket.
     s3_sync.aws_access_key_id          = ApplicationConfig::S3::ACCESS_ID
     s3_sync.aws_secret_access_key      = ApplicationConfig::S3::SECRET_KEY
+
     s3_sync.delete                     = false
     s3_sync.after_build                = false # We do not chain after the build step by default.
     s3_sync.prefer_gzip                = true
@@ -331,6 +115,43 @@ if ApplicationConfig.const_defined?(:S3) && ['staging', 'production'].include?(e
   caching_policy 'text/html',               max_age: (60 * 15), public: true
   caching_policy 'application/xml',         max_age: (60 * 15), public: true
   caching_policy 'image/svg',               max_age: (60 * 15), public: true
-  caching_policy 'application/json',        max_age: (60 * 15), public: true
+  caching_policy 'application/json',        max_age: (60 * 15), public: true # for contents.json
   caching_policy 'application/javascript',  max_age: (60 * 15), public: true
+
+  activate :cloudfront do |cf|
+    cf.access_key_id = ApplicationConfig::S3::ACCESS_ID
+    cf.secret_access_key = ApplicationConfig::S3::SECRET_KEY
+    cf.distribution_id = ApplicationConfig::S3::CLOUDFRONT_DIST_ID
+    cf.filter = /\.html$/i
+  end
+end
+
+# Activate Custom Middleman Helpers
+helpers MiddlemanHelpers # includes every helper in helpers/middleman/*
+
+# Build-specific configuration
+configure :build do
+  activate :gzip do |gzip|
+    gzip.exts = %w(.js .css .html .htm .svg .txt .ico)
+  end
+
+  remove_paths = ['.DS_Store']
+  activate :remover, :paths => remove_paths
+
+  # For example, change the Compass output style for deployment
+  activate :minify_css
+
+  # Minify Javascript on build
+  activate :minify_javascript
+  config[:js_compressor] = Uglifier.new()
+
+  # Enable cache buster
+  activate :asset_hash, :ignore => [/touch-icon/, /opengraph/]
+
+  activate :minify_html do |html|
+    html.remove_http_protocol    = false
+    html.remove_input_attributes = false
+    html.remove_quotes           = true
+    html.remove_intertag_spaces  = true
+  end
 end
