@@ -8,13 +8,13 @@ module ConfigHelper
     current_page.split('/').last.gsub('.html','')
   end
 
-  def self.help_post_url_slug(page)
-    return page&.url_slug.en.sub(%r{^/}, "").sub(%r{/$}, "") if page&.url_slug&.en
+  def self.help_page_url_slug(page)
+    return page.url_slug.sub(%r{^/}, "").sub(%r{/$}, "") if page&.url_slug
     slugify page.title.en
   end
 
   def self.help_category_url_slug(category)
-    slugify category.name.en
+    slugify category[:name]
   end
 
   def self.slugify(page_name)

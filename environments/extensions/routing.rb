@@ -26,17 +26,17 @@ module Middleman
       app.page '/*.txt', layout: false
     end
 
-    def proxy_help_posts()
+    def proxy_help_pages()
       app.data.locales.each do |locale_obj|
-        collection = app.data.help.posts.each
+        collection = app.data.help.pages.each
         collection = collection.map{ |tuple| localize_entry(tuple[1], locale_obj[:lang], default_locale_obj[:lang]) }
-        collection = collection.select{ |post| post[:content] }
+        collection = collection.select{ |page| page[:content] }
 
-        collection.each do |post|
+        collection.each do |page|
           app.proxy(
-            path_for_proxy(ConfigHelper.help_post_url_slug(post), locale_obj[:id]),
-            "help-post.html",
-            locals: { locale_obj: locale_obj, post: post },
+            path_for_proxy(ConfigHelper.help_page_url_slug(page), locale_obj[:id]),
+            "help-page.html",
+            locals: { locale_obj: locale_obj, page: page },
             ignore: true
           )
         end

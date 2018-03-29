@@ -1,4 +1,4 @@
-require 'mappers/help/post'
+require 'mappers/help/page'
 
 # Schema defines mapping.
 # A schema can be either a string 'author' or an array ['author', AuthorMapper].
@@ -15,7 +15,7 @@ module ContentfulConfig
 		ALL_ENTRIES = true
 
 		SCHEMAS = [
-			[ 'post', ::HelpPostMapper ],
+			[ 'page', ::HelpPageMapper ],
 			'category'
 		]
 	end

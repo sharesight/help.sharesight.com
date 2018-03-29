@@ -1,6 +1,6 @@
 # This normalizes the data coming from contentful, so a user enters ' Great   Title!' and it becomes 'Great Title!'
 # Adds url slugs.
-class HelpPostMapper < ContentfulMiddleman::Mapper::Base
+class HelpPageMapper < ContentfulMiddleman::Mapper::Base
   def map(context, entry)
     super
     keys = entry.fields_with_locales.keys

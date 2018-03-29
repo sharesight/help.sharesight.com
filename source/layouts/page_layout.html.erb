@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<% # this is assigned by default, but this makes it more clear
+  page = current_page.metadata[:locals][:page]
+%>
+
+<html lang="<%= current_locale_obj[:lang] || 'en' %>" class="no-js">
+  <!-- page_layout -->
+  <%= partial "layouts/partials/head", locals: locals.merge({
+    og_type: 'article',
+    title: page&.title && "#{page&.title} | #{current_locale_obj[:append_title]}",
+    description: page&.meta_description,
+    social_title: page&.title && "#{page&.title} | #{current_locale_obj[:append_title]}",
+    social_description: page&.meta_description,
+    social_image: page&.featured_image&.url
+  }) %>
+
+  <% partial "layouts/partials/body", locals: locals.merge({}) do %>
+    <%= yield %>
+  <% end %>
+</html>
