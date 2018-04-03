@@ -10,7 +10,6 @@ gem 'middleman-minify-html'
 gem 'middleman-sprockets'
 gem "middleman-es6", git: "https://github.com/vast/middleman-es6"
 gem 'uglifier'
-gem 'jquery-middleman'
 gem "contentful_middleman", '~> 2.1.2'
 gem 'middleman-pagination'
 gem 'middleman-syntax'
