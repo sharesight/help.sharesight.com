@@ -15,7 +15,7 @@ module ContentfulConfig
 		ALL_ENTRIES = true
 
 		SCHEMAS = [
-			[ 'page', ::HelpPageMapper ],
+			{ name: 'page', contentful_schema_id: 'post', mapper: ::HelpPageMapper },
 			'category'
 		]
 	end

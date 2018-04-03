@@ -25,7 +25,9 @@
 # Ignore gems installed in local directory
 /vendor/bundle/
 
-.help_categories-space-hash
-.help_pages-space-hash
+.*-space-hash
+
+data/help/
+# old contentful directories
 data/help_categories/
 data/help_pages/
