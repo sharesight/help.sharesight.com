@@ -1,15 +1,19 @@
 # robotstxt.org/
-<% if env_name == 'staging' %>
+<% if config[:env_name] == 'staging' %>
 User-agent: Twitterbot
 Disallow:
 Allow: /
 <% end %>
 
 User-agent: *
-<% if env_name == 'staging' || env_name == 'development' %>
+<% if config[:env_name] == 'staging' || config[:env_name] == 'development' %>
 Disallow: /
-<% else %>
-Disallow:
+<% end %>
+
+<% data.locales.each do |locale| %>
+  <% locale.pages.select{ |locale_page| locale_page[:show_in_sitemap] == false }.each do |locale_page| %>
+Disallow: <%= localize_path(locale_page[:page], locale_id: locale[:id]) %>
+  <% end %>
 <% end %>
 
 Sitemap: <%= base_url('/sitemapindex.xml') %>
