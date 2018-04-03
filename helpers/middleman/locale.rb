@@ -22,6 +22,11 @@ module MiddlemanLocaleHelpers
     return get_locale_obj(current_locale_id)
   end
 
+  def locale_obj
+    # using rescue as there's no `dig` method on current_page.
+    current_page.metadata[:options][:locals][:locale_obj] || current_locale_obj rescue current_locale_obj
+  end
+
   def is_current_locale_id?(locale_id)
     locale_id = locale_id&.downcase
     return current_locale_id == locale_id
@@ -30,9 +35,9 @@ module MiddlemanLocaleHelpers
   def get_locale_obj(locale_id = current_locale_id )
     locale_id = locale_id&.downcase
 
-    locale_obj = data.locales.find { |x| x[:id] == locale_id }
-    raise Exception.new("Missing locale data for #{locale_id}.") if locale_obj.nil? || locale_obj[:id].nil?
-    return locale_obj || {} # default to an empty hash
+    obj = data.locales.find { |x| x[:id] == locale_id }
+    raise Exception.new("Missing locale data for #{locale_id}.") if obj.nil? || obj[:id].nil?
+    return obj || {} # default to an empty hash
   end
 
   def is_valid_locale_id?(locale_id)
@@ -40,7 +45,7 @@ module MiddlemanLocaleHelpers
     return !!data.locales.find { |x| x[:id] == locale_id }
   end
 
-  def locale_cert_type(locale_obj = current_locale_obj)
-    get_locale_obj(locale_obj[:id])&.cert_type&.to_s || 'stock'
+  def locale_cert_type(obj = current_locale_obj)
+    get_locale_obj(obj[:id])&.cert_type&.to_s || 'stock'
   end
 end
