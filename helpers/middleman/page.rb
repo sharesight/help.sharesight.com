@@ -117,4 +117,18 @@ module MiddlemanPageHelpers
     locales = page_alternative_locales(page[:page]) rescue false
     return locales.length == 1 && locales[0][:id] == default_locale_id rescue false
   end
+
+  def generate_social_title(title)
+    return nil if !title
+    global = " | #{config[:site_name]}"
+
+    data.locales.each do |locale|
+      localized = " | #{locale[:append_title]}"
+      if title.include?(localized) && localized != global
+        title = title.sub(localized, global)
+      end
+    end
+
+    return title
+  end
 end
