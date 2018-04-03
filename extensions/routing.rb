@@ -5,71 +5,60 @@ module Middleman
     end
 
     def after_configuration
-      route()
-      proxy_pages()
-      sitemaps()
+      generic_file_extensions()
+
+      app.data.locales.each do |locale|
+        app.config[:locale_obj] = locale
+
+        contents(locale)
+        proxy_help_pages(locale)
+        proxy_pages(locale)
+        sitemaps(locale)
+      end
     end
 
     private
 
-    def sitemaps()
-      app.data.locales.each do |locale|
-        app.config[:locale_obj] = locale
-        app.proxy "/#{locale[:id]}/sitemap.xml", "sitemap.xml", :locals => { locale_obj: locale }, ignore: false
-      end
-    end
-
-    def route()
+    def generic_file_extensions()
       # Routing Overrides
-      app.page '/*.xml', layout: false
-      app.page '/*.json', layout: false
-      app.page '/*.txt', layout: false
+      app.page '/*.xml', :locals => { locale_obj: app.default_locale_obj }, layout: false
+      app.page '/*.json', :locals => { locale_obj: app.default_locale_obj }, layout: false
+      app.page '/*.txt', :locals => { locale_obj: app.default_locale_obj }, layout: false
+    end
 
+    def sitemaps(locale)
+      app.proxy path_for_proxy('sitemap.xml', locale[:id]), "sitemap.xml", :locals => { locale_obj: locale }, layout: false, ignore: true
+    end
+
+    def contents(locale)
       # Expose contents.json in all locales
-      app.data.locales.each do |locale|
-        app.config[:locale_obj] = locale
-        app.proxy "/#{locale[:id]}/contents.json", "contents.json", :locals => { locale_obj: locale }, ignore: false, layout: false
+      app.proxy path_for_proxy('contents.json', locale[:id]), "contents.json", :locals => { locale_obj: locale }, layout: false, ignore: true
+    end
+
+    def proxy_help_pages(locale)
+      collection = app.page_collection(locale[:lang])
+
+      collection.each do |page|
+        app.proxy(
+          path_for_proxy(ConfigHelper.help_page_url_slug(page), locale[:id]),
+          "help-page.html",
+          locals: { locale_obj: locale, page: page },
+          ignore: true
+        )
       end
     end
 
-    def proxy_help_pages()
-      app.data.locales.each do |locale_obj|
-        collection = app.data.help.pages.each
-        collection = collection.map{ |tuple| localize_entry(tuple[1], locale_obj[:lang], default_locale_obj[:lang]) }
-        collection = collection.select{ |page| page[:content] }
-
-        collection.each do |page|
-          app.proxy(
-            path_for_proxy(ConfigHelper.help_page_url_slug(page), locale_obj[:id]),
-            "help-page.html",
-            locals: { locale_obj: locale_obj, page: page },
-            ignore: true
-          )
-        end
-      end
-    end
-
-    def proxy_pages()
+    def proxy_pages(locale)
       # pages from data/locales.json
-      app.data.locales.each do |locale|
-        app.config[:locale_obj] = locale
-        locale.pages.select{ |page| page.proxy.nil? || page.proxy == true }.each do |page|
-          path = ''
-          path += "/#{locale.id}" if locale.id != app.default_locale_id
-          path += "/#{page[:page]}" if page[:page] != 'index'
-          path += '/index.html'
-
-          app.proxy path, "page-#{page[:page]}.html", :locals => { locale_obj: locale }, ignore: true
-        end
+      locale.pages.select{ |page| page.proxy.nil? || page.proxy == true }.each do |page|
+        app.proxy path_for_proxy(page[:page], locale[:id]), "page-#{page[:page]}.html", :locals => { locale_obj: locale }, ignore: true
       end
     end
-
-    private
 
     def path_for_proxy(slug, locale_id)
       base = (locale_id != app.default_locale_id) ? "#{locale_id}/" : ''
 
-      newPath = "#{base}/#{path}"
+      newPath = "#{base}/#{slug}"
 
       newPath += '.html'
       newPath = newPath.squeeze('/')
