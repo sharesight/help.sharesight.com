@@ -14,13 +14,13 @@ module MiddlemanCollectionHelpers
     collection = data.help.pages
       .map{ |tuple| tuple[1] }
       .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
-      .select{ |model| is_valid_page?(model) }
+      .select{ |model| is_valid_page_model?(model) }
       .sort{ |a, b| sort_pages(a, b) }
 
     if with_associations
       collection = collection.map do |page|
-        category.child_pages = page_ccollection(lang, with_associations: false)
-          .select{ |child_page| child_page[:parent_page][:id] == page[:id] }
+        page[:child_pages] = page_collection(lang, with_associations: false)
+          .select{ |child_page| child_page[:parent_page] && child_page[:parent_page][:id] == page[:id] }
           .sort{ |a, b| sort_pages(a, b) }
 
         page
@@ -34,19 +34,19 @@ module MiddlemanCollectionHelpers
     collection = data.help.categories
       .map{ |tuple| tuple[1] }
       .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
-      .select{ |model| is_valid_category?(model) }
+      .select{ |model| is_valid_category_model?(model) }
       .sort{ |a, b| sort_categories(a, b) }
 
     if with_associations
       collection = collection.map do |category|
         category[:pages] = page_collection(lang, with_associations: true)
-          .select{ |page| page[:category][:id] == category[:id] }
+          .select{ |page| page[:category] && page[:category][:id] == category[:id] }
           .sort{ |a, b| sort_pages(a, b) }
 
         category
       end
 
-      # require associations (pages) to exist
+      # Filter out categories without pages if with_associations = true
       collection = collection.select{ |model| model[:pages].length }
     end
 
@@ -55,13 +55,13 @@ module MiddlemanCollectionHelpers
 
   private
 
-  def is_valid_page?(model)
+  def is_valid_page_model?(model)
     return !!(
-      model && !model[:name].blank? && !model[:url_slug].blank?
+      model && !model[:title].blank? && !model[:url_slug].blank?
     ) rescue false
   end
 
-  def is_valid_category?(model)
+  def is_valid_category_model?(model)
     return !!(
       model && !model[:name].blank?
     ) rescue false
