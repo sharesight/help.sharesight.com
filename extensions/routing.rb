@@ -24,6 +24,12 @@ module Middleman
       app.page '/*.xml', layout: false
       app.page '/*.json', layout: false
       app.page '/*.txt', layout: false
+
+      # Expose contents.json in all locales
+      app.data.locales.each do |locale|
+        app.config[:locale_obj] = locale
+        app.proxy "/#{locale[:id]}/contents.json", "contents.json", :locals => { locale_obj: locale }, ignore: false, layout: false
+      end
     end
 
     def proxy_help_pages()

@@ -13,11 +13,11 @@
       entries << {
         id:                    page[:id],
         title:                 page[:title],
-        page_slug:             ConfigHelper.help_page_url_slug(page),
+        page_slug:             localize_path(ConfigHelper.help_page_url_slug(page), locale_id: locale_obj[:id]),
         page_meta_description: page[:meta_description],
 
         # reduce the amount of data downloaded in browsers
-        content:               SearchHelper::condense_content(page.content.to_s.gsub(%r{[\[\]#\*<>\/]}, ' ')),
+        content:               SearchHelper::condense_content(page[:content].to_s.gsub(%r{[\[\]#\*<>\/]}, ' ')),
 
         # get all locales this is written in, eg. page.content.en = '…'
         # this is more of a "primary-locales" as it should be available in all locales
