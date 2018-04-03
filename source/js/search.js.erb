@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  var locales = <%= data.locale_urls.map {|a| a[:id] } %>;
+  var locales = <%= data.locales.map { |a| a[:id] } %>;
   $.getJSON('/contents.json', function(data){
     var index = populateIndex(data);
     var contents = contentList(data);
@@ -13,7 +13,7 @@ $(document).ready(function(){
         this.field('content', {boost: 50});
         this.field('url', {index: false, store: true});
         for(var i = 0; i < locales.length; i++){
-          if(i.id == 'GLOBAL') {
+          if(i.id === 'global') {
             this.field('en', {boost: 50});
           } else {
             this.field('en-'+i.id, {boost: 50});
