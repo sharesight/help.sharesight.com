@@ -45,6 +45,9 @@ module MiddlemanCollectionHelpers
 
         category
       end
+
+      # require associations (pages) to exist
+      collection = collection.select{ |model| model[:pages].length }
     end
 
     collection
