@@ -2,12 +2,33 @@ require 'ostruct'
 load File::expand_path('../config_helper.rb', __dir__)
 
 module MiddlemanCollectionHelpers
-  def page_url(page, locale_id: default_locale_id)
-    return localize_url(ConfigHelper::help_page_url_slug(page), locale_id: locale_id)
+  def page_url(page, locale_id: default_locale_id, base_url: config[:base_url])
+    path = if page[:url_slug]
+      page[:url_slug].sub(%r{^/}, "").sub(%r{/$}, "")
+    else
+      page[:title].to_s.strip.downcase.urlize.gsub('--', '-')
+    end
+
+    localize_url(path, locale_id: locale_id, base_url: base_url)
   end
 
-  def category_url(category, locale_id: default_locale_id)
-    return localize_url(ConfigHelper::help_category_url_slug(category), locale_id: locale_id)
+  def page_path(page, locale_id: default_locale_id)
+    page_url(category, locale_id: locale_id, base_url: '')
+  end
+
+  def category_url(category, locale_id: default_locale_id, base_url: config[:base_url])
+    return page_url(category[:pages].first, locale_id: locale_id, base_url: base_url) if category[:pages].length
+
+    pages = page_collection(lang, with_associations: false)
+      .select{ |page| page[:category] && page[:category][:id] == category[:id] }
+      .sort{ |a, b| sort_pages(a, b) }
+
+    page_url(pages.first, locale_id: locale_id, base_url: base_url) if pages.length
+    raise "No valid URL found for #{category[:id]} – ensure this category has associated pages."
+  end
+
+  def category_path(category, locale_id: default_locale_id)
+    category_url(category, locale_id: locale_id, base_url: '')
   end
 
   def page_collection(lang = default_locale_obj[:lang], with_associations: false)
