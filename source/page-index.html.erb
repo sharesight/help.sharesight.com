@@ -10,15 +10,18 @@ page_description: 'Help pages for Sharesight'
   <div class="tiles-wrapper">
     <div class="container">
       <!-- TODO, unify this -->
-      <% data.help_categories.category.each_slice(3) do |tiles| %>
+      <% categories_collection(locale_obj[:lang], with_associations: true).each_slice(3) do |groups| %>
         <div class="tiles">
-          <% tiles.each do |key, tile| %>
-            <% next if tile.nil? %>
-            <% default_page = CategoryHelper::pages_in_category(data, tile).first %>
-            <% next if default_page.nil? %>
-            <a href="<%= localize_url(default_page[:page_url], locale_id: locale_obj[:id]) %>" class="tile">
-              <h2><%= tile[:name] %></h2>
-              <p><%= tile[:description] %></p>
+          <!-- <%= groups.inspect %> -->
+
+          <% groups.each do |category| %>
+            <!-- <%= category.inspect %> -->
+            <% next if category.nil? || category[:pages].nil? || category[:pages].blank? %>
+
+            <% first_page = category[:pages].first %>
+            <a href="<%= localize_url(first_page[:url_slug], locale_id: locale_obj[:id]) %>" title="<%= category[:name] %>" class="tile">
+              <h2><%= category[:name] %></h2>
+              <p><%= category[:description] %></p>
             </a>
           <% end %>
         </div>
