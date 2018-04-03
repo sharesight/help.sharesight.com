@@ -10,7 +10,7 @@
             <option label="Region: <%= locale.name.upcase %>" value="<%= locale.id %>" <% if locale_obj[:id] == locale.id %>selected<% end %>>
               Region: <%=locale.name.upcase%>
             </option>
-          <%end%>
+          <% end %>
           <option value='-' disabled>――――</option>
           <option label="Region: <%= default_locale_obj.name.upcase %>" value="<%= default_locale_obj.id %>" <% if locale_obj[:id] == default_locale_obj.id %>selected<% end %>>
             Region: <%= default_locale_obj.name.upcase %>
@@ -24,14 +24,12 @@
       </div>
 
       <section class="images_app_logos">
-          <a href="<%= config[:google_store_url] %>" title="<%= locale_obj[:footer_android_alt] %>">
-            <img src="<%= image_path('icons/google-play-badge.svg') %>" alt="<%= locale_obj[:footer_android_alt] %>">
-          </a>
-          <a href="<%= config[:ios_store_url] %>" title="<%= locale_obj[:footer_ios_alt] %>">
-            <img src="<%= image_path('icons/download-on-the-app-store-apple.svg') %>" alt="<%= locale_obj[:footer_ios_alt] %>">
-          </a>
-        <%end%>
-
+        <a href="<%= config[:google_store_url] %>" title="<%= locale_obj[:footer_android_alt] %>">
+          <img src="<%= image_path('icons/google-play-badge.svg') %>" alt="<%= locale_obj[:footer_android_alt] %>">
+        </a>
+        <a href="<%= config[:ios_store_url] %>" title="<%= locale_obj[:footer_ios_alt] %>">
+          <img src="<%= image_path('icons/download-on-the-app-store-apple.svg') %>" alt="<%= locale_obj[:footer_ios_alt] %>">
+        </a>
       </section>
 
       <div class="icons">
