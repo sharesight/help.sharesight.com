@@ -1,4 +1,5 @@
 <%
+  locale_obj = locals[:locale_obj] || current_locale_obj
   entries = []
 
   page_collection(locale_obj[:lang]).each do |page|

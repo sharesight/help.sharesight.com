@@ -8,8 +8,6 @@ module Middleman
       generic_file_extensions()
 
       app.data.locales.each do |locale|
-        app.config[:locale_obj] = locale
-
         contents(locale)
         proxy_help_pages(locale)
         proxy_pages(locale)
@@ -27,12 +25,11 @@ module Middleman
     end
 
     def sitemaps(locale)
-      app.proxy path_for_proxy('sitemap.xml', locale[:id]), "sitemap.xml", :locals => { locale_obj: locale }, layout: false, ignore: true
+      localize_static_file('sitemap.xml', locale)
     end
 
     def contents(locale)
-      # Expose contents.json in all locales
-      app.proxy path_for_proxy('contents.json', locale[:id]), "contents.json", :locals => { locale_obj: locale }, layout: false, ignore: true
+      localize_static_file('contents.json', locale)
     end
 
     def proxy_help_pages(locale)
@@ -55,14 +52,20 @@ module Middleman
       end
     end
 
-    def path_for_proxy(slug, locale_id)
-      base = (locale_id != app.default_locale_id) ? "#{locale_id}/" : ''
+    def path_for_proxy(slug, locale_id, is_html = true)
+      base = (locale_id != app.default_locale_id) ? "#{locale_id}" : ''
 
       newPath = "#{base}/#{slug}"
-
-      newPath += '.html'
+      newPath += '.html' if is_html
       newPath = newPath.squeeze('/')
       return newPath
+    end
+
+    def localize_static_file(filename, locale)
+      # We cannot proxy sitemap.xml to itself, but we still want the locale_obj, so we use app.page
+      if locale[:id] != app.default_locale_id
+        app.proxy path_for_proxy(filename, locale[:id], false), filename, :locals => { locale_obj: locale }, layout: false, ignore: false
+      end
     end
   end
 end
