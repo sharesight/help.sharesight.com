@@ -1,7 +1,7 @@
 <%
   entries = []
 
-  page_collection(locale_obj[:lang]) do |page|
+  page_collection(locale_obj[:lang]).each do |page|
     if (
       page &&
       page[:category] &&
@@ -10,23 +10,19 @@
       page[:content] && # has content (en, or otherwise)
       ConfigHelper.help_page_url_slug(page) # has a url
     )
-      raw_page = data.help.pages.find{ |id, _page| _page[:id] == page[:id] }
-
       entries << {
-        :id                     => page[:id],
-        :title                  => page[:title],
-        :page_slug              => ConfigHelper.help_page_url_slug(page),
-        :page_meta_description  => page[:meta_description],
+        id:                    page[:id],
+        title:                 page[:title],
+        page_slug:             ConfigHelper.help_page_url_slug(page),
+        page_meta_description: page[:meta_description],
 
         # reduce the amount of data downloaded in browsers
-        :content                => SearchHelper::condense_content(page.content.to_s.gsub(%r{[\[\]#\*<>\/]}, ' '))
+        content:               SearchHelper::condense_content(page.content.to_s.gsub(%r{[\[\]#\*<>\/]}, ' ')),
 
         # get all locales this is written in, eg. page.content.en = '…'
         # this is more of a "primary-locales" as it should be available in all locales
-        :page_locales           => raw_page[:content][:keys],
+        page_locales:          page[:content_locales]
       }
     end
   end
-%>
-
-<%= entries.to_json %>
+%><%= entries.to_json %>

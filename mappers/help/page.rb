@@ -4,7 +4,9 @@ class HelpPageMapper < ContentfulMiddleman::Mapper::Base
   def map(context, entry)
     super
 
-    # does nothing
+    # Adds a "content available in locales" field to the page; NOTE: 'en' is available in all locales.
+    context.content_locales = context&.content&.keys
+    context.content_locales = ['en'] if context.content_locales.blank?
 
     return context
   end
