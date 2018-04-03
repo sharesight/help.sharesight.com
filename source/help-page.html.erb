@@ -6,8 +6,6 @@ layout: 'page_layout'
 <% my_locale = url[1] %>
 <% category_id ||= nil %>
 <% fetch_locale = current_page.url.split('/')%>
-<%= partial "partials/header" %>
-<%= partial "partials/search" %>
 
 <div class="container reveal">
   <%= partial "partials/left_menu", locals: { category_id: page.last.category&.en&.sys&.id } %>
@@ -68,7 +66,4 @@ layout: 'page_layout'
       </script>
     </article>
   </div>
-
 </div>
-
-<%= partial "partials/footer" %>

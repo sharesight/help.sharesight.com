@@ -1,7 +1,7 @@
 <%
   # NOTE: Body must have a yield.  It will not function without.
   locale_obj = locals[:locale_obj] || current_locale_obj
-  header = locals[:header]
+  header = locals[:header] || 'partials/header'
 
   page_classes = locals[:page_classes] || current_page.data.page_classes
   section_class = locals[:section_class] || current_page.data.section_class
@@ -21,12 +21,13 @@
 
   <% if header %>
     <%= partial header, locals: locals.merge({ locale_obj: locale_obj }) %>
+    <%= partial "partials/search" %>
   <% end %>
 
   <main role="main" id="main-area" aria-label="Start on main content">
     <%= yield %>
 
-    <%= partial "partials/site_footer", locals: locals.merge({ locale_obj: locale_obj }) %>
+    <%= partial "partials/footer", locals: locals.merge({ locale_obj: locale_obj }) %>
   </main>
 
   <% if content_for?(:javascript) %>
