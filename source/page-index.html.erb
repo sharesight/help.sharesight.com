@@ -9,13 +9,10 @@ page_description: 'Help pages for Sharesight'
   </div>
   <div class="tiles-wrapper">
     <div class="container">
-      <!-- TODO, unify this -->
+      <!-- NOTE: Very similar logic exists elsewhere -->
       <% categories_collection(locale_obj[:lang], with_associations: true).each_slice(3) do |groups| %>
         <div class="tiles">
-          <!-- <%= groups.inspect %> -->
-
           <% groups.each do |category| %>
-            <!-- <%= category.inspect %> -->
             <% next if category.nil? || category[:pages].nil? || category[:pages].blank? %>
 
             <% first_page = category[:pages].first %>
