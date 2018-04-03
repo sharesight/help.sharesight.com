@@ -39,7 +39,7 @@ module MiddlemanCollectionHelpers
 
     if with_associations
       collection = collection.map do |category|
-        category.pages = page_collection(lang, with_associations: true)
+        category[:pages] = page_collection(lang, with_associations: true)
           .select{ |page| page[:category][:id] == category[:id] }
           .sort{ |a, b| sort_pages(a, b) }
 
@@ -60,7 +60,7 @@ module MiddlemanCollectionHelpers
 
   def is_valid_category?(model)
     return !!(
-      model && !model[:name].blank? && !model[:url_slug].blank?
+      model && !model[:name].blank?
     ) rescue false
   end
 
