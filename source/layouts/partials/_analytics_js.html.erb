@@ -21,3 +21,7 @@
     })(window,document,'script','dataLayer','<%= ApplicationConfig::GoogleAnalytics::TAG_MANAGER_CONTAINER %>');
   </script>
 <% end %>
+
+<% if ApplicationConfig.const_defined?(:Optimizely) && ApplicationConfig::Optimizely::ID %>
+  <script src="https://cdn.optimizely.com/js/<%= ApplicationConfig::Optimizely::ID %>.js" async></script>
+<% end %>

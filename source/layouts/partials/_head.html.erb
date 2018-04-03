@@ -34,8 +34,4 @@
 
   <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
   <%= stylesheet_link_tag "all.css" %>
-
-  <% if ApplicationConfig.const_defined?(:Optimizely) && ApplicationConfig::Optimizely::ID %>
-    <script src="https://cdn.optimizely.com/js/<%= ApplicationConfig::Optimizely::ID %>.js" async></script>
-  <% end %>
 </head>
