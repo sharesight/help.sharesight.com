@@ -29,7 +29,7 @@ layout: 'page_layout'
     <label for="page_navigation" class="selector">
       <select id="page_navigation" name="page_navigation">
         <!-- NOTE: Very similar logic exists elsewhere -->
-        <% categories_collection(locale_obj[:lang], with_associations: true).each do |category| %>
+        <% categories_collection(locale_obj[:lang]).each do |category| %>
           <optgroup label="<%= category[:name] %>">
             <% category[:pages].each do |cat_page| %>
               <option value="<%= page_url(cat_page, locale_id: locale_obj[:id]) %>" <% if cat_page[:id] == page[:id] %>selected<% end %>>

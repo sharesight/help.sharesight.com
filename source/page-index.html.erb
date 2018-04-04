@@ -10,7 +10,7 @@ page_description: 'Help pages for Sharesight'
   <div class="tiles-wrapper">
     <div class="container">
       <!-- NOTE: Very similar logic exists elsewhere -->
-      <% categories_collection(locale_obj[:lang], with_associations: true).each_slice(3) do |groups| %>
+      <% categories_collection(locale_obj[:lang]).each_slice(3) do |groups| %>
         <div class="tiles">
           <% groups.each do |category| %>
             <a href="<%= category_url(category, locale_id: locale_obj[:id]) %>" title="<%= category[:name] %>" class="tile">

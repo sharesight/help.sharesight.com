@@ -18,11 +18,11 @@ module MiddlemanCollectionHelpers
   def category_url(category, locale_id: default_locale_id, base_url: config[:base_url])
     return page_url(category[:pages].first, locale_id: locale_id, base_url: base_url) if !category[:pages].blank?
 
-    pages = pages_collection(get_locale_obj(locale_id)[:lang], with_associations: false)
+    pages = pages_collection(get_locale_obj(locale_id)[:lang])
       .select{ |page| page[:category] && page[:category][:id] == category[:id] }
       .sort{ |a, b| sort_pages(a, b) }
 
-    return page_url(pages.first, locale_id: locale_id, base_url: base_url) if pages.length
+    return page_url(pages.first, locale_id: locale_id, base_url: base_url) if pages&.first
     raise "No valid URL found for #{category[:id]} – ensure this category has associated pages."
   end
 
@@ -30,59 +30,56 @@ module MiddlemanCollectionHelpers
     category_url(category, locale_id: locale_id, base_url: '')
   end
 
-  def pages_collection(lang = default_locale_obj[:lang], with_associations: false)
-    return get_cached_collection('categories', lang, with_associations) if get_cached_collection('categories', lang, with_associations)
+  def pages_collection(lang = default_locale_obj[:lang], with_associations = true)
+    return get_cached_collection('pages', lang, with_associations) if get_cached_collection('pages', lang, with_associations)
 
     collection = data.help.pages
       .map{ |tuple| tuple[1] }
       .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
       .select{ |model| is_valid_page_model?(model) }
 
+    # add child pages (depth = 1)
     if with_associations
-      collection = collection.map do |page|
-        page[:child_pages] = pages_collection(lang, with_associations: false)
-          .select{ |child_page| child_page[:parent_page] && child_page[:parent_page][:id] == page[:id] }
-
+      collection = collection.map{ |page|
+        page[:child_pages] = pages_collection(lang, false).select{ |child_page| child_page[:parent_page] && child_page[:parent_page][:id] == page[:id] }
         page
-      end
+      }
     end
 
     collection = collection.sort{ |a, b| sort_pages(a, b) }
-    set_cached_collection(collection, 'categories', lang, with_associations)
+
+    set_cached_collection(collection, 'pages', lang, with_associations)
     collection
   end
 
-  def categories_collection(lang = default_locale_obj[:lang], with_associations: false)
-    return get_cached_collection('pages', lang, with_associations) if get_cached_collection('pages', lang, with_associations)
+  def categories_collection(lang = default_locale_obj[:lang], with_associations = true)
+    return get_cached_collection('categories', lang, with_associations) if get_cached_collection('categories', lang, with_associations)
 
     collection = data.help.categories
       .map{ |tuple| tuple[1] }
       .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
       .select{ |model| is_valid_category_model?(model) }
 
+    # add associated pages, without children
     if with_associations
-      collection = collection.map do |category|
-        category[:pages] = pages_collection(lang, with_associations: true) # they need child_pages too
-          .select{ |page| page[:category] && page[:category][:id] == category[:id] }
-
+      collection = collection.map{ |category|
+        category[:pages] = pages_collection(lang, false).select{ |page| page[:category] && page[:category][:id] == category[:id] }
         category
-      end
-
-      # Filter out categories without pages if with_associations = true
-      collection = collection.select{ |model| model[:pages].length }
+      }.select{ |model| model[:pages].length }
     end
 
     collection = collection.sort{ |a, b| sort_categories(a, b) }
-    set_cached_collection(collection, 'pages', lang, with_associations)
+
+    set_cached_collection(collection, 'categories', lang, with_associations)
     collection
   end
 
   private
 
+  # Caching is based off of a "hash" of key, lang, with_associations
   def get_cached_collection(key, lang, with_associations)
     @cached_collection ||= {}
     return @cached_collection[key][lang][with_associations] if @cached_collection.dig(key, lang, with_associations)
-    return @cached_collection[key][lang][true] if @cached_collection.dig(key, lang, true)
     false
   end
 
