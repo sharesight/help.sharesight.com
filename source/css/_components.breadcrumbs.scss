@@ -1,12 +1,11 @@
 .breadcrumbs {
   padding:0;
   list-style:none;
-  margin-bottom:40px;
   margin-top:5px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 
   @media (min-width:678px) {
-    margin-bottom:60px;
+    margin-bottom: 30px;
   }
 
   li {display:inline-block;
