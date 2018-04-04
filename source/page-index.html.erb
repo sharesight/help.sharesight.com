@@ -13,10 +13,7 @@ page_description: 'Help pages for Sharesight'
       <% categories_collection(locale_obj[:lang], with_associations: true).each_slice(3) do |groups| %>
         <div class="tiles">
           <% groups.each do |category| %>
-            <% next if category.nil? || category[:pages].nil? || category[:pages].blank? %>
-
-            <% first_page = category[:pages].first %>
-            <a href="<%= localize_url(first_page[:url_slug], locale_id: locale_obj[:id]) %>" title="<%= category[:name] %>" class="tile">
+            <a href="<%= category_url(category, locale_id: locale_obj[:id]) %>" title="<%= category[:name] %>" class="tile">
               <h2><%= category[:name] %></h2>
               <p><%= category[:description] %></p>
             </a>

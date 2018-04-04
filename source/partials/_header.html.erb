@@ -26,9 +26,8 @@
         <% groups.each do |key, category| %>
           <% next if category.nil? || category[:pages].nil? || category[:pages].blank? %>
 
-          <% category[:pages] = pages.first %>
           <li>
-            <a href="<%= localize_url(first_page[:url], locale_id: locale_obj[:id]) %>" title="<%= category[:name] %>">
+            <a href="<%= category_url(category, locale_id: locale_obj[:id]) %>" title="<%= category[:name] %>">
               <%= category[:name] %>
             </a>
           </li>
