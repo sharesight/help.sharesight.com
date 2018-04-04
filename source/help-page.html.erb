@@ -2,35 +2,37 @@
 page_classes: 'category'
 layout: 'page_layout'
 ---
+<%
+  page = locals[:page]
+%>
 <% url = current_page.url.split("/") %>
 <% my_locale = url[1] %>
 <% category_id ||= nil %>
 <% fetch_locale = current_page.url.split('/')%>
 
 <div class="container reveal">
-  <%= partial "partials/left_menu", locals: { category_id: page.last.category&.en&.sys&.id } %>
-  <div class="content">
+  <%= partial "partials/left_menu", locals: { locale_obj: locale_obj, page: page } %>
 
+  <div class="content">
     <ul class="breadcrumbs">
       <li><a href="<%= localize_url(current_page.url, locale_id: locale_obj[:id]) %>">Help</a></li>
+      <li><a href="<%= category_url(page[:category], locale_id: locale_obj[:id]) %>"><%= page[:category][:title] %></a></li>
 
-      <!-- TODO -->
-      <li><a href="<%= localize_url(help_category_url_slug(page[:category]) %>"><%= category[:category_name] %></a></li>
-
-      <% if page.last[:parent_page]%>
+      <% if page[:parent_page] && page[:parent_page][:title] %>
         <li class="breadcrumb-extra">
-          <a href="<%=BreadcrumbHelper::parent_slug(data, page, current_page.url)%>">
-            <%=BreadcrumbHelper::parent(data, page)%>
+          <a href="<%= page_url(page[:parent_page], locale_id: locale_obj[:id]) %>">
+            <%= page[:parent_page][:title] %>
           </a>
-      </li>
-      <%end%>
-      <li class="breadcrumb-extra"><%=BreadcrumbHelper::child(page)%></li>
+        </li>
+      <% end %>
+
+      <li class="breadcrumb-extra"><%= page[:title] %></li>
     </ul>
 
     <label for="selector" class="selector selector_redirect locale">
       <select>
         <% CategoryHelper::navigation_menu_structure(data).each do |cat| %>
-          <% category = cat.first.last%>
+          <% category = cat.last %>
 
           <optgroup label="<%= category[:name] %>">
 
@@ -39,31 +41,26 @@ layout: 'page_layout'
 
               <% if url.length == 2 %>
                 <% if page[:content][:en] %>
-                  <option value="<%=category_url%>/" <% if url.length == 3 %><% if "#{category_url}/" == "/#{url[1]}/#{url.last}/" %>selected<%end%><%end%>><%=page[:page_title]%></option>
-                <%end%>
+                  <option value="<%=category_url%>/" <% if url.length == 3 %><% if "#{category_url}/" == "/#{url[1]}/#{url.last}/" %>selected<% end %><% end %>><%=page[:page_title]%></option>
+                <% end %>
               <% elsif page[:content]['en-AU'] && my_locale == "au"%>
-                <option value="<%=category_url%>/" <% if url.length == 3 %><% if "#{category_url}/" == "/#{url[1]}/#{url.last}/" %>selected<%end%><%end%>><%=page[:page_title]%></option>
+                <option value="<%=category_url%>/" <% if url.length == 3 %><% if "#{category_url}/" == "/#{url[1]}/#{url.last}/" %>selected<% end %><% end %>><%=page[:page_title]%></option>
               <% elsif page[:content]['en-NZ'] && my_locale == "nz"%>
-                <option value="<%=category_url%>/" <% if url.length == 3 %><% if "#{category_url}/" == "/#{url[1]}/#{url.last}/" %>selected<%end%><%end%>><%=page[:page_title]%></option>
+                <option value="<%=category_url%>/" <% if url.length == 3 %><% if "#{category_url}/" == "/#{url[1]}/#{url.last}/" %>selected<% end %><% end %>><%=page[:page_title]%></option>
                 <% else %>
-                <option value="<%=category_url%>/" <% if url.length == 3 %><% if "#{category_url}/" == "/#{url[1]}/#{url.last}/" %>selected<%end%><%end%>><%=page[:page_title]%></option>
-              <%end%>
-            <%end%>
+                <option value="<%=category_url%>/" <% if url.length == 3 %><% if "#{category_url}/" == "/#{url[1]}/#{url.last}/" %>selected<% end %><% end %>><%=page[:page_title]%></option>
+              <% end %>
+            <% end %>
           </optgroup>
-        <%end%>
+        <% end %>
       </select>
     </label>
 
     <article class="article">
-      <h1><%=page.last.title&.en&.to_s%></h1>
-      <% if locale_content(page) %>
-        <%= Kramdown::Document.new(locale_content(page).gsub('.png)', '.png?w=917)').gsub('.jpg)', '.jpg?w=917)')).to_html.html_safe %>
-      <%end%>
+      <h1><%= page[:title] %></h1>
+      <%= Kramdown::Document.new(page[:content].gsub('.png)', '.png?w=917)').gsub('.jpg)', '.jpg?w=917)')).to_html.html_safe %>
 
-      <p class="date_modified">Last modified on <%= page[:updated_at].strftime("%B %-d, %Y") %> UTC</p>
-      <script>
-        var get_headings = document.getElementsByTagName('table');
-      </script>
+      <p class="date_modified">Last modified on <%= page[:meta][:updatedAt].strftime("%B %-d, %Y") %> UTC</p>
     </article>
   </div>
 </div>
