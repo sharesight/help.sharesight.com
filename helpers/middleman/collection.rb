@@ -35,19 +35,17 @@ module MiddlemanCollectionHelpers
       .map{ |tuple| tuple[1] }
       .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
       .select{ |model| is_valid_page_model?(model) }
-      .sort{ |a, b| sort_pages(a, b) }
 
     if with_associations
       collection = collection.map do |page|
         page[:child_pages] = page_collection(lang, with_associations: false)
           .select{ |child_page| child_page[:parent_page] && child_page[:parent_page][:id] == page[:id] }
-          .sort{ |a, b| sort_pages(a, b) }
 
         page
       end
     end
 
-    collection
+    collection.sort{ |a, b| sort_pages(a, b) }
   end
 
   def categories_collection(lang = default_locale_obj[:lang], with_associations: false)
@@ -55,13 +53,11 @@ module MiddlemanCollectionHelpers
       .map{ |tuple| tuple[1] }
       .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
       .select{ |model| is_valid_category_model?(model) }
-      .sort{ |a, b| sort_categories(a, b) }
 
     if with_associations
       collection = collection.map do |category|
-        category[:pages] = page_collection(lang, with_associations: true)
+        category[:pages] = page_collection(lang, with_associations: false)
           .select{ |page| page[:category] && page[:category][:id] == category[:id] }
-          .sort{ |a, b| sort_pages(a, b) }
 
         category
       end
@@ -70,7 +66,7 @@ module MiddlemanCollectionHelpers
       collection = collection.select{ |model| model[:pages].length }
     end
 
-    collection
+    collection.sort{ |a, b| sort_categories(a, b) }
   end
 
   private
