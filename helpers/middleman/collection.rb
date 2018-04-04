@@ -16,7 +16,7 @@ module MiddlemanCollectionHelpers
   end
 
   def category_url(category, locale_id: default_locale_id, base_url: config[:base_url])
-    return page_url(category[:pages].first, locale_id: locale_id, base_url: base_url) if !category[:pages].blank?
+    return page_url(category[:pages].first, locale_id: locale_id, base_url: base_url) if category[:pages]&.first
 
     pages = pages_collection(get_locale_obj(locale_id)[:lang])
       .select{ |page| page[:category] && page[:category][:id] == category[:id] }
