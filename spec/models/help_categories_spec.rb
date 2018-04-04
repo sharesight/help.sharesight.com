@@ -7,7 +7,7 @@ describe 'Help Categories', :type => :model do
 
     @fields = [
       :id, :_meta,
-      :name, :description, :image, :order
+      :name, :description, :order
     ]
 
     @localized = []
