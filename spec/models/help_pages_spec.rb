@@ -48,20 +48,22 @@ describe 'Help Pages', :type => :model do
     expect(schema).to include(*@fields) # this converts array to args
   end
 
-  it "should have localization on the data" do
+  it "should have localization on the data in Production" do
+    skip "Skipping for non-production builds." if Capybara.app.config[:env_name] != 'production'
+
     # This is an array of [key, [sub-keys]]
     # Primarily used for locale validation, eg. ["name", ["en", "en-NZ"]]
     schema = @data.map{ |i, x| x.select{ |k, v| v.kind_of?(::Hash) }.map{ |k, v| [k, v.to_h.keys] } }.flatten(1).uniq
 
     @localized.each do |field|
       schema.select{ |key, locales| key.to_s == field.to_s }.each do |key, locales|
-        expect(locales).to include('en'), "Missing the `en` localization on #{field}"
+        expect(locales).to include('en'), "Missing the `en` localization on #{field}, got locales: #{locales}"
       end
     end
   end
 
   it "should have valid data in production" do
-    # skip "Skipping for non-production builds." if Capybara.app.config[:env_name] != 'production'
+    skip "Skipping for non-production builds." if Capybara.app.config[:env_name] != 'production'
 
     @collection.each do |model|
       is_valid = model &&
