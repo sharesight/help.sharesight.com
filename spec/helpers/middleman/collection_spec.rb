@@ -52,7 +52,7 @@ describe 'Collection Middleman Helper', :type => :helper do
       expect(data).to be_kind_of(Array)
       data.each do |a|
         expect(a).to include(:id)
-        expect(a).to include(:title)
+        expect(a).to include(:name)
       end
     end
 
