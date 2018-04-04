@@ -56,7 +56,7 @@ module MiddlemanCollectionHelpers
 
     if with_associations
       collection = collection.map do |category|
-        category[:pages] = pages_collection(lang, with_associations: false)
+        category[:pages] = pages_collection(lang, with_associations: true) # they need child_pages too
           .select{ |page| page[:category] && page[:category][:id] == category[:id] }
 
         category
