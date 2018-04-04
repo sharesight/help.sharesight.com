@@ -24,7 +24,7 @@ module MiddlemanLocaleHelpers
 
   def locale_obj
     # using rescue as there's no `dig` method on current_page.
-    current_page.metadata[:options][:locals][:locale_obj] || current_locale_obj rescue current_locale_obj
+    current_page.metadata[:locals][:locale_obj] || current_page.metadata[:options][:locals][:locale_obj] || current_locale_obj rescue current_locale_obj
   end
 
   def is_current_locale_id?(locale_id)
