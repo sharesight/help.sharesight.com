@@ -131,19 +131,6 @@ module MiddlemanUrlHelpers
     return wrap_path_in_slashes(split.join('/'))
   end
 
-  def strip_pagination_from_path(path)
-    path = strip_html_from_path(path)
-    split = path&.split('/') || []
-
-    # if the path ends in pages/# (# being any regex `\d`), delete both splits
-    if split[-2] == 'pages' && split[-1].match(/^\d+$/)
-      split.delete_at(-2)
-      split.delete_at(-1)
-    end
-
-    return  wrap_path_in_slashes(split.join('/'))
-  end
-
   # An absolute url for the image (eg. for Facebook/Twitter)
   def image_url(source)
     return base_url(image_path(source))

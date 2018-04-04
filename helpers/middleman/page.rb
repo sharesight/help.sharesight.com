@@ -16,7 +16,6 @@ module MiddlemanPageHelpers
     # do not remove index from path if it's the only path!
     path = strip_index_from_path(path) if trim_wrapped_slashes(path) != 'index'
 
-    path = strip_pagination_from_path(path)
     path = trim_wrapped_slashes(path)
     path = path&.downcase
 

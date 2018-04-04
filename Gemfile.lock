@@ -268,8 +268,6 @@ GEM
     middleman-minify-html (3.4.1)
       htmlcompressor (~> 0.2.0)
       middleman-core (>= 3.2)
-    middleman-pagination (1.2.0)
-      middleman-core (~> 3.3)
     middleman-pry (1.0.1)
       middleman (>= 3.3, < 5)
       pry (~> 0.9)
@@ -379,7 +377,6 @@ DEPENDENCIES
   middleman-es6!
   middleman-livereload
   middleman-minify-html
-  middleman-pagination
   middleman-pry
   middleman-remover
   middleman-s3_sync
