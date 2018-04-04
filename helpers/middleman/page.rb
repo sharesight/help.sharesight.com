@@ -5,8 +5,8 @@ module MiddlemanPageHelpers
   include MiddlemanLocaleHelpers
   include MiddlemanUrlHelpers
 
-  def current_path_array(path: current_page.path)
-    return path.split("/")
+  def current_path_array(path: current_page&.path)
+    return path&.split("/") || []
   end
 
   def full_page_path_name(path: current_page.path)
