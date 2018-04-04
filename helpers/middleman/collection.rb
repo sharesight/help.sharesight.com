@@ -31,6 +31,8 @@ module MiddlemanCollectionHelpers
   end
 
   def pages_collection(lang = default_locale_obj[:lang], with_associations: false)
+    return get_cached_collection('categories', lang, with_associations) if get_cached_collection('categories', lang, with_associations)
+
     collection = data.help.pages
       .map{ |tuple| tuple[1] }
       .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
@@ -45,10 +47,14 @@ module MiddlemanCollectionHelpers
       end
     end
 
-    collection.sort{ |a, b| sort_pages(a, b) }
+    collection = collection.sort{ |a, b| sort_pages(a, b) }
+    set_cached_collection(collection, 'categories', lang, with_associations)
+    collection
   end
 
   def categories_collection(lang = default_locale_obj[:lang], with_associations: false)
+    return get_cached_collection('pages', lang, with_associations) if get_cached_collection('pages', lang, with_associations)
+
     collection = data.help.categories
       .map{ |tuple| tuple[1] }
       .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
@@ -66,10 +72,27 @@ module MiddlemanCollectionHelpers
       collection = collection.select{ |model| model[:pages].length }
     end
 
-    collection.sort{ |a, b| sort_categories(a, b) }
+    collection = collection.sort{ |a, b| sort_categories(a, b) }
+    set_cached_collection(collection, 'pages', lang, with_associations)
+    collection
   end
 
   private
+
+  def get_cached_collection(key, lang, with_associations)
+    @cached_collection ||= {}
+    return @cached_collection[key][lang][with_associations] if @cached_collection.dig(key, lang, with_associations)
+    return @cached_collection[key][lang][true] if @cached_collection.dig(key, lang, true)
+    false
+  end
+
+  def set_cached_collection(collection, key, lang, with_associations)
+    @cached_collection ||= {}
+    @cached_collection[key] ||= {}
+    @cached_collection[key][lang] ||= {}
+    @cached_collection[key][lang][with_associations] = collection
+    collection
+  end
 
   def is_valid_page_model?(model)
     return !!(
