@@ -58,7 +58,7 @@ module MiddlemanPageHelpers
   end
 
   def page_alternative_locales(page_name = valid_page_from_path)
-    return false if !is_valid_page?(page_name)
+    return [] if !is_valid_page?(page_name)
 
     @page_alternative_locales ||= data.locales.reduce({}) do |hash, locale|
       locale.pages.each do |page_data|
