@@ -14,7 +14,7 @@
     social_image: page&.featured_image&.url,
 
     # grabs a list of locales based on the content languages.
-    alternate_locales: page&.content_langs&.map{|lang| data.locales.find{|locale| locale[:lang].to_s == lang.to_s}}.select{|locale| locale}
+    alternate_locales: page&.content_langs&.map{|lang| data.locales.find{|locale| locale[:lang].to_s == lang.to_s}}&.select{|locale| locale}
   }) %>
 
   <% partial "layouts/partials/body", locals: locals.merge({}) do %>
