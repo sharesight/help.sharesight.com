@@ -5,7 +5,7 @@
 <nav class="side-menu">
   <% categories_collection(locale_obj[:lang], with_associations: true).each do |category| %>
     <section>
-      <h4 data-toggle="<% page[:category][:id] == category[:id] ? 1 : 0 %>"><%= category[:name] %></h4>
+      <h4 data-toggle="<%= page[:category][:id] == category[:id] ? 1 : 0 %>"><%= category[:name] %></h4>
       <ul>
         <% category[:pages].each do |cat_page| %>
           <% if !cat_page[:parent_page] && cat_page[:content] %>
