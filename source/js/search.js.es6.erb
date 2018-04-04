@@ -1,126 +1,128 @@
-const locales = <%= data.locales.map { |a| a[:id] } %>;
+;(function(){
+  const locales = <%= data.locales.map { |a| a[:id] } %>;
 
-function loadJSON(path, successFn, errorFn) {
-    const xhr = new XMLHttpRequest();
+  function loadJSON(path, successFn, errorFn) {
+      const xhr = new XMLHttpRequest();
 
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          if (typeof successFn === 'function') successFn(JSON.parse(xhr.responseText));
-        } else {
-          if (typeof errorFn === 'function') errorFn(xhr);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            if (typeof successFn === 'function') successFn(JSON.parse(xhr.responseText));
+          } else {
+            if (typeof errorFn === 'function') errorFn(xhr);
+          }
         }
+      };
+
+      xhr.open("GET", path, true);
+      xhr.send();
+  }
+
+  function disableEnterKeyPress(element) {
+    const onKeyEvent = (e) => {
+      const keyCode = e.which || e.keyCode;
+      const keyName = e.key || e.keyIdentifier;
+
+      if (keyCode === 13 || keyName === 'Enter') { // the enter key
+        e.preventDefault();
+        return false;
       }
     };
 
-    xhr.open("GET", path, true);
-    xhr.send();
-}
-
-function disableEnterKeyPress(element) {
-  const onKeyEvent = (e) => {
-    const keyCode = e.which || e.keyCode;
-    const keyName = e.key || e.keyIdentifier;
-
-    if (keyCode === 13 || keyName === 'Enter') { // the enter key
-      e.preventDefault();
-      return false;
-    }
-  };
-
-  element.addEventListener('keyup', onKeyEvent);
-}
-
-function getCurrentPageLocale () {
-  // grab the locale from the url, eg /ca/article = 'ca' or /article = ''.
-  let currentPageLocale;
-  const firstUriSplit = window.location.href.split('/')[3];
-  if (firstUriSplit && locales.indexOf(firstUriSplit)) { // is a valid locale
-    currentPageLocale = firstUriSplit;
+    element.addEventListener('keyup', onKeyEvent);
   }
 
-  return currentPageLocale;
-}
+  function getCurrentPageLocale () {
+    // grab the locale from the url, eg /ca/article = 'ca' or /article = ''.
+    let currentPageLocale;
+    const firstUriSplit = window.location.href.split('/')[3];
+    if (firstUriSplit && locales.indexOf(firstUriSplit)) { // is a valid locale
+      currentPageLocale = firstUriSplit;
+    }
 
-function getContentsUrl () {
-  const currentPageLocale = getCurrentPageLocale();
-  if (currentPageLocale) return `/${currentPageLocale}/contents.json`;
-  return '/contents.json';
-}
+    return currentPageLocale;
+  }
 
-function populateIndex(data){
-  // this is shorthand for lunr.Builder
-  const index = lunr(function () {
-    this.ref('id');
+  function getContentsUrl () {
+    const currentPageLocale = getCurrentPageLocale();
+    if (currentPageLocale) return `/${currentPageLocale}/contents.json`;
+    return '/contents.json';
+  }
 
-    this.field('title', { boost: 100, required: true });
-    this.field('keywords', { boost: 250 });
-    this.field('content', { boost: 50 });
-    this.field('page_locales', { boost: 0 });
+  function populateIndex(data){
+    // this is shorthand for lunr.Builder
+    const index = lunr(function () {
+      this.ref('id');
 
-    this.pipeline.remove(lunr.stemmer);
-    data.forEach((item) => this.add(item));
-  });
+      this.field('title', { boost: 100, required: true });
+      this.field('keywords', { boost: 250 });
+      this.field('content', { boost: 50 });
+      this.field('page_locales', { boost: 0 });
 
-  return index; // instanceof lunr.Index
-}
-
-const createResultElement = ({ title, slug }) => {
-  const li = document.createElement('li');
-  const link = document.createElement('a');
-  link.href = slug;
-  link.innerText = title;
-
-  li.appendChild(link);
-  return li;
-}
-
-function searchSetup(index, contents, searchField, searchResults){
-  searchField.addEventListener('input', function() {
-    const value = this.value;
-
-    // reset search results
-    searchResults.innerHTML = '';
-
-    if (!value) return;
-    const results = index.query(function (query) {
-      // search for the input value
-      query.term(value, {
-        boost: 1,
-        wildcard: lunr.Query.wildcard.TRAILING,
-      })
-
-      // Boosts the current locale if it exists inside page_locales, by 5x
-      query.term(getCurrentPageLocale(), {
-        boost: 5,
-        fields: ['page_locales'],
-        wildcard: 0, // none
-      })
+      this.pipeline.remove(lunr.stemmer);
+      data.forEach((item) => this.add(item));
     });
-    if (!results) return;
 
-    results.forEach((result) => {
-      const content = contents.find(function(obj) { return obj.id === result.ref; });
+    return index; // instanceof lunr.Index
+  }
 
-      if (content && content.title && content.page_slug) {
-        searchResults.appendChild(
-          createResultElement({ title: content.title, slug: content.page_slug })
-        );
-      }
+  const createResultElement = ({ title, slug }) => {
+    const li = document.createElement('li');
+    const link = document.createElement('a');
+    link.href = slug;
+    link.innerText = title;
+
+    li.appendChild(link);
+    return li;
+  }
+
+  function searchSetup(index, contents, searchField, searchResults){
+    searchField.addEventListener('input', function() {
+      const value = this.value;
+
+      // reset search results
+      searchResults.innerHTML = '';
+
+      if (!value) return;
+      const results = index.query(function (query) {
+        // search for the input value
+        query.term(value, {
+          boost: 1,
+          wildcard: lunr.Query.wildcard.TRAILING,
+        })
+
+        // Boosts the current locale if it exists inside page_locales, by 5x
+        query.term(getCurrentPageLocale(), {
+          boost: 5,
+          fields: ['page_locales'],
+          wildcard: 0, // none
+        })
+      });
+      if (!results) return;
+
+      results.forEach((result) => {
+        const content = contents.find(function(obj) { return obj.id === result.ref; });
+
+        if (content && content.title && content.page_slug) {
+          searchResults.appendChild(
+            createResultElement({ title: content.title, slug: content.page_slug })
+          );
+        }
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchField = document.querySelector("#search-field");
+    const searchResults = document.querySelector("#search-results");
+
+    disableEnterKeyPress(searchField);
+
+    loadJSON(getContentsUrl(), (data) => {
+      const index = populateIndex(data);
+      const contents = [].concat(data); // don't mutate
+
+      searchSetup(index, contents, searchField, searchResults);
     });
   });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  const searchField = document.querySelector("#search-field");
-  const searchResults = document.querySelector("#search-results");
-
-  disableEnterKeyPress(searchField);
-
-  loadJSON(getContentsUrl(), (data) => {
-    const index = populateIndex(data);
-    const contents = [].concat(data); // don't mutate
-
-    searchSetup(index, contents, searchField, searchResults);
-  });
-});
+})(document, window);
