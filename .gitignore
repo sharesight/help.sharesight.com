@@ -9,10 +9,12 @@
 
 # Ignore the build directory
 /build
+yarn-error.log
 
 # Ignore cache
 /.sass-cache
 /.cache
+/tmp
 /.tmp
 
 # Ignore .DS_store file
