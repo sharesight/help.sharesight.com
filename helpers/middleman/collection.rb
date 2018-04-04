@@ -93,7 +93,12 @@ module MiddlemanCollectionHelpers
 
   def is_valid_page_model?(model)
     return !!(
-      model && !model[:title]&.blank? && !model[:url_slug]&.blank? && !model[:content]&.blank? && !model[:category]&.blank?
+      model &&
+      # it's posible to not have a localized version for content, so don't attempt to render it in that locale
+      # when we don't have a lang, eg. looking for 'en' or 'en-NZ', but only 'en-CA' is listed, content will result in a hash: {'en-CA': …}
+      !model[:title]&.blank? && model[:title].is_a?(String) &&
+      !model[:content]&.blank? && model[:content].is_a?(String) &&
+      !model[:category]&.blank? && model[:category][:id]
     ) rescue false
   end
 
