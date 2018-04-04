@@ -1,5 +1,4 @@
 require 'ostruct'
-load File::expand_path('../config_helper.rb', __dir__)
 
 module MiddlemanCollectionHelpers
   def page_url(page, locale_id: default_locale_id, base_url: config[:base_url])
@@ -13,17 +12,17 @@ module MiddlemanCollectionHelpers
   end
 
   def page_path(page, locale_id: default_locale_id)
-    page_url(category, locale_id: locale_id, base_url: '')
+    page_url(page, locale_id: locale_id, base_url: '')
   end
 
   def category_url(category, locale_id: default_locale_id, base_url: config[:base_url])
-    return page_url(category[:pages].first, locale_id: locale_id, base_url: base_url) if category[:pages].length
+    return page_url(category[:pages].first, locale_id: locale_id, base_url: base_url) if !category[:pages].blank?
 
-    pages = page_collection(lang, with_associations: false)
+    pages = page_collection(get_locale_obj(locale_id)[:lang], with_associations: false)
       .select{ |page| page[:category] && page[:category][:id] == category[:id] }
       .sort{ |a, b| sort_pages(a, b) }
 
-    page_url(pages.first, locale_id: locale_id, base_url: base_url) if pages.length
+    return page_url(pages.first, locale_id: locale_id, base_url: base_url) if pages.length
     raise "No valid URL found for #{category[:id]} – ensure this category has associated pages."
   end
 

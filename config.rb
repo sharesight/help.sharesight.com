@@ -3,7 +3,6 @@ require 'config/contentful'
 
 # Loading middleman helpers as these may change often.
 load 'helpers/basic_helper.rb'
-load 'helpers/config_helper.rb'
 load 'helpers/middleman/helpers.rb'
 require 'helpers/s3_redirects_helper.rb'
 

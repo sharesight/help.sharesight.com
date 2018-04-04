@@ -37,7 +37,7 @@ module Middleman
 
       collection.each do |page|
         app.proxy(
-          path_for_proxy(ConfigHelper.help_page_url_slug(page), locale[:id]),
+          path_for_proxy(app.page_path(page, locale_id: locale[:id])),
           "help-page.html",
           locals: { locale_obj: locale, page: page },
           ignore: true
@@ -52,11 +52,12 @@ module Middleman
       end
     end
 
-    def path_for_proxy(slug, locale_id, is_html = true)
+    # It's valid to send no locale_id, eg. if you've already localized the page via localize_path.
+    def path_for_proxy(slug, locale_id = '', is_html = true)
       base = (locale_id != app.default_locale_id) ? "#{locale_id}" : ''
 
       newPath = "#{base}/#{slug}"
-      newPath += '.html' if is_html
+      newPath = newPath.sub(/\/$/, '') + '.html' if is_html # ensure we do slug.html and not slug/.html
       newPath = newPath.squeeze('/')
       return newPath
     end

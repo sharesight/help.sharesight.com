@@ -7,13 +7,12 @@
       page[:category] &&
       page[:meta_description] &&
       page[:title] &&
-      page[:content] && # has content (en, or otherwise)
-      ConfigHelper.help_page_url_slug(page) # has a url
+      page[:content]
     )
       entries << {
         id:                    page[:id],
         title:                 page[:title],
-        page_slug:             localize_path(ConfigHelper.help_page_url_slug(page), locale_id: locale_obj[:id]),
+        page_slug:             page_path(page, locale_id: locale_obj[:id]),
         page_meta_description: page[:meta_description],
 
         # reduce the amount of data downloaded in browsers
