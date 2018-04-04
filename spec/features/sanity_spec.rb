@@ -21,13 +21,13 @@ describe 'Build Sanity', :type => :feature do
     # files only in root directory
     expect(root_dir).to include("favicon.ico")
     expect(root_dir).to include("robots.txt")
-    expect(root_dir).to include("sitemap.xml")
 
     ['', 'au', 'ca', 'nz', 'uk'].each do |locale_id|
       expect(root_dir).to include(locale_id) if locale_id != ''
       dir = dir_list("build/#{locale_id}")
       expect(dir).to include("index.html")
       expect(dir).to include("contents.json")
+      expect(root_dir).to include("sitemap.xml")
     end
   end
 
