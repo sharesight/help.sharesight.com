@@ -84,10 +84,10 @@ module MiddlemanCollectionHelpers
   end
 
   def generic_sort(a, b, secondary_sort_field = 'id')
-    a_order = a[:order] || 0
-    b_order = b[:order] || 0
+    a_order = a[:order] || 100
+    b_order = b[:order] || 100
     return (a[secondary_sort_field] || '')&.strip&.downcase <=> (b[secondary_sort_field] || '')&.strip&.downcase if b_order == a_order
-    b_order <=> a_order
+    a_order <=> b_order
   end
 
   def sort_categories(a, b)
