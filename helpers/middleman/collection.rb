@@ -93,13 +93,13 @@ module MiddlemanCollectionHelpers
 
   def is_valid_page_model?(model)
     return !!(
-      model && !model[:title].blank? && !model[:url_slug].blank?
+      model && !model[:title]&.blank? && !model[:url_slug]&.blank? && !model[:content]&.blank? && !model[:category]&.blank?
     ) rescue false
   end
 
   def is_valid_category_model?(model)
     return !!(
-      model && !model[:name].blank?
+      model && !model[:name]&.blank?
     ) rescue false
   end
 
