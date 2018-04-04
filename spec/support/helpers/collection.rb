@@ -23,7 +23,7 @@ module CapybaraCollectionHelpers
     pages
   end
 
-  def get_categories(locale_obj = Capybara.app.default_locale_obj, check_length: true, all: false)
+  def get_categories(locale_obj = Capybara.app.default_locale_obj)
     categories = Capybara.app.data.help.categories.map{ |tuple| tuple[1] }
     categories = categories.select{ |category| category && category[:name] } # only categories with a truthy name
     categories = categories.map{ |category| Capybara.app.localize_entry(category, locale_obj[:lang], Capybara.app.default_locale_obj[:lang]) }
@@ -31,6 +31,7 @@ module CapybaraCollectionHelpers
     categories = categories.map do |category|
       category[:url] = Capybara.app.category_url(category, locale_id: locale_obj[:id])
       category[:path] = Capybara.app.category_path(category, locale_id: locale_obj[:id])
+      category
     end
 
     categories
