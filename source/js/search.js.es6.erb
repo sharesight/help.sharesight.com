@@ -54,7 +54,7 @@ function populateIndex(data){
     this.ref('id');
 
     this.field('title', { boost: 100, required: true });
-    this.field('keywords', { boost: 95 });
+    this.field('keywords', { boost: 250 });
     this.field('content', { boost: 50 });
     this.field('page_locales', { boost: 0 });
 
@@ -84,10 +84,11 @@ function searchSetup(index, contents, searchField, searchResults){
 
     if (!value) return;
     const results = index.query(function (query) {
+      // search for the input value
       query.term(value, {
         boost: 1,
         wildcard: lunr.Query.wildcard.TRAILING,
-      }) // search for the input text inside
+      })
 
       // Boosts the current locale if it exists inside page_locales, by 5x
       query.term(getCurrentPageLocale(), {
