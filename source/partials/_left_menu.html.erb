@@ -10,17 +10,19 @@
         <% category[:pages].each do |cat_page| %>
           <% if !cat_page[:parent_page] && cat_page[:content] %>
             <li>
-              <a href="<%= page_url(cat_page, locale_id: locale_obj[:id]) %>" style="<% if cat_page[:id] == page[:id] %>color:#000; font-weight:600;<% end %>">
+              <a href="<%= page_url(cat_page, locale_id: locale_obj[:id]) %>" <% if cat_page[:id] == page[:id] %>style="color:#000; font-weight:600;"<% end %>>
                 <%= cat_page[:title] %>
               </a>
 
-              <% unless page[:child_pages].blank? %>
+              <% unless cat_page[:child_pages].blank? %>
                 <ul>
-                  <% page[:child_pages].each do |child|%>
+                  <% cat_page[:child_pages].each do |child|%>
                     <% if child[:content] %>
-                      <a href="<%= page_url(child, locale_id: locale_obj[:id]) %>" style="<% if child[:id] == page[:id] %>color:#000; font-weight:600;<% end %>">
-                        <%= child[:title] %>
-                      </a>
+                      <li>
+                        <a href="<%= page_url(child, locale_id: locale_obj[:id]) %>" <% if child[:id] == page[:id] %>style="color:#000; font-weight:600;"<% end %>>
+                          <%= child[:title] %>
+                        </a>
+                      </li>
                     <% end %>
                   <% end %>
                 </ul>
