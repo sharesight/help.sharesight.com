@@ -1,16 +1,18 @@
-<div class="section page_footer" id="footer">
-  <div class="container">
-  <img src="<%= image_path('logos/logo2.svg') %>" class="logo2" alt="<%= locale_cert_type.capitalize %> Portfolio Tracker - Sharesight">
-    <p class="footer_intro" role="contentinfo">Simply the best portfolio management tool for DIY investors.</p>
+<footer class="section footer" id="footer">
+  <div class="footer__container">
+    <div class="footer__head">
+      <img src="<%= image_path('logos/logo2.svg') %>" class="footer__logo" alt="<%= locale_page(page: 'index', locale_obj: locale_obj)[:page_title] %>" id="footer_site_logo">
+      <p class="footer__intro" role="contentinfo" id="footer_intro">Simply the best portfolio management tool for DIY investors.</p>
+    </div>
 
-    <div class="footer_container">
-      <label for="selector" class="selector redirect locale">
+    <div class="footer__actions">
+      <label for="selector" class="footer__locale">
         <select id="region_selector">
           <% data.locales.select{ |locale| locale.id != default_locale_id }.each do |locale| %>
             <option label="Region: <%= locale.name.upcase %>" value="<%= locale.id %>" <% if locale_obj[:id] == locale.id %>selected<% end %>>
               Region: <%=locale.name.upcase%>
             </option>
-          <% end %>
+          <%end%>
           <option value='-' disabled>――――</option>
           <option label="Region: <%= default_locale_obj.name.upcase %>" value="<%= default_locale_obj.id %>" <% if locale_obj[:id] == default_locale_obj.id %>selected<% end %>>
             Region: <%= default_locale_obj.name.upcase %>
@@ -18,55 +20,112 @@
         </select>
       </label>
 
-      <div class="buttons">
-        <a href="<%= config[:login_url] %>" class="button btn">LOGIN</a>
-        <a href="<%= config[:signup_url] %>" class="button btn">SIGN UP</a>
+      <div class="footer__buttons">
+        <a href="<%= config[:login_url] %>" class="footer__login" title="Login to Sharesight">LOGIN</a>
+        <a href="<%= config[:signup_url] %>" class="footer__sign-up" title="Sign up for Sharesight">SIGN UP</a>
       </div>
 
-      <section class="images_app_logos">
-        <a href="<%= config[:google_store_url] %>" title="<%= locale_obj[:footer_android_alt] %>">
-          <img src="<%= image_path('icons/google-play-badge.svg') %>" alt="<%= locale_obj[:footer_android_alt] %>">
-        </a>
-        <a href="<%= config[:ios_store_url] %>" title="<%= locale_obj[:footer_ios_alt] %>">
-          <img src="<%= image_path('icons/download-on-the-app-store-apple.svg') %>" alt="<%= locale_obj[:footer_ios_alt] %>">
-        </a>
-      </section>
+      <div class="footer__apps">
+        <a href="<%= config[:google_store_url] %>" class="footer__app" title="<%= locale_obj[:footer_android_alt] %>"><img src="<%= image_path('icons/google-play-badge.svg')%>" alt="<%= locale_obj[:footer_android_alt] %>"></a>
+        <a href="<%= config[:ios_store_url] %>" class="footer__app" title="<%= locale_obj[:footer_ios_alt] %>"><img src="<%= image_path('icons/download-on-the-app-store-apple.svg')%>" alt="<%= locale_obj[:footer_ios_alt] %>"></a>
 
-      <div class="icons">
-        <% data.social_media_icons.each do |smi| %>
-          <a href="<%= smi.url %>" title="Check us out on <%= smi.name %>">
-            <%= image_tag "/img/icons/#{smi.image}", class: "icon" %>
-          </a>
-        <% end %>
+        <div class="footer__social">
+          <% data.social_media_icons.each do |smi| %>
+            <a href="<%= smi.url %>" class="footer__social-link" title="Check us out on <%= smi.name %>">
+              <%= image_tag "/img/icons/#{smi.image}", class: "footer__social-icon" %>
+            </a>
+          <% end %>
+        </div>
       </div>
     </div>
 
-    <ul class="links" id="main-menu" tabindex="0" role="menubar" aria-label="Full Website Menu">
-      <li class="link_item" role="menuitem">
-        <a href="<%= localize_url(locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="link" title="Sharesight Home" tabindex="0"  id="sharesight_url">
+    <ul class="footer__links" id="main-menu" role="menubar" aria-label="Company Links">
+      <li role="none" class="footer__link-header">Company</li>
+      <li role="menuitem">
+        <a href="<%= localize_url(locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="<%= locale_page(page: 'index', locale_obj: locale_obj)[:page_title] %>">
           www.sharesight.com
         </a>
       </li>
 
-      <li class="link_item" role="menuitem">
-        <a href="<%= config[:community_url] %>" class="link" title="Visit our forums">
-          Community Forum
+      <li role="menuitem">
+        <a href="<%= localize_url('about-sharesight', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="About Sharesight | <%= locale_obj[:append_title] %>">
+          About Us
         </a>
       </li>
 
-      <li class="link_item" role="menuitem">
-        <a href="<%= localize_url('privacy-policy', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="link" id="privacy_url" title="Privacy Policy – <%= locale_cert_type.capitalize %> Portfolio Tracker">
+      <li role="menuitem">
+        <a href="<%= localize_url('pricing', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Pricing | <%= locale_obj[:append_title] %>">
+          Pricing
+        </a>
+      </li>
+    </ul>
+
+    <ul class="footer__links" id="main-menu" role="menubar" aria-label="Website Links">
+      <li role="none" class="footer__link-header">&nbsp;</li>
+      <li role="menuitem">
+        <a href="<%= localize_url('faq', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Frequently Asked Questions | <%= locale_obj[:append_title] %>">
+          FAQ
+        </a>
+      </li>
+
+      <li role="menuitem">
+        <a href="<%= unlocalized_url('blog', base_url: config[:marketing_url]) %>" class="footer__link" title="Sharesight Blog">
+          Blog
+        </a>
+      </li>
+
+      <li role="menuitem">
+        <a href="<%= localize_url('partners', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Partners | <%= locale_obj[:append_title] %>">
+          Partners
+        </a>
+      </li>
+    </ul>
+
+    <ul class="footer__links" id="main-menu" role="menubar" aria-label="Resources Links">
+      <li role="none" class="footer__link-header">Resources</li>
+      <li role="menuitem">
+        <a href="<%= config[:api_url] %>" class="footer__link" title="Sharesight Developer API">
+          Developer API
+        </a>
+      </li>
+
+      <li role="menuitem">
+        <a href="<%= localize_url('privacy-policy', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Privacy Policy | <%= locale_obj[:append_title] %>">
           Privacy Policy
+        </a>
+      </li>
+
+      <li role="menuitem">
+        <a href="<%= localize_url('sharesight-terms-of-use', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Terms of Service | <%= locale_obj[:append_title] %>">
+          Terms of Use
+        </a>
+      </li>
+
+      <li role="menuitem">
+        <a href="<%= localize_url('sharesight-professional-terms-of-use', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Terms of Service | <%= locale_obj[:append_title] %> Pro">
+          Pro Terms of Use
+        </a>
+      </li>
+    </ul>
+
+    <ul class="footer__links" id="main-menu" role="menubar" aria-label="Support Links">
+      <li role="none" class="footer__link-header">Support</li>
+      <li role="menuitem">
+        <a href="<%= localize_url(locale_id: locale_obj[:id]) %>" class="footer__link" title="Help | <%= locale_obj[:append_title] %>">
+          Help Centre
+        </a>
+      </li>
+
+      <li role="menuitem">
+        <a href="<%= config[:community_url] %>" class="footer__link" title="Sharesight Community Forum">
+          Community Forum
         </a>
       </li>
     </ul>
   </div>
-</div>
+</footer>
 
-<footer class="section_footer">
-  <p class="free">
-    <a href="mailto:sales@sharesight.com" class="free email">sales@sharesight.com</a>
-    <br>
-    © <%=Date.today.year%> Sharesight. All rights reserved.
-  </p>
+<footer class="footer__copyright">
+  © <%= Date.today.year %> Sharesight
+  <br />All rights reserved.
 </footer>
