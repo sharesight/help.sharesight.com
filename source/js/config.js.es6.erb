@@ -6,7 +6,7 @@ const config = {
   locale_ids: <%= data.locales.map {|a| a[:id].downcase } %>,
   base_url: `<%= base_url('/') %>`,
   base_path: `<%= base_path('/') %>`,
-  marketing_url: `<%= base_url('/', base_url: config[:help_url]) %>`,
+  marketing_url: `<%= base_url('/', base_url: config[:marketing_url]) %>`,
   locales: [ // this is some minimal data coming from locales.json
     <% data.locales.each do |locale| %>
     {
