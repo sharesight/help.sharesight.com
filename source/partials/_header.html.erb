@@ -22,10 +22,8 @@
     <span class="close" id="js-close" tabindex="0">Close</span>
 
     <ul>
-      <% categories_collection(locale_obj[:lang], with_associations: true).each_slice(3) do |groups| %>
-        <% groups.each do |key, category| %>
-          <% next if category.nil? || category[:pages].nil? || category[:pages].blank? %>
-
+      <% categories_collection(locale_obj[:lang]).each_slice(3) do |groups| %>
+        <% groups.each do |category| %>
           <li>
             <a href="<%= category_url(category, locale_id: locale_obj[:id]) %>" title="<%= category[:name] %>">
               <%= category[:name] %>
