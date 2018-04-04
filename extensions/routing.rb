@@ -33,7 +33,7 @@ module Middleman
     end
 
     def proxy_help_pages(locale)
-      collection = app.page_collection(locale[:lang])
+      collection = app.pages_collection(locale[:lang])
 
       collection.each do |page|
         app.proxy(

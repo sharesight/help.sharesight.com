@@ -18,7 +18,7 @@ module MiddlemanCollectionHelpers
   def category_url(category, locale_id: default_locale_id, base_url: config[:base_url])
     return page_url(category[:pages].first, locale_id: locale_id, base_url: base_url) if !category[:pages].blank?
 
-    pages = page_collection(get_locale_obj(locale_id)[:lang], with_associations: false)
+    pages = pages_collection(get_locale_obj(locale_id)[:lang], with_associations: false)
       .select{ |page| page[:category] && page[:category][:id] == category[:id] }
       .sort{ |a, b| sort_pages(a, b) }
 
@@ -30,7 +30,7 @@ module MiddlemanCollectionHelpers
     category_url(category, locale_id: locale_id, base_url: '')
   end
 
-  def page_collection(lang = default_locale_obj[:lang], with_associations: false)
+  def pages_collection(lang = default_locale_obj[:lang], with_associations: false)
     collection = data.help.pages
       .map{ |tuple| tuple[1] }
       .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
@@ -38,7 +38,7 @@ module MiddlemanCollectionHelpers
 
     if with_associations
       collection = collection.map do |page|
-        page[:child_pages] = page_collection(lang, with_associations: false)
+        page[:child_pages] = pages_collection(lang, with_associations: false)
           .select{ |child_page| child_page[:parent_page] && child_page[:parent_page][:id] == page[:id] }
 
         page
@@ -56,7 +56,7 @@ module MiddlemanCollectionHelpers
 
     if with_associations
       collection = collection.map do |category|
-        category[:pages] = page_collection(lang, with_associations: false)
+        category[:pages] = pages_collection(lang, with_associations: false)
           .select{ |page| page[:category] && page[:category][:id] == category[:id] }
 
         category
