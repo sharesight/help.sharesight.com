@@ -1,7 +1,5 @@
 <head>
   <meta charset="utf-8">
-  <%= partial "layouts/partials/analytics_js" %>
-
   <% features = [
     'es6', 'es7','es2017', 'default-3.6',
     '~html5-elements',
@@ -24,10 +22,10 @@
   ] %>
   <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=<%= features.join(',') %>&flags=gated&rum=0"></script>
 
-  <%= javascript_include_tag 'localization' %>
+  <%= partial "layouts/partials/analytics_js" %>
+  <script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
 
-    <script async src="//cdn.embedly.com/widgets/platform.js" charset="UTF-8"></script>
-  <%= javascript_include_tag 'lunr' %>
+  <%= javascript_include_tag 'localization' %>
   <%= javascript_include_tag 'search' %>
 
   <%= partial "layouts/partials/meta", locals: locals %>
