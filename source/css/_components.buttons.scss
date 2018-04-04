@@ -12,8 +12,8 @@
   &:hover{background-color:rgb(74, 74, 74); color:#fff;}
 }
 
-.button_feature {border:2px solid $colour_accent; color:$colour_primary; font-size:0.9375rem; padding:15px 60px; letter-spacing:1px; background-color: transparent;
-  &:hover{background-color:$colour_accent; color:#fff;}
+.button_feature {border:2px solid $colour_secondary; color:$colour_primary; font-size:0.9375rem; padding:15px 60px; letter-spacing:1px; background-color: transparent;
+  &:hover{background-color:$colour_secondary; color:#fff;}
 }
 
 .button_heading {}

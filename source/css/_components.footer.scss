@@ -76,8 +76,8 @@
         white-space: normal;
         &:first-child {
           left:0;
-          color:$colour_accent;
-          border:1px solid $colour_accent;
+          color:$colour_secondary;
+          border:1px solid $colour_secondary;
         }
         &:last-child {
           right:0;

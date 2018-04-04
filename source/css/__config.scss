@@ -1,6 +1,3 @@
-@import "_tools.typography";
-// Google fonts api not showing ttf for IOS
-
 @font-face {
   font-family: 'Open Sans Bold';
   src: url('../fonts/opensans-bold-webfont-webfont.woff') format('woff');
@@ -36,15 +33,20 @@ $font_family_serif: 'merriweatheritalic', serif;
 
 $colour_default: #9B9B9B;
 $colour_primary: #4A4A4A;
-$colour_secondary: #266F8C;
-$colour_accent: #F5A623;
+$colour_teal: #266F8C;
+$colour_secondary: #F5A623;
+$colour_pro: #2f353e;
 
 $colour_banner_default: #2e363e;
 $colour_banner_primary: #20242b;
 $colour_banner_accent: #49525c;
 
+$colour_table-lines: #d4d4cc;
 
-// Repsponsive widths (guides)
+$background_white: #fafafa;
+$background_offset_white: #f4f4ef;
+$background_pearl: #fce5cd;
+
 $screen-xs:                  320px !default;
 $screen-xs-min:              $screen-xs !default;
 $screen-phone:               $screen-xs-min !default;
@@ -69,4 +71,15 @@ $screen-xs-max:              ($screen-sm-min - 1) !default;
 $screen-sm-max:              ($screen-md-min - 1) !default;
 $screen-md-max:              ($screen-lg-min - 1) !default;
 
-$table-lines: #d4d4cc;
+$breakpoints: (
+  // min, max
+  base: (false, $screen-xs-min - 1, $screen-xs-min - 1),
+  xs: ($screen-xs-min, $screen-xs-max, $screen-xs-max),
+  phone: (480px, $screen-xs-max, $screen-xs-max), // custom breakpoint!
+  sm: ($screen-sm-min, $screen-sm-max, $screen-sm-max - 40),
+  md: ($screen-md-min, $screen-md-max, $screen-md-max - 100),
+  lg: ($screen-lg-min, false, 1440px)
+);
+
+$grid-columns: 12;
+$gutter: 20px;
