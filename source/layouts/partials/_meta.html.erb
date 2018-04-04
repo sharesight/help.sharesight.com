@@ -29,6 +29,8 @@
   metas[:social_image]       ||= DEFAULT_SOCIAL_IMG[:url]
   metas[:social_image]         = "https:#{metas[:social_image]}" if metas[:social_image]&.start_with?('//') # converts //images.contentful.com to https://images.contentful.com for Facebook to not complain.
 
+  metas[:alternate_locales]    = locals[:alternate_locales]
+  metas[:alternate_locales]  ||= page_alternative_locales
 %>
 
 <!-- <%= valid_page_from_path %> -->
@@ -63,7 +65,7 @@
 <%# locales must be in language_TERRITORY (`en_US` is default, not `en`) %>
 <% og_locale = current_locale_id == default_locale_id ? 'en_US' : current_locale_obj[:lang] %>
 <meta property="og:locale" content="<%= og_locale.gsub('-', '_') %>">
-<% page_alternative_locales.select{ |locale| locale[:id] != current_locale_id }.each do |locale| %>
+<% metas[:alternate_locales].select{ |locale| locale[:id] != current_locale_id }.each do |locale| %>
   <% og_locale = locale[:id] == default_locale_id ? 'en_US' : locale[:lang] %>
   <meta property="og:locale:alternate" content="<%= og_locale.gsub('-', '_') %>">
 <% end %>
@@ -80,4 +82,4 @@
 <%# Links; next/prev should be canonical. %>
 <link rel="alternate" type="application/rss+xml" title="Sharesight RSS Feed" href="<%= base_url('/blog/feed.xml') %>">
 <link rel="canonical" href="<%= metas[:canonical_url] %>">
-<%= partial "layouts/partials/alternate_links" %>
+<%= partial "layouts/partials/alternate_links", locals: { alternate_locales: metas[:alternate_locales] } %>
