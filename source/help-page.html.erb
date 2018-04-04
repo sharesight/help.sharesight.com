@@ -25,8 +25,9 @@ layout: 'page_layout'
       <li class="breadcrumb-extra"><%= page[:title] %></li>
     </ul>
 
-    <label for="selector" class="selector selector_redirect locale">
-      <select>
+    <!-- On mobile, instead of the left navigation, we use a dropdown navigation here -->
+    <label for="page_navigation" class="selector">
+      <select id="page_navigation" name="page_navigation">
         <!-- NOTE: Very similar logic exists elsewhere -->
         <% categories_collection(locale_obj[:lang], with_associations: true).each do |category| %>
           <optgroup label="<%= category[:name] %>">
