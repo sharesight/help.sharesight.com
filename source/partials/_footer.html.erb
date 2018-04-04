@@ -1,7 +1,9 @@
+<% index_page_title = locale_page(page: 'index', locale_obj: locale_obj)[:page_title] %>
+
 <footer class="section footer" id="footer">
   <div class="footer__container">
     <div class="footer__head">
-      <img src="<%= image_path('logos/logo2.svg') %>" class="footer__logo" alt="<%= locale_page(page: 'index', locale_obj: locale_obj)[:page_title] %>" id="footer_site_logo">
+      <img src="<%= image_path('logos/logo2.svg') %>" class="footer__logo" alt="<%= index_page_title %>" id="footer_site_logo">
       <p class="footer__intro" role="contentinfo" id="footer_intro">Simply the best portfolio management tool for DIY investors.</p>
     </div>
 
@@ -42,19 +44,19 @@
     <ul class="footer__links" id="main-menu" role="menubar" aria-label="Company Links">
       <li role="none" class="footer__link-header">Company</li>
       <li role="menuitem">
-        <a href="<%= localize_url(locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="<%= locale_page(page: 'index', locale_obj: locale_obj)[:page_title] %>">
+        <a href="<%= localize_url(locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Sharesight">
           www.sharesight.com
         </a>
       </li>
 
       <li role="menuitem">
-        <a href="<%= localize_url('about-sharesight', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="About Sharesight | <%= locale_obj[:append_title] %>">
+        <a href="<%= localize_url('about-sharesight', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="About Us | Sharesight">
           About Us
         </a>
       </li>
 
       <li role="menuitem">
-        <a href="<%= localize_url('pricing', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Pricing | <%= locale_obj[:append_title] %>">
+        <a href="<%= localize_url('pricing', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Pricing | Sharesight">
           Pricing
         </a>
       </li>
@@ -63,7 +65,7 @@
     <ul class="footer__links" id="main-menu" role="menubar" aria-label="Website Links">
       <li role="none" class="footer__link-header">&nbsp;</li>
       <li role="menuitem">
-        <a href="<%= localize_url('faq', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Frequently Asked Questions | <%= locale_obj[:append_title] %>">
+        <a href="<%= localize_url('faq', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Frequently Asked Questions | Sharesight">
           FAQ
         </a>
       </li>
@@ -75,7 +77,7 @@
       </li>
 
       <li role="menuitem">
-        <a href="<%= localize_url('partners', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Partners | <%= locale_obj[:append_title] %>">
+        <a href="<%= localize_url('partners', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Partners | Sharesight">
           Partners
         </a>
       </li>
@@ -90,19 +92,19 @@
       </li>
 
       <li role="menuitem">
-        <a href="<%= localize_url('privacy-policy', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Privacy Policy | <%= locale_obj[:append_title] %>">
+        <a href="<%= localize_url('privacy-policy', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Privacy Policy | Sharesight">
           Privacy Policy
         </a>
       </li>
 
       <li role="menuitem">
-        <a href="<%= localize_url('sharesight-terms-of-use', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Terms of Service | <%= locale_obj[:append_title] %>">
+        <a href="<%= localize_url('sharesight-terms-of-use', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Terms of Service | Sharesight">
           Terms of Use
         </a>
       </li>
 
       <li role="menuitem">
-        <a href="<%= localize_url('sharesight-professional-terms-of-use', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Terms of Service | <%= locale_obj[:append_title] %> Pro">
+        <a href="<%= localize_url('sharesight-professional-terms-of-use', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Terms of Service | Sharesight Pro">
           Pro Terms of Use
         </a>
       </li>
@@ -111,7 +113,7 @@
     <ul class="footer__links" id="main-menu" role="menubar" aria-label="Support Links">
       <li role="none" class="footer__link-header">Support</li>
       <li role="menuitem">
-        <a href="<%= localize_url(locale_id: locale_obj[:id]) %>" class="footer__link" title="Help | <%= locale_obj[:append_title] %>">
+        <a href="<%= localize_url(locale_id: locale_obj[:id]) %>" class="footer__link" title="<%= locale_obj[:default_title] %>">
           Help Centre
         </a>
       </li>
