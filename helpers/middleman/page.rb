@@ -1,6 +1,10 @@
 load File::expand_path('./locale.rb', __dir__)
 load File::expand_path('./url.rb', __dir__)
 
+# PageHelper relates to MIDDLEMAN PAGES, not help/pages!
+# Eg. page-index, page-404.
+# Most of this code doesn't really make sense – it comes from www.sharesight.com
+
 module MiddlemanPageHelpers
   include MiddlemanLocaleHelpers
   include MiddlemanUrlHelpers
