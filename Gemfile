@@ -20,14 +20,20 @@ gem 'redcarpet'
 gem 'aws-s3'
 gem 'middleman-remover'
 
-# tests
-gem 'middleman-pry'
-gem 'maxitest'
-gem 'shoulda-context'
-
 # support whitelist-sanitizing content (remove script-tags, etc.)
 gem 'rails-html-sanitizer'
 
 gem 'stopwords-filter', require: 'stopwords'
 
-gem "bundler-audit"
+# tests
+group :test do
+  gem 'capybara'
+  gem 'capybara-selenium'
+  gem 'chromedriver-helper' # for headless chrome
+  gem 'rspec'
+  gem 'guard-rspec', require: false
+end
+
+group :development, :test do
+  gem "bundle-audit"
+end

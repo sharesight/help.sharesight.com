@@ -123,10 +123,11 @@ module MiddlemanPageHelpers
 
   def generate_social_title(title)
     return nil if !title
-    global = " | #{config[:site_name]}"
+    title = title.to_s.strip
+    global = " | #{default_locale_obj[:append_title]}".strip
 
     data.locales.each do |locale|
-      localized = " | #{locale[:append_title]}"
+      localized = " | #{locale[:append_title]}".strip
       if title.include?(localized) && localized != global
         title = title.sub(localized, global)
       end
