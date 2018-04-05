@@ -58,7 +58,7 @@ jobs:
 
     - stage: deploy
       env: NAME=deploy
-      # no pull requests should deploy!
+      # Pull Requests do not deploy.
       if: branch IN (master, develop) AND type IN (push, api, cron)
       script:
         - ./bin/travis/deploy.sh
