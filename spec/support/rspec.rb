@@ -76,12 +76,17 @@ RSpec::Matchers.define :have_titles do |title, social_title|
   end
 
   failure_message do |page|
-    "expected <title>#{page.title}</title> to match #{title}/#{social_title} on #{current_path}"
+    "expected <title>#{page.title}</title> to match #{title} or #{social_title} on #{current_path}"
   end
 end
 
 RSpec::Matchers.define :have_descriptions do |description, social_description|
   social_description ||= description
+
+  # parse
+  description = BasicHelper.replace_quotes(description)
+  social_description = BasicHelper.replace_quotes(description)
+
   match do |page|
     expect(page).to have_meta('description', description)
     expect(page).to have_meta('og:description', social_description, name_key: 'property')
