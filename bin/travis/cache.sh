@@ -7,6 +7,8 @@ get_cache_from_s3() {
     cd $TRAVIS_BUILD_DIR
     BUILT_FROM_BUNDLE=false
 
+    echo "using aws credentials, AWS_ACCESS_KEY_ID = ${AWS_ACCESS_KEY_ID}"
+
     # download the current build file
     # use sync instead of mv/cp as it doesn't require the file to exist (see include/exclude)
     announce_time_start # Must use for complicated functions like this
