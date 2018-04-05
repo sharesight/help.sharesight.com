@@ -5,6 +5,12 @@ module Middleman
     end
 
     def after_configuration
+      # ensure this doesn't run before data is available; if it never runs, it will fail tests
+      if !app.data || !app.data.respond_to?('help') || !app.data.help.respond_to?('categories') || !app.data.help.respond_to?('pages')
+        puts "WARNING: Not routing as middleman contentful has not been ran!  Please ensure middleman contentful runs successfully first."
+        return
+      end
+
       generic_file_extensions()
 
       app.data.locales.each do |locale|

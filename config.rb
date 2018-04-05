@@ -61,6 +61,10 @@ activate :autoprefixer do |autoprefixer_config|
   autoprefixer_config.cascade  = false
 end
 
+# Custom Middleman Extensions
+activate :init_s3
+activate :routing
+
 # --START Contentful Setup
 space = ContentfulConfig::HelpSpace
 use_preview_api = config[:env_name] != 'production'
@@ -94,10 +98,6 @@ activate :contentful do |f|
 end
 
 # --END Contentful Setup
-
-# Custom Middleman Extensions
-activate :init_s3
-activate :routing
 
 if ApplicationConfig.const_defined?(:S3) && ['staging', 'production'].include?(env_name)
   activate :s3_sync do |s3_sync|
