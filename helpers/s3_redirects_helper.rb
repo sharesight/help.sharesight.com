@@ -8,7 +8,7 @@ require 'uri'
 module S3RedirectsHelper
 
   BASE_DIR_STUFF_TO_IGNORE = [
-    ".", "..", "index.html", "sitemapindex.xml", "sitemap.xml", "robots.txt", "humans.txt",
+    ".", "..", "index.html", "sitemapindex.xml", "sitemap.xml", "contents.json", "robots.txt", "humans.txt",
     "index.html.gz", "js", "fonts", "favicon.ico", "img", "css"
   ]
 
