@@ -20,6 +20,8 @@ module CapybaraCollectionHelpers
       page
     end
 
+    pages = pages.select{|page| Capybara.app.is_valid_page_model?(page)}
+
     pages
   end
 
@@ -33,6 +35,8 @@ module CapybaraCollectionHelpers
       category[:path] = Capybara.app.category_path(category, locale_id: locale_obj[:id])
       category
     end
+
+    categories = categories.select{|category| Capybara.app.is_valid_category_model?(category)}
 
     categories
   end
