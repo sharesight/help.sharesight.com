@@ -1,21 +1,22 @@
 # robotstxt.org/
-<% if env_name == 'staging' %>
+<% if config[:env_name] == 'staging' %>
 User-agent: Twitterbot
 Disallow:
 Allow: /
 <% end %>
 
 User-agent: *
-<% if env_name == 'staging' || env_name == 'development' %>
+<% if config[:env_name] == 'staging' || config[:env_name] == 'development' %>
 Disallow: /
-<% else %>
-Disallow:
 <% end %>
 
-<% if env_name == 'staging' %>
-Sitemap: http://sharesight-help-staging.s3-website-us-east-1.amazonaws.com/sitemap.xml
-<% elsif env_name == 'development' %>
-Sitemap: http://localhost:4567/sitemap.xml
-<% else %>
-Sitemap: https://www.help.sharesight.com/sitemap.xml
+<% data.locales.each do |locale| %>
+  <% locale.pages.select{ |locale_page| locale_page[:show_in_sitemap] == false }.each do |locale_page| %>
+Disallow: <%= localize_path(locale_page[:page], locale_id: locale[:id]) %>
+  <% end %>
+<% end %>
+
+Sitemap: <%= base_url('/sitemapindex.xml') %>
+<% data.locales.each do |locale| %>
+Sitemap: <%= localize_url('/sitemap.xml', locale_id: locale[:id] )%>
 <% end %>

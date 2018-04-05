@@ -1,78 +1,37 @@
 <%
-category_id ||= nil
-fetch_locale = current_page.url.split('/')
-reg_url = fetch_locale[1].length == 2 ? "/#{fetch_locale[1]}" : url_root
+  page = locals[:page]
 %>
-  <nav class="side-menu">
-    <% CategoryHelper::navigation_menu_structure(data).each do |cat| %>
-    <% category = cat.first.last%>
+
+<nav class="side-menu">
+  <% categories_collection(locale_obj[:lang], true, false).each do |category| %>
     <section>
-      <h4 data-toggle="<% if category_id && category_id == cat.first.first%>1<%else%>0<% end %>"><%=category[:category_name]%></h4>
+      <h4 data-toggle="<%= page[:category] && page[:category][:id] == category[:id] ? 1 : 0 %>"><%= category[:name] %></h4>
+
       <ul>
-        <% category[:pages].each do |page| %>
-          <% category_url = "#{ConfigHelper::get_locale_from_url(current_page.url)}/#{page[:page_url]}" %>
+        <% category[:pages].each do |cat_page| %>
+          <% if !cat_page[:parent_page] && cat_page[:content] %>
+            <li>
+              <a href="<%= page_url(cat_page, locale_id: locale_obj[:id]) %>" <% if cat_page[:id] == page[:id] %>style="color:#000; font-weight:600;"<% end %>>
+                <%= cat_page[:title] %>
+              </a>
 
-          <!-- All regions -->
-          <% data.locale_urls.each_with_index do |loc, idx|%>
-            <% locale_id = loc.path.gsub('/','') %>
-            <% if fetch_locale[1] == locale_id %>
-              <% if !page[:has_parent] && page[:content]["en-#{locale_id.upcase}"]%>
-                <li><a href="<%=reg_url%>/<%=page[:page_url].gsub(/([^\/]$)/, '\1/')%>" style="<% if page[:page_url] == current_page.url.split('/').last%>color:#000; font-weight:600;<% end %>"><%=page[:page_title]%></a>
-                  <% unless page[:subpages].blank? && page[:subpages]%>
-                    <ul>
-                      <% page[:subpages].each do |sub|%>
-                        <% alt_page = data.help_pages.page.find {|n| n.last.id == sub[0]}.last%>
-                        <% if alt_page[:content][:en] && page[:content][:en] != "\n\n"%>
-                          <li><a href="<%=reg_url%>/<%=sub.last.gsub(/([^\/]$)/, '\1/');%>" style="<% if sub.last == fetch_locale.last%>color:#000; font-weight:600;<% end %>"><%=sub[1]%></a></li>
-                        <%elsif alt_page[:content]["en-#{locale_id.upcase}"] && !alt_page[:content][:en] %>
-                          <li><a href="<%=reg_url%>/<%=sub.last.gsub(/([^\/]$)/, '\1/');%>" style="<% if sub.last == fetch_locale.last%>color:#000; font-weight:600;<% end %>"><%=sub[1]%></a></li>
-                        <% end %>
-                      <% end %>
-                    </ul>
-                  <% end %>
-                </li>
-              <%elsif !page[:has_parent] && page[:content]['en'] && page[:content]['en'] != "\n\n"%>
-                <li><a href="<%="#{reg_url}/#{page[:page_url]}".gsub(/([^\/]$)/, '\1/')%>" style="<% if page[:page_url] == current_page.url.split('/').last%>color:#000; font-weight:600;<% end %>"><%=page[:page_title]%></a>
-                  <% unless page[:subpages].blank? && page[:subpages]%>
-                    <ul>
-                      <% page[:subpages].each do |sub|%>
-                        <% alt_page = data.help_pages.page.find {|n| n.last.id == sub[0]}.last%>
-                        <% if alt_page[:content][:en] && page[:content][:en] != "\n\n"%>
-                          <li><a href="<%=reg_url%>/<%=sub.last.gsub(/([^\/]$)/, '\1/');%>" style="<% if sub.last == fetch_locale.last%>color:#000; font-weight:600;<% end %>"><%=sub[1]%></a></li>
-                        <%elsif alt_page[:content]["en-#{locale_id.upcase}"] && !alt_page[:content][:en] %>
-                          <li><a href="/<%=sub.last.gsub(/([^\/]$)/, '\1/');%>" style="<% if sub.last == fetch_locale.last%>color:#000; font-weight:600;<% end %>"><%=sub[1]%></a></li>
-                        <% end %>
-                      <% end %>
-                    </ul>
-                  <% end %>
-                </li>
-              <% end %>
-
-            <% end %>
-          <% end %>
-          <!-- Global only -->
-          <% if fetch_locale.length == 2 %>
-            <% if !page[:has_parent] && page[:content][:en] && page[:content][:en] != "\n\n"%>
-              <li><a href="<%=reg_url%>/<%=page[:page_url]%>/" style="<% if page[:page_url] == current_page.url.split('/').last%>color:#000; font-weight:600;<% end %>"><%=page[:page_title]%></a>
-                <% unless page[:subpages].blank? && page[:subpages]%>
-                  <ul>
-                    <% page[:subpages].each do |sub|%>
-                      <% alt_page = data.help_pages.page.find {|n| n.last.id == sub[0]}.last%>
-
-                      <% if alt_page[:content][:en] && page[:content][:en] != "\n\n"%>
-                        <li><a href="<%=reg_url%>/<%=sub.last.gsub(/([^\/]$)/, '\1/');%>" style="<% if sub.last == fetch_locale.last%>color:#000; font-weight:600;<% end %>"><%=sub[1]%></a></li>
-                      <% end %>
+              <% unless cat_page[:child_pages].blank? %>
+                <ul>
+                  <% cat_page[:child_pages].each do |child|%>
+                    <% if child[:content] %>
+                      <li>
+                        <a href="<%= page_url(child, locale_id: locale_obj[:id]) %>" <% if child[:id] == page[:id] %>style="color:#000; font-weight:600;"<% end %>>
+                          <%= child[:title] %>
+                        </a>
+                      </li>
                     <% end %>
-                  </ul>
-                <% end %>
-              </li>
-
-            <% end %>
-            <% end %>
-
+                  <% end %>
+                </ul>
+              <% end %>
+            </li>
+          <% end %>
         <% end %>
-
       </ul>
     </section>
-    <% end %>
-  </nav>
+  <% end %>
+</nav>

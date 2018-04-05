@@ -21,3 +21,8 @@ These are stored securely in Travis for the user `help_deploy`.
 AWS_DEPLOY_ACCESS_ID=
 AWS_DEPLOY_SECRET_KEY=
 ```
+
+#### Travis Specific Environment:
+ - For Travis Build Caching via aws-cli (currently linked to the `travis-ci` user, which is currently shared by both [www] and [help]):
+   - AWS_ACCESS_KEY_ID
+   - AWS_SECRET_ACCESS_KEY

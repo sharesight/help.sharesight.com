@@ -24,7 +24,7 @@
 .tiles {
   .tile {border-top:1px solid #D9D9D9; padding:20px;
     @media(min-width:677px){border:1px solid #D9D9D9; padding:40px;}
-    h3 {color: $colour_accent;}
+    h3 {color: $colour_secondary;}
     p {color: $colour_primary; margin:0;}
   }
 }

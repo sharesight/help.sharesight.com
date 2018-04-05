@@ -1,15 +1,34 @@
-@import "__config";
+@import "_config";
 
 .section_emphasis {background-color: #f0f0f0;}
 .section_highlight {background-color: rgba(224, 219, 199, 0.5);}
 .section_compact {max-width:950px; text-align:left;}
 
 
-.header_primary {background-color:$colour_banner_default; height:80px; position:relative;
+.header_primary {
+  background-color:$colour_banner_default;
+  height:80px;
+  position:relative;
+
+  .site_logo, #site_logo, #site_logo img {
+    position:relative;
+    display:inline-block;
+    height:50px;
+  }
+
+  .site_logo {
+    bottom:-20px;
+  }
+
+  #site_logo img {
+    text-indent:-99999px;
+  }
+
   .container {position:relative;}
-  .logo {height:50px; background-size:contain; position:relative; bottom:-20px; text-indent:-99999px;}
-  .site_logo {position:relative; display:inline-block;}
-  .help {display:inline-block; position:absolute; left:0; width:38px; background-color:$colour_banner_accent; text-transform:uppercase; border-radius:3px; font-size:0.625rem; top:16px; color:#fff; text-align:center; padding: 2px 0; font-weight:bold;}
+  .help {
+    display:inline-block; position:absolute; left:0; width:38px; background-color:$colour_banner_accent; text-transform:uppercase; border-radius:3px; font-size:0.625rem; top:0; color:#fff; text-align:center; padding: 2px 0; font-weight:bold;
+    pointer-events: none;
+  }
   .hamburger {width:65px; height:80px;background-color:$colour_banner_primary; display:inline-block; position:absolute; top:0; right:0; background: #20242b image-url('icons/hamburger.svg') no-repeat center;
     @media(min-width:640px){display:none;}
   }
@@ -25,7 +44,7 @@
 
     ul {margin:40px 0 60px; padding:0; list-style:none;
       li a {display:inline-block; color:#fff; text-transform:uppercase; font-size:1rem; width:100%; padding:20px 0; border-bottom:1px solid rgba(244,244,244,.75);}
-      li:last-child a {color:$colour_accent;}
+      li:last-child a {color:$colour_secondary;}
     }
     .close {display:inline-block; float:right; text-transform:uppercase; color: #fff;
       &:after{content:""; position:relative; top:5px; margin-left:10px; display:inline-block; width:24px; height:24px; background: image-url('icons/close.svg') no-repeat center; background-size:contain;}

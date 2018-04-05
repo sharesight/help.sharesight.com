@@ -1,0 +1,51 @@
+---
+page_classes: 'category'
+layout: 'page_layout'
+---
+<%
+  page = locals[:page]
+%>
+
+<div class="container help-page-container">
+  <%= partial "partials/left_menu", locals: { locale_obj: locale_obj, page: page } %>
+
+  <div class="content">
+    <ul class="breadcrumbs">
+      <li><a href="<%= localize_url(current_page.url, locale_id: locale_obj[:id]) %>">Help</a></li>
+      <li><a href="<%= category_url(page[:category], locale_id: locale_obj[:id]) %>"><%= page[:category][:name] %></a></li>
+
+      <% if page[:parent_page] && page[:parent_page][:title] %>
+        <li class="breadcrumb-extra">
+          <a href="<%= page_url(page[:parent_page], locale_id: locale_obj[:id]) %>">
+            <%= page[:parent_page][:title] %>
+          </a>
+        </li>
+      <% end %>
+
+      <li class="breadcrumb-extra"><%= page[:title] %></li>
+    </ul>
+
+    <!-- On mobile, instead of the left navigation, we use a dropdown navigation here -->
+    <label for="page_navigation" class="selector">
+      <select id="page_navigation" name="page_navigation">
+        <!-- NOTE: Very similar logic exists elsewhere -->
+        <% categories_collection(locale_obj[:lang]).each do |category| %>
+          <optgroup label="<%= category[:name] %>">
+            <% category[:pages].each do |cat_page| %>
+              <option value="<%= page_url(cat_page, locale_id: locale_obj[:id]) %>" <% if cat_page[:id] == page[:id] %>selected<% end %>>
+                <%= cat_page[:title] %>
+              </option>
+            <% end %>
+          </optgroup>
+        <% end %>
+      </select>
+    </label>
+
+    <article class="article">
+      <h1><%= page[:title] %></h1>
+      <%= Kramdown::Document.new(page[:content]&.gsub('.png)', '.png?w=917)').gsub('.jpg)', '.jpg?w=917)')).to_html.html_safe %>
+
+      <p class="date_modified">Last modified on <%= Date.parse(page[:_meta][:updated_at]).strftime("%B %-d, %Y") %> UTC</p>
+    </article>
+  </div>
+</div>

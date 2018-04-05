@@ -1,12 +1,7 @@
 ---
 page_classes: 'page_home'
 page_description: 'Help pages for Sharesight'
-include_geo_redirect: true
 ---
-<% fetch_locale = current_page.url.split('/')%>
-<%= partial "partials/header" %>
-
-<%= partial "partials/search" %>
 
 <section class="section">
   <div class="container">
@@ -14,15 +9,13 @@ include_geo_redirect: true
   </div>
   <div class="tiles-wrapper">
     <div class="container">
-      <% data.help_categories.category.each_slice(3) do |tiles| %>
+      <!-- NOTE: Very similar logic exists elsewhere -->
+      <% categories_collection(locale_obj[:lang]).each_slice(3) do |groups| %>
         <div class="tiles">
-          <% tiles.each do |key, tile| %>
-            <% next if tile.nil? %>
-            <% default_page = CategoryHelper::pages_in_category(data, tile).first %>
-            <% next if default_page.nil? %>
-            <a href="<% if fetch_locale[1] && fetch_locale[1].length == 2%>/<%=fetch_locale[1]%><%else%><%end%>/<%= default_page[:page_url] %>/" class="tile">
-              <h2><%=tile[:name][:en]%></h2>
-              <p><%=tile[:description][:en]%></p>
+          <% groups.each do |category| %>
+            <a href="<%= category_url(category, locale_id: locale_obj[:id]) %>" title="<%= category[:name] %>" class="tile">
+              <h2><%= category[:name] %></h2>
+              <p><%= category[:description] %></p>
             </a>
           <% end %>
         </div>
@@ -36,7 +29,7 @@ include_geo_redirect: true
     <div class="twin">
       <h2>Sharesight Community</h2>
       <p>Ask questions, request features and report bugs on our community forum. We are always working on Sharesight and your suggestions help us decide what to work on next.</p>
-      <a href="https://community.sharesight.com" class="button button_feature">Visit our Forum</a>
+      <a href="<%= config[:community_url] %>" class="button button_feature">Visit our Forum</a>
     </div>
     <div class="twin">
       <h2>Videos &amp; Guides</h2>
@@ -65,4 +58,3 @@ include_geo_redirect: true
     </div>
   </div>
 </div>
-<%= partial "partials/footer" %>
