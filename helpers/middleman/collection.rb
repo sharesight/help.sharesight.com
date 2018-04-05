@@ -74,21 +74,8 @@ module MiddlemanCollectionHelpers
     collection
   end
 
-  private
-
-  # Caching is based off of a "hash" of key, lang, with_associations
-  def get_cached_collection(key, lang, with_associations)
-    @cached_collection ||= {}
-    return @cached_collection[key][lang][with_associations] if @cached_collection.dig(key, lang, with_associations)
-    false
-  end
-
-  def set_cached_collection(collection, key, lang, with_associations)
-    @cached_collection ||= {}
-    @cached_collection[key] ||= {}
-    @cached_collection[key][lang] ||= {}
-    @cached_collection[key][lang][with_associations] = collection
-    collection
+  def page_content_locales(page)
+    page&.content_langs&.map{|lang| data.locales.find{|locale| locale[:lang].to_s == lang.to_s}}&.select{|locale| locale} || []
   end
 
   def is_valid_page_model?(model)
@@ -106,6 +93,23 @@ module MiddlemanCollectionHelpers
     return !!(
       model && !model[:name]&.blank?
     ) rescue false
+  end
+
+  private
+
+  # Caching is based off of a "hash" of key, lang, with_associations
+  def get_cached_collection(key, lang, with_associations)
+    @cached_collection ||= {}
+    return @cached_collection[key][lang][with_associations] if @cached_collection.dig(key, lang, with_associations)
+    false
+  end
+
+  def set_cached_collection(collection, key, lang, with_associations)
+    @cached_collection ||= {}
+    @cached_collection[key] ||= {}
+    @cached_collection[key][lang] ||= {}
+    @cached_collection[key][lang][with_associations] = collection
+    collection
   end
 
   def generic_sort(a, b, secondary_sort_field = 'id')
