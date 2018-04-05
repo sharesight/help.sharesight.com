@@ -85,7 +85,7 @@ RSpec::Matchers.define :have_descriptions do |description, social_description|
 
   # parse
   description = BasicHelper.replace_quotes(description)
-  social_description = BasicHelper.replace_quotes(description)
+  social_description = BasicHelper.replace_quotes(social_description)
 
   match do |page|
     expect(page).to have_meta('description', description)
