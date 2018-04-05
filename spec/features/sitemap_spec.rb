@@ -33,74 +33,30 @@ describe 'Sitemap', :type => :feature do
       visit localize_path('sitemap.xml', locale_id: locale[:id])
 
       expectation = 0
-      expectation += locale[:pages].reject{ |page| page.show_in_sitemap == false }.length
+      expectation += locale[:pages].reject{ |_page| _page.show_in_sitemap == false }.length
 
-      expectation += get_blog_posts().length if locale[:id] == default_locale_id
-      expectation += get_blog_categories().length if locale[:id] == default_locale_id
+      # get all pages with content in this locale
+      expectation += get_pages(locale, true).length
 
-      expectation += get_partners_partners().length
-      expectation += get_partners_categories(all: true).length
-
-      expect(all(:xpath, '//urlset/url').length).to eq(expectation)
-      expect(all(:xpath, '//urlset/url/loc').length).to eq(expectation)
+      expect(all(:xpath, '//urlset/url').length).to eq(expectation), "Got #{all(:xpath, '//urlset/url').length} urls, expected #{expectation} in #{locale[:id]}"
+      expect(all(:xpath, '//urlset/url/loc').length).to eq(expectation), "Got #{all(:xpath, '//urlset/url/loc').length} url/locs, expected #{expectation} in #{locale[:id]}"
     end
   end
 
-  it "should have all the blog posts on the global sitemap" do
-    visit @path
-
-    get_blog_posts().each do |post|
-      url = Capybara.app.post_url(post)
-
-      xpath = generate_xpath('//urlset/url/loc', text: url)
-      expect(page).to have_xpath(xpath), "#{post.title} is missing in sitemap (expected #{url})."
-    end
-  end
-
-  it "should have all the blog categories on the global sitemap" do
-    visit @path
-
-    get_blog_categories().each do |category|
-      url = base_url("/blog/#{BasicHelper::url_friendly_string(category.name)}")
-
-      xpath = generate_xpath('//urlset/url/loc', text: url)
-      expect(page).to have_xpath(xpath), "#{category.name} is missing in sitemap (expected #{url})."
-    end
-  end
-
-  it "should have all the partners" do
+  it "should have all the help pages" do
     locales.each do |locale|
       visit localize_path('sitemap.xml', locale_id: locale[:id])
 
-      get_partners_partners().each do |partner|
-        url = Capybara.app.partner_url(partner, locale_id: locale[:id])
+      get_pages(locale, true).each do |_page|
+        url = Capybara.app.page_url(_page, locale_id: locale[:id])
 
         xpath = generate_xpath('//urlset/url/loc', text: url)
-        expect(page).to have_xpath(xpath), "#{partner.name} is missing in sitemap (expected #{url})."
+        expect(page).to have_xpath(xpath), "#{_page.name} is missing in #{locale[:id]} sitemap (expected #{url})."
 
-        locales.each do |sublocale|
-          url = Capybara.app.partner_url(partner, locale_id: sublocale.id)
+        Capybara.app.page_content_locales(_page).each do |sublocale|
+          url = Capybara.app.page_url(_page, locale_id: sublocale.id)
           xpath = generate_xpath('//urlset/url/link', args: { href: url })
-          expect(page).to have_xpath(xpath), "#{partner.name} is missing in sitemap (expected #{url})."
-        end
-      end
-    end
-  end
-
-  it "should have all the partner categories" do
-    locales.each do |locale|
-      visit localize_path('sitemap.xml', locale_id: locale[:id])
-
-      get_partners_categories(all: true).each do |category|
-        url = localize_url("/partners/#{category[:url_slug]}", locale_id: locale[:id])
-
-        xpath = generate_xpath('//urlset/url/loc', text: url)
-        expect(page).to have_xpath(xpath), "#{category.name} is missing in sitemap (expected #{url})."
-
-        locales.each do |sublocale|
-          url = localize_url("/partners/#{category[:url_slug]}", locale_id: sublocale.id)
-          xpath = generate_xpath('//urlset/url/link', args: { href: url })
-          expect(page).to have_xpath(xpath), "#{category.name} is missing in sitemap (expected #{url})."
+          expect(page).to have_xpath(xpath), "#{_page.name} is missing in #{locale[:id]} sitemap (expected #{url})."
         end
       end
     end
