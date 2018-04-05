@@ -6,7 +6,7 @@ module Middleman
 
     def after_configuration
       # ensure this doesn't run before data is available; if it never runs, it will fail tests
-      if !app.data || !app.data.respond_to?('help') || !app.data.help.respond_to?('categories') || !app.data.help.respond_to?('pages')
+      if !app&.data&.respond_to?(:help) || !app.data.help&.pages || !app.data.help&.categories
         puts "WARNING: Not routing as middleman contentful has not been ran!  Please ensure middleman contentful runs successfully first."
         return
       end
