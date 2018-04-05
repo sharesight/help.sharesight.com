@@ -76,8 +76,8 @@ describe 'Collection Middleman Helper', :type => :helper do
       [
         # [index, locales]
         # Random numbers, could break! Needs to be better!
-        ['14pYIcSugwgiasyiAS4WKk', ["global", "nz", "au", "ca", "uk"]],
-        ['5ox0N62c1iiuAaucsMO2UI', ["global", "nz", "au", "ca", "uk"]],
+        ['14pYIcSugwgiasyiAS4WKk', ["global", "au", "ca", "nz", "uk"]],
+        ['5ox0N62c1iiuAaucsMO2UI', ["global", "au", "ca", "nz", "uk"]],
       ].each do |id, expectation|
         this_page = @pages.find{|page| page[:id] == id}
         page_locales = Capybara.app.page_content_locales(this_page)
