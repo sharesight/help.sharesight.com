@@ -7,11 +7,9 @@
     "contentful": "bundle exec middleman contentful",
     "start": "yarn contentful && bundle exec middleman",
     "build": "bundle install && yarn contentful && bundle exec middleman build --verbose && yarn test",
-    "test": "yarn jest && yarn rspec",
+    "test": "yarn rspec",
     "rspec": "bundle exec rspec spec",
-    "rspec:tdd": "bundle exec guard",
-    "jest": "NODE_ENV=test ./node_modules/.bin/jest",
-    "jest:tdd": "yarn jest --watch --verbose"
+    "rspec:tdd": "bundle exec guard"
   },
   "repository": {
     "type": "git",
@@ -21,8 +19,6 @@
     "url": "https://github.com/sharesight/help.sharesight.com/issues"
   },
   "homepage": "https://github.com/sharesight/help.sharesight.com#readme",
-  "devDependencies": {
-    "jest": "^22.4.0"
-  },
+  "devDependencies": {},
   "dependencies": {}
 }
