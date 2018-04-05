@@ -9,9 +9,9 @@ describe 'Collection Middleman Helper', :type => :helper do
   context "page_url and page_path" do
     # This is a proxy to other tested helpers.
     it "should return a string" do
-      get_pages().each do |page|
-        expect(@app.page_url(page)).to be_kind_of(::String)
-        expect(@app.page_path(page)).to be_kind_of(::String)
+      get_pages().each do |_page|
+        expect(@app.page_url(_page)).to be_kind_of(::String)
+        expect(@app.page_path(_page)).to be_kind_of(::String)
       end
     end
   end
