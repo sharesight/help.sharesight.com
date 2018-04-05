@@ -1,7 +1,7 @@
 require 'cgi'
 
 module CapybaraCollectionHelpers
-  def get_pages(locale_obj = Capybara.app.default_locale_obj)
+  def get_pages(locale_obj = Capybara.app.default_locale_obj, locale_specific = false)
     pages = Capybara.app.data.help.pages.map{ |tuple| tuple[1] }
     pages = pages.map do |page|
       page = Capybara.app.localize_entry(page, locale_obj[:lang], Capybara.app.default_locale_obj[:lang])
@@ -11,16 +11,20 @@ module CapybaraCollectionHelpers
       page[:path] = Capybara.app.page_path(page, locale_id: locale_obj[:id])
 
       # The browser will do this when it parses `&amp; => &`
-      page[:name] = page[:name] && CGI::unescapeHTML(page[:name])
+      page[:title] = page[:title] && CGI::unescapeHTML(page[:title])
       page[:meta_description] = page[:meta_description] && CGI::unescapeHTML(page[:meta_description])
 
       # Mimic layouts/partials/head
-      page[:page_title] = "#{BasicHelper.replace_quotes(page[:name])} | #{locale_obj[:append_title]} page"
-      page[:description] = BasicHelper.replace_quotes(page[:short_description])
+      page[:page_title] = "#{BasicHelper.replace_quotes(page[:title])} | #{locale_obj[:append_title]}"
+      page[:description] = BasicHelper.replace_quotes(page[:meta_description])
       page
     end
 
     pages = pages.select{|page| Capybara.app.is_valid_page_model?(page)}
+
+    if locale_specific
+      pages = pages.select{|_page| Capybara.app.page_content_locales(_page).include?(locale_obj)}
+    end
 
     pages
   end

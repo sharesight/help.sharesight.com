@@ -41,7 +41,8 @@ module MiddlemanCollectionHelpers
     # add child pages (depth = 1)
     if with_associations
       collection = collection.map{ |page|
-        page[:child_pages] = pages_collection(lang, false).select{ |child_page| child_page[:parent_page] && child_page[:parent_page][:id] == page[:id] }
+        # This is recursive, but it should get cached..
+        page[:child_pages] = pages_collection(lang, false).select{ |child_page| child_page[:parent_page] && child_page[:parent_page][:id] == page[:id]}
         page
       }
     end
@@ -52,7 +53,7 @@ module MiddlemanCollectionHelpers
     collection
   end
 
-  def categories_collection(lang = default_locale_obj[:lang], with_associations = true)
+  def categories_collection(lang = default_locale_obj[:lang], with_associations = true, restrict_children = true)
     return get_cached_collection('categories', lang, with_associations) if get_cached_collection('categories', lang, with_associations)
 
     collection = data.help.categories
@@ -60,12 +61,14 @@ module MiddlemanCollectionHelpers
       .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
       .select{ |model| is_valid_category_model?(model) }
 
-    # add associated pages, without children
+    # add associated pages, with children
     if with_associations
       collection = collection.map{ |category|
-        category[:pages] = pages_collection(lang, false).select{ |page| page[:category] && page[:category][:id] == category[:id] }
+        category[:pages] = pages_collection(lang, true).select{ |page| page[:category] && page[:category][:id] == category[:id] }
         category
-      }.select{ |model| model[:pages].length }
+      }
+
+      collection = collection.select{ |model| model[:pages].length } if restrict_children
     end
 
     collection = collection.sort{ |a, b| sort_categories(a, b) }
