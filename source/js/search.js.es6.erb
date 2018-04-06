@@ -64,7 +64,7 @@
   function getCurrentPathLocale () {
     // grab the locale from the url, eg /ca/article = 'ca' or /article = ''.
     let currentPathLocale = '';
-    const firstUriSplit = window.location.href.split('/')[3];
+    const firstUriSplit = window.location.pathname.split('/')[1];
     if (firstUriSplit && locales.indexOf(firstUriSplit)) { // is a valid locale
       currentPathLocale = firstUriSplit;
     }
@@ -74,8 +74,9 @@
 
   function getContentsUrl () {
     const currentPathLocale = getCurrentPathLocale();
-    if (currentPathLocale) return `/${currentPathLocale}/contents.json`;
-    return '/contents.json';
+    const baseUrl = `<%= config[:base_url] %>`;
+    if (currentPathLocale) return `${baseUrl}/${currentPathLocale}/contents.json`;
+    return `${baseUrl}/contents.json`;
   }
 
   // NOTE: Ensure this 100% matches the `fuseConfig` file in sharesight/investapp.
@@ -155,7 +156,6 @@
     }
 
     disableEnterKeyPress(searchField);
-
     loadJSON(getContentsUrl(), (data) => {
       setFuse(data);
       searchField.addEventListener('input', searchHandler);
