@@ -1,7 +1,7 @@
 require 'cgi'
 
 module CapybaraCollectionHelpers
-  def get_pages(locale_obj = Capybara.app.default_locale_obj, locale_specific = false)
+  def get_pages(locale_obj = Capybara.app.default_locale_obj)
     pages = Capybara.app.data.help.pages.map{ |tuple| tuple[1] }
     pages = pages.map do |page|
       page = Capybara.app.localize_entry(page, locale_obj[:lang], Capybara.app.default_locale_obj[:lang])
@@ -21,11 +21,6 @@ module CapybaraCollectionHelpers
     end
 
     pages = pages.select{|page| Capybara.app.is_valid_page_model?(page)}
-
-    if locale_specific
-      pages = pages.select{|_page| Capybara.app.page_content_locales(_page).include?(locale_obj)}
-    end
-
     pages
   end
 

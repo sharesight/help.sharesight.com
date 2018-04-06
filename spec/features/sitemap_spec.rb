@@ -36,7 +36,7 @@ describe 'Sitemap', :type => :feature do
       expectation += locale[:pages].reject{ |_page| _page.show_in_sitemap == false }.length
 
       # get all pages with content in this locale
-      expectation += get_pages(locale, true).length
+      expectation += get_pages(locale).length
 
       expect(all(:xpath, '//urlset/url').length).to eq(expectation), "Got #{all(:xpath, '//urlset/url').length} urls, expected #{expectation} in #{locale[:id]}"
       expect(all(:xpath, '//urlset/url/loc').length).to eq(expectation), "Got #{all(:xpath, '//urlset/url/loc').length} url/locs, expected #{expectation} in #{locale[:id]}"
@@ -47,13 +47,13 @@ describe 'Sitemap', :type => :feature do
     locales.each do |locale|
       visit localize_path('sitemap.xml', locale_id: locale[:id])
 
-      get_pages(locale, true).each do |_page|
+      get_pages(locale).each do |_page|
         url = Capybara.app.page_url(_page, locale_id: locale[:id])
 
         xpath = generate_xpath('//urlset/url/loc', text: url)
         expect(page).to have_xpath(xpath), "#{_page.name} is missing in #{locale[:id]} sitemap (expected #{url})."
 
-        Capybara.app.page_content_locales(_page).each do |sublocale|
+        locales.each do |sublocale|
           url = Capybara.app.page_url(_page, locale_id: sublocale.id)
           xpath = generate_xpath('//urlset/url/link', args: { href: url })
           expect(page).to have_xpath(xpath), "#{_page.name} is missing in #{locale[:id]} sitemap (expected #{url})."

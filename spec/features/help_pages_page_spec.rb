@@ -4,7 +4,7 @@ require 'spec_helper'
 describe 'Help Pages', :type => :feature do
   it "should load and have expected base metas" do
     locales.each do |locale|
-      get_pages(locale, true).each do |_page|
+      get_pages(locale).each do |_page|
         visit _page[:path]
 
         expect(page).to respond_successfully
@@ -19,14 +19,14 @@ describe 'Help Pages', :type => :feature do
 
   it "should have expected urls" do
     locales.each do |locale|
-      get_pages(locale, true).each do |_page|
+      get_pages(locale).each do |_page|
         visit _page[:path]
 
         expect(page).to have_meta('og:url', base_url(_page[:path]), name_key: 'property')
 
         expect(page).to have_head('link', args: { rel: 'canonical', href: absolute_url(_page[:path]) }, debug: :href)
 
-        Capybara.app.page_content_locales(_page).each do |alternate_locale|
+        locales.each do |alternate_locale|
           if alternate_locale[:id] == default_locale_id
             expect(page).to have_head('link', args: { rel: 'alternate', href: localize_url(_page[:path], locale_id: default_locale_id), hreflang: 'x-default' }, debug: :href)
           end
@@ -38,7 +38,7 @@ describe 'Help Pages', :type => :feature do
 
   it "should have the expected elements" do
     locales.each do |locale|
-      get_pages(locale, true).each do |_page|
+      get_pages(locale).each do |_page|
         visit _page[:path]
 
         expect(page).to have_css('.breadcrumbs li', text: "Help")
@@ -53,7 +53,7 @@ describe 'Help Pages', :type => :feature do
 
   it "should have all help topics in navigation" do
     locales.each do |locale|
-      get_pages(locale, true).each do |_page|
+      get_pages(locale).each do |_page|
         visit _page[:path]
 
         get_categories(locale).each do |category|

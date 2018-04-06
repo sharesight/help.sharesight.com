@@ -76,7 +76,7 @@ describe 'Collection Middleman Helper', :type => :helper do
       [
         # [index, locales]
         # Random numbers, could break! Needs to be better!
-        ['14pYIcSugwgiasyiAS4WKk', ["global", "au", "ca", "nz", "uk"]],
+        ['post_185', ["au", "ca"]],
         ['5ox0N62c1iiuAaucsMO2UI', ["global", "au", "ca", "nz", "uk"]],
       ].each do |id, expectation|
         this_page = @pages.find{|page| page[:id] == id}

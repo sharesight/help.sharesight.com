@@ -53,7 +53,10 @@ const localization = {
         `${config.base_path}/`.replace(/\/+/g, '/'), // relative urls (/faq); replace duplicate slashes
       ].map(path => Array.from(document.querySelectorAll(`a[href^="${path}"]`)))
     ).forEach((element) => {
-      element.pathname = urlHelper.localizePath(element.pathname)
+      // don't localize urls that are inside of the help article, as they may go to another locale
+      if (!element.matches('article.article a')) {
+        element.pathname = urlHelper.localizePath(element.pathname)
+      }
     })
   },
 

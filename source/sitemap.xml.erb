@@ -3,7 +3,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
 <%# Iterate through every partner category with more than one post.  Include partners/all %>
-<% pages_collection(locale_obj[:lang]).select{|page| page_content_locales(page).include?(locale_obj)}.each do |page| %>
+<% pages_collection(locale_obj[:lang]).each do |page| %>
   <% updated_at = page.dig(:_meta, :updated_at) || page.dig(:_meta, 'updated_at') %>
 
   <url>
@@ -12,7 +12,7 @@
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
 
-    <% page_content_locales(page).each do |locale| %>
+    <% data.locales.each do |locale| %>
       <% if locale[:id] == default_locale_id %>
         <xhtml:link rel="alternate" href="<%= page_url(page, locale_id: locale[:id]) %>" hreflang="x-default" />
       <% end %>
