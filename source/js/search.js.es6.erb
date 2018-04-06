@@ -1,7 +1,34 @@
-<% require_asset "./lunr" %>
+<%# fuse.js should come from /node_modules, but current version of middleman / middleman-sprockets does not support this %>
+<% require_asset "./fuse.js" %>
 
 ;(function(){
   const locales = <%= data.locales.map { |a| a[:id] } %>;
+
+  let fuseInstance; // cache this
+  const getFuse = (data = [], fromCache = true) => {
+    if (fuseInstance && fromCache) return fuseInstance;
+    return setFuse(data);
+  }
+
+  const setFuse = (data = []) => {
+    if (!data || !data.length) return false;
+
+    // since we're really only counting the first [distance] characters, truncate all strings based on it
+    // this saves like 80-90% (mostly result.content) and speeds up searches greatly!
+    let indexData = data.slice().map(result => {
+      if (fuseConfig.tokenize) return result; // tokenize looks at the entire content, regardless of [distance]
+
+      const newResult = { ...result }
+      Object.keys(newResult).forEach(key => {
+        if (typeof newResult[key] === 'string') newResult[key] = newResult[key].substring(0, fuseConfig.distance)
+      })
+
+      return newResult;
+    });
+
+    fuseInstance = new Fuse(indexData, fuseConfig)
+    return fuseInstance;
+  }
 
   function loadJSON(path, successFn, errorFn) {
       const xhr = new XMLHttpRequest();
@@ -34,97 +61,104 @@
     element.addEventListener('keyup', onKeyEvent);
   }
 
-  function getCurrentPageLocale () {
+  function getCurrentPathLocale () {
     // grab the locale from the url, eg /ca/article = 'ca' or /article = ''.
-    let currentPageLocale;
+    let currentPathLocale = '';
     const firstUriSplit = window.location.href.split('/')[3];
     if (firstUriSplit && locales.indexOf(firstUriSplit)) { // is a valid locale
-      currentPageLocale = firstUriSplit;
+      currentPathLocale = firstUriSplit;
     }
 
-    return currentPageLocale;
+    return currentPathLocale;
   }
 
   function getContentsUrl () {
-    const currentPageLocale = getCurrentPageLocale();
-    if (currentPageLocale) return `/${currentPageLocale}/contents.json`;
+    const currentPathLocale = getCurrentPathLocale();
+    if (currentPathLocale) return `/${currentPathLocale}/contents.json`;
     return '/contents.json';
   }
 
-  function populateIndex(data){
-    // this is shorthand for lunr.Builder
-    const index = lunr(function () {
-      this.ref('id');
+  // NOTE: Ensure this 100% matches the `fuseConfig` file in sharesight/investapp.
+  const fuseConfig = {
+    maxResults: 20, // NOTE: Not a fuse property, we use this internally.
 
-      this.field('title', { boost: 100, required: true });
-      this.field('keywords', { boost: 250 });
-      this.field('content', { boost: 50 });
-      this.field('page_locales', { boost: 0 });
+    // All options below a part of Fuse itself.
+    caseSensitive: false,
+    shouldSort: true,
+    includeScore: true, // wraps the result in an object, eg `{ item: Result, score: Number }`
+    findAllMatches: true, // don't stop on a "perfect" match
+    threshold: 0.5, // lower gives up earlier
+    location: 0, // search from the start of the string
+    distance: 100, // max distance the string is valid to be searched in; only the first [distance] characters from [location] could result in a perfect score
+    maxPatternLength: 32,
+    minMatchCharLength: 2,
+    keys: [
+      { name: 'keywords', weight: 1 },
+      { name: 'title', weight: 0.5 },
+      { name: 'path', weight: 0.1 },
+      { name: 'description', weight: 0.1 },
+      { name: 'content', weight: 0.1 },
+      { name: 'category_name', weight: 0.05 },
+    ],
+  };
 
-      this.pipeline.remove(lunr.stemmer);
-      data.forEach((item) => this.add(item));
-    });
 
-    return index; // instanceof lunr.Index
-  }
-
-  const createResultElement = ({ title, slug }) => {
+  const renderResult = ({ title, path }) => {
     const li = document.createElement('li');
     const link = document.createElement('a');
-    link.href = slug;
+
+    link.href = path;
     link.innerText = title;
 
     li.appendChild(link);
     return li;
   }
 
-  function searchSetup(index, contents, searchField, searchResults){
-    searchField.addEventListener('input', function() {
-      const value = this.value;
+  const appendResultToPage = (result) => {
+    document.querySelector("#search-results").appendChild(
+      renderResult({ title: result.title, path: result.path })
+    );
+  }
 
-      // reset search results
-      searchResults.innerHTML = '';
+  const getResults = (value) => {
+    const fuse = getFuse();
 
-      if (!value) return;
-      const results = index.query(function (query) {
-        // search for the input value
-        query.term(value, {
-          boost: 1,
-          wildcard: lunr.Query.wildcard.TRAILING,
-        })
+    if (!fuse) {
+      console.error(`Unable to find fuse instance to search.`)
+      return;
+    }
 
-        // Boosts the current locale if it exists inside page_locales, by 5x
-        query.term(getCurrentPageLocale(), {
-          boost: 5,
-          fields: ['page_locales'],
-          wildcard: 0, // none
-        })
-      });
-      if (!results) return;
+    if (!value) return;
 
-      results.forEach((result) => {
-        const content = contents.find(function(obj) { return obj.id === result.ref; });
+    return fuse.search(value)
+      .map(result => ({ ...result.item, score: result.score })) // flatten result from Fuse
+      .filter(result => result && result.title && result.path)
+      .slice(0, fuseConfig.maxResults) // only display the first 20 results
+  }
 
-        if (content && content.title && content.page_slug) {
-          searchResults.appendChild(
-            createResultElement({ title: content.title, slug: content.page_slug })
-          );
-        }
-      });
-    });
+  function searchHandler() {
+    document.querySelector("#search-results").innerHTML = ''; // reset search results
+
+    const results = getResults(this.value);
+    if (!results || !results.length) return;
+
+    results.forEach(appendResultToPage);
   }
 
   document.addEventListener('DOMContentLoaded', function() {
     const searchField = document.querySelector("#search-field");
     const searchResults = document.querySelector("#search-results");
 
+    if (!searchField && !searchResults) {
+      console.warn(`No search DOM is found on this page, will not initialize.`)
+      return;
+    }
+
     disableEnterKeyPress(searchField);
 
     loadJSON(getContentsUrl(), (data) => {
-      const index = populateIndex(data);
-      const contents = [].concat(data); // don't mutate
-
-      searchSetup(index, contents, searchField, searchResults);
+      setFuse(data);
+      searchField.addEventListener('input', searchHandler);
     });
   });
 })(document, window);
