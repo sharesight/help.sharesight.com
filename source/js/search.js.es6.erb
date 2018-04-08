@@ -3,11 +3,19 @@
 
 ;(function(){
   const locales = <%= data.locales.map { |a| a[:id] } %>;
+  let fuseInstance; // caches the fuse instance (with data in it)
+  let searchData; // caches a promise in loadSearchData
 
-  let fuseInstance; // cache this
   const getFuse = (data = [], fromCache = true) => {
-    if (fuseInstance && fromCache) return fuseInstance;
-    return setFuse(data);
+    return new Promise((resolve, reject) => {
+      if (fuseInstance && fromCache) {
+        resolve(fuseInstance);
+      } else if (!data || !data.length) {
+        loadSearchData().then(d => resolve(setFuse(d)));
+      } else {
+        resolve(setFuse(data));
+      }
+    })
   }
 
   const setFuse = (data = []) => {
@@ -32,7 +40,6 @@
 
   function loadJSON(path, successFn, errorFn) {
       const xhr = new XMLHttpRequest();
-
       xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status >= 200 && xhr.status < 300) {
@@ -122,28 +129,43 @@
   }
 
   const getResults = (value) => {
-    const fuse = getFuse();
+    return getFuse().then(fuse => {
+      if (!value) return;
+      if (!fuse) {
+        console.error(`Unable to find fuse instance to search.`);
+        return;
+      }
 
-    if (!fuse) {
-      console.error(`Unable to find fuse instance to search.`)
-      return;
-    }
-
-    if (!value) return;
-
-    return fuse.search(value)
-      .map(result => ({ ...result.item, score: result.score })) // flatten result from Fuse
-      .filter(result => result && result.title && result.path)
-      .slice(0, fuseConfig.maxResults) // only display the first 20 results
+      return fuse.search(value)
+        .map(result => ({ ...result.item, score: result.score })) // flatten result from Fuse
+        .filter(result => result && result.title && result.path)
+        .slice(0, fuseConfig.maxResults) // only display the first 20 results
+    })
   }
 
   function searchHandler() {
     document.querySelector("#search-results").innerHTML = ''; // reset search results
 
-    const results = getResults(this.value);
-    if (!results || !results.length) return;
+    getResults(this.value).then(results => {
+      if (!results || !results.length) return;
 
-    results.forEach(appendResultToPage);
+      results.forEach(appendResultToPage);
+    });
+  }
+
+  function loadSearchData () {
+    if (searchData) return searchData;
+
+    searchData = new Promise((resolve, reject) => {
+      loadJSON(getContentsUrl(), (data) => {
+        setFuse(data);
+        resolve(data);
+      }, (error) => {
+        reject(error);
+      });
+    })
+
+    return searchData;
   }
 
   document.addEventListener('DOMContentLoaded', function() {
@@ -155,10 +177,9 @@
       return;
     }
 
+    loadSearchData();
+
     disableEnterKeyPress(searchField);
-    loadJSON(getContentsUrl(), (data) => {
-      setFuse(data);
-      searchField.addEventListener('input', searchHandler);
-    });
+    searchField.addEventListener('input', searchHandler);
   });
 })(document, window);
