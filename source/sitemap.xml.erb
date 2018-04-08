@@ -12,7 +12,7 @@
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
 
-    <% data.locales.each do |locale| %>
+    <% page_content_locales(page).each do |locale| %>
       <% if locale[:id] == default_locale_id %>
         <xhtml:link rel="alternate" href="<%= page_url(page, locale_id: locale[:id]) %>" hreflang="x-default" />
       <% end %>

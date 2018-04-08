@@ -44,18 +44,21 @@ layout: 'page_layout'
     <article class="article">
       <h1><%= page[:title] %></h1>
 
-      <% content_locales = page_content_locales(page) - [locale_obj] %>
-      <% if content_locales.length > 0 %>
-        <small>Content also available specifically for
+      <% content_langs = page[:content_langs] - [locale_obj[:lang].to_sym] %>
+      <% if content_langs.length > 0 %>
+        <small>Content also available for
           <%
+
             i = 0
-            content_locales.each do |locale|
+            content_langs.each do |lang|
               i = i + 1
-              name = locale[:for_country] || locale[:name]
-              manual_join_text = ' and '  if content_locales.length == 2
-              manual_join_text = ', '     if content_locales.length > 2
-              manual_join_text = ', and ' if i == content_locales.length - 1 && content_locales.length > 2
-              manual_join_text = ''       if !manual_join_text || i == content_locales.length
+              locale = data.locales.find{|l| l[:lang].to_sym == lang.to_sym}
+              name = locale[:for_country]
+              name = locale[:name] if name.blank?
+              manual_join_text = ' and '  if content_langs.length == 2
+              manual_join_text = ', '     if content_langs.length > 2
+              manual_join_text = ', and ' if i == content_langs.length - 1 && content_langs.length > 2
+              manual_join_text = ''       if !manual_join_text || i == content_langs.length
           %>
             <a href="<%= page_url(page, locale_id: locale[:id]) %>"><%= name %></a><%= manual_join_text %>
           <% end %>
