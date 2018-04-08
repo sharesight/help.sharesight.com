@@ -75,16 +75,23 @@ describe 'Collection Middleman Helper', :type => :helper do
     it "should give an array of locales (should be all locale)" do
       [
         # [index, locales]
-        # Random numbers, could break! Needs to be better!
         ['post_185', ["au", "ca"]],
         ['5ox0N62c1iiuAaucsMO2UI', ["global", "au", "ca", "nz", "uk"]],
       ].each do |id, expectation|
-        this_page = @pages.find{|page| page[:id] == id}
+        this_page = @pages.find{|page| page[:id].to_s == id.to_s}
         page_locales = Capybara.app.page_content_locales(this_page)
         locale_ids = page_locales.map{|l| l[:id]}
+
         expect(page_locales).to be_kind_of(Array)
+        expect(this_page && this_page[:id]).to eq(id), "Page not found for #{id} – has this page been deleted or is invalid?"
         expect(locale_ids).to eq(expectation), "Locales did not match expectation for id: #{this_page[:id]}, got #{locale_ids}, expected #{expectation}"
       end
+    end
+
+    it "should return an array with nil input" do
+      page_locales = Capybara.app.page_content_locales(nil)
+      expect(page_locales).to be_kind_of(Array)
+      expect(page_locales).to eq([])
     end
   end
 end

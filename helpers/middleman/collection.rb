@@ -78,7 +78,14 @@ module MiddlemanCollectionHelpers
   end
 
   def page_content_locales(page)
-    page&.content_langs&.map{|lang| data.locales.find{|locale| locale[:lang].to_s == lang.to_s}}&.select{|locale| locale} || []
+    page_locales = page&.content_langs&.map{|lang| data.locales.find{|locale| locale[:lang].to_s == lang.to_s}}&.select{|locale| locale} || []
+    return [] if page_locales.length == 0
+
+    # if we have the default (global) locale, include all locales, so it gets localized in all pages
+    page_locales = page_locales + data.locales if page_locales.include?(default_locale_obj)
+
+    page_locales = page_locales.uniq
+    page_locales
   end
 
   def is_valid_page_model?(model)
