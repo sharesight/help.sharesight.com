@@ -16,8 +16,8 @@
         description:           page[:meta_description],
         category_name:         page[:category][:name],
 
-        # reduce the amount of data downloaded in browsers
-        content:               SearchHelper::condense_content(page[:content].to_s.gsub(%r{[\[\]#\*<>\/]}, ' ')),
+        # reduce the amount of data downloaded in browsers – only keep the first 400 characters of contents.json
+        content:               SearchHelper::condense_content(page[:content].to_s.gsub(%r{[\[\]#\*<>\/]}, ' '))[0..400],
         keywords:              page[:keywords]&.to_s
       }
     end
