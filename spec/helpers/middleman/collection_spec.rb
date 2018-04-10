@@ -75,7 +75,9 @@ describe 'Collection Middleman Helper', :type => :helper do
     it "should give an array of locales (should be all locale)" do
       [
         # [index, locales]
-        ['post_185', ["au", "ca"]],
+        # every id should actually give all locales, else it will fail in another place...
+        # page_content_locales should == app.data.locales
+        ['post_185', ["global", "au", "ca", "nz", "uk"]],
         ['5ox0N62c1iiuAaucsMO2UI', ["global", "au", "ca", "nz", "uk"]],
       ].each do |id, expectation|
         this_page = @pages.find{|page| page[:id].to_s == id.to_s}
