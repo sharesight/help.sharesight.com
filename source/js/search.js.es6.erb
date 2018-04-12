@@ -72,7 +72,9 @@
     // grab the locale from the url, eg /ca/article = 'ca' or /article = ''.
     let currentPathLocale = '';
     const firstUriSplit = window.location.pathname.split('/')[1];
-    if (firstUriSplit && locales.indexOf(firstUriSplit)) { // is a valid locale
+
+    // is a valid locale that we would want to localize off of, eg. don't localize "global"
+    if (firstUriSplit && locales.indexOf(firstUriSplit) !== -1 && firstUriSplit !== `<%= default_locale_id %>`) {
       currentPathLocale = firstUriSplit;
     }
 
