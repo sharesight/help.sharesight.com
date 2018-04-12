@@ -1,58 +1,41 @@
+<% locale_obj = locals[:locale_obj] || default_locale_obj %>
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-<% data.locale_urls.each do |lo| %>
+<%# Iterate through every partner category with more than one post.  Include partners/all %>
+<% pages_collection(locale_obj[:lang]).each do |page| %>
+  <% updated_at = page.dig(:_meta, :updated_at) || page.dig(:_meta, 'updated_at') %>
+
   <url>
-    <loc><%=url_root%><%=lo.id == 'GLOBAL' ? '' : "/#{lo.id.downcase}/"%></loc>
-    <% data.locale_urls.each do |lu|%>
-      <xhtml:link rel="alternate" hreflang="<%= alternative_locale(lu) == 'en' ? 'x-default' : alternative_locale(lu).gsub('UK', 'GB')%>" href="<%=url_root%><%=locale_str_correction(lu)%>" />
-    <% end %>
+    <loc><%= page_url(page, locale_id: locale_obj[:id]) %></loc>
+    <% if updated_at %><lastmod><%= updated_at %></lastmod><% end %>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+
+    <% page_content_locales(page).each do |locale| %>
+      <% if locale[:id] == default_locale_id %>
+        <xhtml:link rel="alternate" href="<%= page_url(page, locale_id: locale[:id]) %>" hreflang="x-default" />
+      <% end %>
+      <xhtml:link rel="alternate" href="<%= page_url(page, locale_id: locale[:id]) %>" hreflang="<%= locale[:lang].downcase %>" />
+    <%end%>
   </url>
 <% end %>
 
-<% CategoryHelper::navigation_menu_structure(data).each do |cat| %>
-  <% category = cat.first.last%>
-  <% category[:pages].each do |page| %>
-    <% if page[:content].keys.length == 1 && page[:content].keys.first == 'en' && page[:content]['en'] != "\n\n" %>
-      <% data.locale_urls.each do |lo|%>
-      <url>
-        <loc><%= url_root %><%= lo.id == 'GLOBAL' ? '/' : "/#{lo.id.downcase}/"%><%=page[:page_url] %>/</loc>
-        <% data.locale_urls.each do |lu|%>
-          <xhtml:link rel="alternate" hreflang="<%= alternative_locale(lu) == 'en' ? 'x-default' : alternative_locale(lu).gsub('UK', 'GB')%>" href="<%=url_root%><%=locale_str_correction(lu) == '' ? '/' : "#{locale_str_correction(lu)}"%><%=page[:page_url]%>/" />
-        <% end %>
-      </url>
+<%# This is a list of pages on this current locale %>
+<% locale_obj[:pages].reject{ |page| page.show_in_sitemap == false }.each do |page_data| %>
+  <url>
+    <%# Some pages can be strictly non-global, eg. a canadian landing page, so grabs the first locale. %>
+    <loc><%= localize_url(page_data.page, locale_id: locale_obj[:id]) %></loc>
+    <changefreq><%= page_data.sitemap_changefreq || 'weekly' %></changefreq>
+    <priority><%= page_data.sitemap_priority || '0.5' %></priority>
+
+    <% page_alternative_locales(page_data[:page]).each do |locale| %>
+      <%# Set a default language alternate link in addition to the en-* versions we have %>
+      <% if locale[:id] == default_locale_id %>
+        <xhtml:link rel="alternate" href="<%= localize_url(page_data.page, locale_id: locale[:id]) %>" hreflang="x-default" />
       <% end %>
-    <% elsif page[:content].keys.length > 1 && page[:content].keys.include?('en') %>
-      <% if page[:content]['en'] == "\n\n" %>
-        <url>
-          <loc><%=url_root%><%=page[:content].keys.last == 'en-NZ' ? "/#{page[:content].keys.last.gsub('en-', '').downcase}/" : "/"%><%=page[:page_url]%>/</loc>
-          <% page[:content].keys.each do |lu|%>
-            <% if lu != 'en'%>
-              <xhtml:link rel="alternate" hreflang="<%=lu%>" href="<%=url_root%>/<%=lu.gsub('en-','').downcase%>/<%=page[:page_url]%>/" />
-            <% end %>
-          <% end %>
-        </url>
-      <% else %>
-        <% data.locale_urls.each do |lo|%>
-          <url>
-            <loc><%=url_root%><%=lo.id == 'GLOBAL' ? '/' : "/#{lo.id.downcase}/"%><%=page[:page_url]%>/</loc>
-            <% data.locale_urls.each do |lu|%>
-              <xhtml:link rel="alternate" hreflang="<%= alternative_locale(lu) == 'en' ? 'x-default' : alternative_locale(lu).gsub('UK', 'GB')%>" href="<%=url_root%><%=locale_str_correction(lu) == '' ? '/' : "#{locale_str_correction(lu)}"%><%=page[:page_url]%>/" />
-            <% end %>
-          </url>
-        <% end %>
-      <% end %>
-    <% elsif !page[:content].keys.include?('en') %>
-      <% page[:content].keys.each do |lo|%>
-        <url>
-          <loc><%=url_root%>/<%=lo.gsub('en-','').downcase%>/</loc>
-          <% page[:content].keys.each do |lu|%>
-            <xhtml:link rel="alternate" hreflang="<%=lu%>" href="<%=url_root%>/<%=lu.gsub('en-','').downcase%>/<%=page[:page_url]%>/" />
-          <% end %>
-        </url>
-      <% end %>
+      <xhtml:link rel="alternate" href="<%= localize_url(page_data.page, locale_id: locale[:id]) %>" hreflang="<%= locale[:lang].downcase %>" />
     <% end %>
-  <% end %>
-  <% end %>
+  </url>
+<% end %>
 </urlset>

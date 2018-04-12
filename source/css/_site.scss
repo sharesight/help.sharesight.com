@@ -7,9 +7,12 @@
 	Trumps - Helpers and overrides, e.g. .float-left { float:left !important;}
 */
 
-@import "__config";
-@import "tools.typography";
-@import "tools.mixins";
+@import "_config";
+
+// must be in order
+@import "tools/mixins";
+@import "tools/functions";
+@import "tools/grid";
 @import "tools.headings";
 @import "tools.shapes";
 @import "base.elements";
@@ -17,6 +20,8 @@
 @import "objects.layout";
 @import "objects.images";
 @import "objects.tile";
+@import "components/a11y";
+@import "components/buttons";
 @import "components.alerts";
 @import "components.buttons";
 @import "components.layout";
@@ -36,3 +41,4 @@
 @import "trumps";
 @import "pages.pages";
 @import "pages.404";
+@import "footer";

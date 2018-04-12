@@ -1,27 +1,25 @@
 require 'aws/s3'
 require 'uri'
 
-#
+# TODO: Untested Code
 # execute: S3RedirectsHelper::make_s3_redirects
-# dry run execute: S3RedirectsHelper::make_s3_redirects(true)
-#
+
 module S3RedirectsHelper
 
   BASE_DIR_STUFF_TO_IGNORE = [
-    "index.html", "js", "fonts", "img", "patterns", "css"
+    ".", "..", "index.html", "sitemapindex.xml", "sitemap.xml", "contents.json", "robots.txt", "humans.txt",
+    "index.html.gz", "js", "fonts", "favicon.ico", "img", "css"
   ]
 
   def self.make_s3_redirects(dry_run = false)
-    return unless ["staging", "production"].include?(ENV['APP_ENV']) && ENV['TRAVIS_PULL_REQUEST'] == 'false'
-    puts "Env is #{ENV['APP_ENV']}, dry run is #{dry_run}"
+    return unless ["staging", "production"].include?(ENV['APP_ENV']) && ENV['TRAVIS_PULL_REQUEST'] == "false"
 
     bucket_name = ::ApplicationConfig::S3::BUCKET
 
     make_connection
-
     base_dir_objects = Dir.entries("build") - BASE_DIR_STUFF_TO_IGNORE
     directory_queue = Queue.new
-    base_dir_objects.each { |o| directory_queue << o if include_file?(o) }
+    base_dir_objects.each { |o| directory_queue << o }
 
     while !directory_queue.empty? do
       current_dir = directory_queue.pop
@@ -29,12 +27,25 @@ module S3RedirectsHelper
       Dir.entries(File.join("build", current_dir)).each do |object|
         full_name = File.join(current_dir, object)
 
-        next unless include_file?(object)
+        next if object.match(/^\.$/) # ignore .
+        next if object.match(/^\.\.$/) # ignore ..
+
+        # don't redirect gz, gzip, json, xml, htaccess, etc, but not html
+        next if object.match(/\.[A-z0-9]{2,4}\/?$/) && !object.match(/\.html$/) # ignore all non-html files with extensions 2-4 characters long
+        next if object.match(/\.htaccess$/)
 
         # if object is a directory, store it to read later
         directory_queue << full_name if File.directory?(full_name)
 
-        if !object.match(%r{index\.html$})
+        # if object.matches current_dir/pages, redirect to current_dir/index.html
+        if object.match(%r{pages$})
+          create_redirect("#{full_name}", "/#{current_dir}/index.html", bucket_name, dry_run)
+          create_redirect("#{full_name}/index.html", "/#{current_dir}/index.html", bucket_name, dry_run)
+        elsif number = object.match(%r{(\d+)\.html$})
+          # if object.matches SITE_BASE/current_dir/*.html
+          create_redirect("/#{current_dir}/#{number[1]}", "/#{current_dir}/#{number[1]}.html", bucket_name, dry_run)
+          create_redirect("/#{current_dir}/#{number[1]}/index.html", "/#{current_dir}/#{number[1]}.html", bucket_name, dry_run)
+        elsif !object.match(%r{index\.html$})
           # add a "no trailing slash" redirect for the directory, using new S3
           # object of 'directory/index.html'
           create_redirect("/#{full_name}", "/#{full_name}/", bucket_name, dry_run)
@@ -44,21 +55,11 @@ module S3RedirectsHelper
     end
   end
 
-  private
-
-  def self.include_file?(filename)
-    return if filename.match /\.(txt|gz|json|xml)$/ # ignore these zipped pages
-    return if filename.match /^\.$/ # ignore .
-    return if filename.match /^\.\.$/ # ignore ..
-    return if filename.match /^favicon.ico$/ # ignore ..
-    true
-  end
-
   def self.create_redirect(source_path, target_path, bucket_name, dry_run = false)
     create_redirect_file source_path, target_path, bucket_name, false, dry_run
   end
 
-  # deletes the old redirect, if it existed
+  # delete old redirect, if existing
   def self.create_redirect!(source_path, target_path, bucket_name, dry_run = false)
     create_redirect_file source_path, target_path, bucket_name, true, dry_run
   end
@@ -70,6 +71,7 @@ module S3RedirectsHelper
     )
   end
 
+  private
 
   def self.create_redirect_file(source_path, target_path, bucket_name, override_existing = false, dry_run = false)
     if AWS::S3::S3Object.exists?(source_path, bucket_name)

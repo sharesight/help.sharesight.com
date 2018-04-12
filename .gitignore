@@ -6,27 +6,31 @@
 
 # Ignore bundler config
 /.bundle
+/node_modules
 
 # Ignore the build directory
 /build
+yarn-error.log
 
 # Ignore cache
 /.sass-cache
 /.cache
+/tmp
 /.tmp
 
 # Ignore .DS_store file
 .DS_Store
 
 # Ignore personal files
-.ruby-version
 .ruby-gemset
 .envrc
 
 # Ignore gems installed in local directory
 /vendor/bundle/
 
-.help_categories-space-hash
-.help_pages-space-hash
+.*-space-hash
+
+data/help/
+# old contentful directories
 data/help_categories/
 data/help_pages/

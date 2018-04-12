@@ -1,33 +1,37 @@
-.content.selector select {
-  display:inline-block;
-}
+$__selector-height: 45px;
 
 .selector {
+  background: image-url("img/icons/caret_line.svg") no-repeat right 15px center #343434;
+  border:none;
   display: block;
-  height: 35px;
-  width: 100%;
+  height: $__selector-height;
   margin-bottom: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+
+  @media (min-width: 678px){
+    display:none;
+  }
 }
 
 .selector select {
-  outline:none;
+  appearance: none;
   background: transparent;
+  border-radius: 0;
   border: none;
-  font-size: 0.8125rem;
-  padding: 5px 15px;
-  width: 100%;
   color:#fff;
   font-family: 'Open Sans', helvetica, sans-serif;
-  font-weight:300;
-  text-align: left;
-  line-height: 35px;
-  border-radius: 0;
+  font-size: 0.8125rem;
+  font-weight: 300;
+  height: $__selector-height;
   letter-spacing: 1px;
-  height:45px;
-
-  appearance: none;
-  -moz-appearance: none; // firefo/gecko
-  -webkit-appearance: none; // webkit, blink, maybe even ie?
+  line-height: $__selector-height - (5px * 2);
+  outline:none;
+  padding: 5px 15px;
+  text-align: left;
+  width: 100%;
 
   &:focus {
     background: image-url("img/icons/caret_line.svg") no-repeat right 15px center #343434;
@@ -42,21 +46,5 @@
 
   @media(min-width:375px){
     font-size: 0.9375rem;
-  }
-}
-
-.selector.locale {
-  background: image-url("img/icons/caret_line.svg") no-repeat right 15px center #343434;
-  height: 45px;
-  width: 100%;
-  border:none;
-}
-
-.selector_redirect {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  @media (min-width: 678px){
-    display:none;
   }
 }

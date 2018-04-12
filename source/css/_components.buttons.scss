@@ -1,6 +1,8 @@
 // Used in menu
 
-.button {display:inline-block; width:100%; text-align:center; padding:15px; text-transform:uppercase; letter-spacing: 1px; font-size:0.875rem;
+.button {
+  display:inline-block; width:100%; text-align:center; padding:15px; text-transform:uppercase; letter-spacing: 1px; font-size:0.875rem;
+  max-width:16.25rem;
   @media (min-width:768px){max-width:17.25rem;}
 }
 
@@ -10,12 +12,12 @@
   &:hover{background-color:rgb(74, 74, 74); color:#fff;}
 }
 
-.button_feature {border:2px solid $colour_accent; color:$colour_primary; font-size:0.9375rem; padding:15px 60px; letter-spacing:1px; background-color: transparent;
-  &:hover{background-color:$colour_accent; color:#fff;}
+.button_feature {border:2px solid $colour_secondary; color:$colour_primary; font-size:0.9375rem; padding:15px 60px; letter-spacing:1px; background-color: transparent;
+  &:hover{background-color:$colour_secondary; color:#fff;}
 }
 
 .button_heading {}
 
-.button_inverse {background:transparent; color:#fff; border:1px solid #fff;
+.button_inverse {background:transparent; color:#fff; border:2px solid #fff;
   &:hover {background:#fff; color:transparent; color:#000;}
 }

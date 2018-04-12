@@ -1,0 +1,187 @@
+<%# fuse.js should come from /node_modules, but current version of middleman / middleman-sprockets does not support this %>
+<% require_asset "./fuse.js" %>
+
+;(function(){
+  const locales = <%= data.locales.map { |a| a[:id] } %>;
+  let fuseInstance; // caches the fuse instance (with data in it)
+  let searchData; // caches a promise in loadSearchData
+
+  const getFuse = (data = [], fromCache = true) => {
+    return new Promise((resolve, reject) => {
+      if (fuseInstance && fromCache) {
+        resolve(fuseInstance);
+      } else if (!data || !data.length) {
+        loadSearchData().then(d => resolve(setFuse(d)));
+      } else {
+        resolve(setFuse(data));
+      }
+    })
+  }
+
+  const setFuse = (data = []) => {
+    if (!data || !data.length) return false;
+
+    // since we're really only counting the first [distance] characters, truncate all strings based on it
+    // this saves like 80-90% (mostly result.content) and speeds up searches greatly!
+    let indexData = data.slice().map(result => {
+      if (fuseConfig.tokenize) return result; // tokenize looks at the entire content, regardless of [distance]
+
+      const newResult = { ...result }
+      Object.keys(newResult).forEach(key => {
+        if (typeof newResult[key] === 'string') newResult[key] = newResult[key].substring(0, fuseConfig.distance)
+      })
+
+      return newResult;
+    });
+
+    fuseInstance = new Fuse(indexData, fuseConfig)
+    return fuseInstance;
+  }
+
+  function loadJSON(path, successFn, errorFn) {
+      const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            if (typeof successFn === 'function') successFn(JSON.parse(xhr.responseText));
+          } else {
+            if (typeof errorFn === 'function') errorFn(xhr);
+          }
+        }
+      };
+
+      xhr.open("GET", path, true);
+      xhr.send();
+  }
+
+  function disableEnterKeyPress(element) {
+    const onKeyEvent = (e) => {
+      const keyCode = e.which || e.keyCode;
+      const keyName = e.key || e.keyIdentifier;
+
+      if (keyCode === 13 || keyName === 'Enter') { // the enter key
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    element.addEventListener('keyup', onKeyEvent);
+  }
+
+  function getCurrentPathLocale () {
+    // grab the locale from the url, eg /ca/article = 'ca' or /article = ''.
+    let currentPathLocale = '';
+    const firstUriSplit = window.location.pathname.split('/')[1];
+
+    // is a valid locale that we would want to localize off of, eg. don't localize "global"
+    if (firstUriSplit && locales.indexOf(firstUriSplit) !== -1 && firstUriSplit !== `<%= default_locale_id %>`) {
+      currentPathLocale = firstUriSplit;
+    }
+
+    return currentPathLocale;
+  }
+
+  function getContentsUrl () {
+    const currentPathLocale = getCurrentPathLocale();
+    const baseUrl = `<%= config[:base_url] %>`;
+    if (currentPathLocale) return `${baseUrl}/${currentPathLocale}/contents.json`;
+    return `${baseUrl}/contents.json`;
+  }
+
+  // NOTE: Ensure this 100% matches the `fuseConfig` file in sharesight/investapp.
+  const fuseConfig = {
+    maxResults: 10, // NOTE: Not a fuse property, we use this internally.
+
+    // All options below a part of Fuse itself.
+    caseSensitive: false,
+    shouldSort: true,
+    includeScore: true, // wraps the result in an object, eg `{ item: Result, score: Number }`
+    findAllMatches: true, // don't stop on a "perfect" match
+    threshold: 0.5, // lower gives up earlier
+    location: 0, // search from the start of the string
+    distance: 100, // max distance the string is valid to be searched in; only the first [distance] characters from [location] could result in a perfect score
+    maxPatternLength: 32,
+    minMatchCharLength: 2,
+    keys: [
+      { name: 'keywords', weight: 1 },
+      { name: 'title', weight: 0.5 },
+      { name: 'path', weight: 0.1 },
+      { name: 'description', weight: 0.1 },
+      { name: 'content', weight: 0.1 },
+      { name: 'category_name', weight: 0.05 },
+    ],
+  };
+
+
+  const renderResult = ({ title, path }) => {
+    const li = document.createElement('li');
+    const link = document.createElement('a');
+
+    link.href = path;
+    link.innerText = title;
+
+    li.appendChild(link);
+    return li;
+  }
+
+  const appendResultToPage = (result) => {
+    document.querySelector("#search-results").appendChild(
+      renderResult({ title: result.title, path: result.path })
+    );
+  }
+
+  const getResults = (value) => {
+    return getFuse().then(fuse => {
+      if (!value) return;
+      if (!fuse) {
+        console.error(`Unable to find fuse instance to search.`);
+        return;
+      }
+
+      return fuse.search(value)
+        .map(result => ({ ...result.item, score: result.score })) // flatten result from Fuse
+        .filter(result => result && result.title && result.path)
+        .slice(0, fuseConfig.maxResults) // only display the first 20 results
+    })
+  }
+
+  function searchHandler() {
+    document.querySelector("#search-results").innerHTML = ''; // reset search results
+
+    getResults(this.value).then(results => {
+      if (!results || !results.length) return;
+
+      results.forEach(appendResultToPage);
+    });
+  }
+
+  function loadSearchData () {
+    if (searchData) return searchData;
+
+    searchData = new Promise((resolve, reject) => {
+      loadJSON(getContentsUrl(), (data) => {
+        setFuse(data);
+        resolve(data);
+      }, (error) => {
+        reject(error);
+      });
+    })
+
+    return searchData;
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchField = document.querySelector("#search-field");
+    const searchResults = document.querySelector("#search-results");
+
+    if (!searchField && !searchResults) {
+      console.warn(`No search DOM is found on this page, will not initialize.`)
+      return;
+    }
+
+    loadSearchData();
+
+    disableEnterKeyPress(searchField);
+    searchField.addEventListener('input', searchHandler);
+  });
+})(document, window);
