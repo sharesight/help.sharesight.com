@@ -1,26 +1,32 @@
 //= require "./config"
 //= require "./helpers/cookies"
-//= require "./helpers/content"
 //= require "./helpers/locale"
 //= require "./helpers/page"
 //= require "./helpers/url"
+
+
+/*
+ * NOTE: This file, and associated files, are adapted from our marketing website.
+ * See: `https://github.com/sharesight/www.sharesight.com/blob/master/source/js/localization.js.es6`
+ *
+ * Most of this localization script is not used on help.sharesight.com
+ * This is a fairly stripped down version of www.sharesight.com's code.
+ * Eg. content modification and url rewriting is gone.
+ *
+ * This code, generally, is strictly for the localization dropdown, and is drastic overkill for that.
+ * If you need to modify this code, please look at the original file first to see if that functionality exists.
+ */
 
 const localization = {
   setLocaleId: false,
 
   onLoad () {
     this.initializeRegionSelector()
-    this.modifyContent()
   },
 
   isGlobalOnlyPage () {
     if (document.getElementById('_404')) return true
     return false
-  },
-
-  modifyContent () {
-    this.updateUrls()
-    contentManager.updateContent()
   },
 
   setLocale (locale_id) {
@@ -32,7 +38,6 @@ const localization = {
 
     this.setLocaleId = locale_id
     cookieManager.setCookie(locale_id)
-    this.modifyContent()
 
     // if we're not on a page that begins with the current locale, which should be localized, refresh the page and Cloudfront's localization should kick in
     if (!this.isGlobalOnlyPage() && window.location.pathname.indexOf(`/${locale_id}`) !== 0) {
@@ -43,21 +48,6 @@ const localization = {
   getCurrentLocaleId () {
     if (this.setLocaleId) return this.setLocaleId;
     return localeHelper.getCookieLocale();
-  },
-
-  updateUrls () {
-    ;[].concat.apply([], // flatten arrays of arrays
-      [
-        config.base_url, // absolute urls (www.sharesight.com)
-        config.marketing_url, // help site (help.sharesight.com)
-        `${config.base_path}/`.replace(/\/+/g, '/'), // relative urls (/faq); replace duplicate slashes
-      ].map(path => Array.from(document.querySelectorAll(`a[href^="${path}"]`)))
-    ).forEach((element) => {
-      // don't localize urls that are inside of the help article, as they may go to another locale
-      if (!element.matches('article.article a')) {
-        element.pathname = urlHelper.localizePath(element.pathname)
-      }
-    })
   },
 
   getRegionSelectorNode () {
