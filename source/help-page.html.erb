@@ -44,25 +44,37 @@ layout: 'page_layout'
     <article class="article">
       <h1><%= page[:title] %></h1>
 
-      <% content_langs = page[:content_langs] - [locale_obj[:lang].to_sym] %>
+      <%
+        # This is pretty utter crap, sorry.
+        default_locale_lang = default_locale_obj[:lang].to_sym
+        content_langs = page[:content_langs] - [locale_obj[:lang].to_sym]
+        non_default_content_langs = content_langs - [default_locale_lang]
+      %>
       <% if content_langs.length > 0 %>
-        <small>Content also available for
-          <%
-
-            i = 0
-            content_langs.each do |lang|
-              i = i + 1
-              locale = data.locales.find{|l| l[:lang].to_sym == lang.to_sym}
-              name = locale[:for_country]
-              name = locale[:name] if name.blank?
-              manual_join_text = ' and '  if content_langs.length == 2
-              manual_join_text = ', '     if content_langs.length > 2
-              manual_join_text = ', and ' if i == content_langs.length - 1 && content_langs.length > 2
-              manual_join_text = ''       if !manual_join_text || i == content_langs.length
-          %>
-            <a href="<%= page_url(page, locale_id: locale[:id]) %>"><%= name %></a><%= manual_join_text %>
+        <small class="article__content-locales">
+          Content also available
+          <% if non_default_content_langs.length %>
+            for
+            <%
+              i = 0
+              non_default_content_langs.each do |lang|
+                i = i + 1
+                lang_locale = data.locales.find{|l| l[:lang].to_sym == lang.to_sym}
+                name = lang_locale[:for_country]
+                name = lang_locale[:name] if name.blank?
+                manual_join_text = ' and '  if non_default_content_langs.length == 2
+                manual_join_text = ', '     if non_default_content_langs.length > 2
+                manual_join_text = ', and ' if i == non_default_content_langs.length - 1 && non_default_content_langs.length > 2
+                manual_join_text = ''       if !manual_join_text || i == non_default_content_langs.length
+            %>
+              <a href="<%= page_url(page, locale_id: lang_locale[:id]) %>"><%= name %></a><%= manual_join_text %>
+            <% end %>
+            tax entities<% unless content_langs.include?(default_locale_lang) %>.<% end %>
           <% end %>
-          tax entities.
+          <% if content_langs.include?(default_locale_lang) %>
+            <% if non_default_content_langs %> or <% end %>
+            on our <a href="<%= page_url(page, locale_id: default_locale_id) %>">global</a> site.
+          <% end %>
         </small>
       <% end %>
 
