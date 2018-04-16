@@ -13,6 +13,10 @@ module ApplicationConfig
     API_KEY = ENV['BUGSNAG_API_KEY']
   end
 
+  module Intercom
+		APP_ID = 'tv6jsyee'
+	end
+
   module Optimizely
 		ID = 5841851301
 	end
