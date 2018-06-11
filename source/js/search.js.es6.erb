@@ -54,18 +54,14 @@
       xhr.send();
   }
 
-  function disableEnterKeyPress(element) {
-    const onKeyEvent = (e) => {
-      const keyCode = e.which || e.keyCode;
-      const keyName = e.key || e.keyIdentifier;
+  function disableEnterKey (e) {
+    const keyCode = e.which || e.keyCode;
+    const keyName = e.key || e.keyIdentifier;
 
-      if (keyCode === 13 || keyName === 'Enter') { // the enter key
-        e.preventDefault();
-        return false;
-      }
-    };
-
-    element.addEventListener('keyup', onKeyEvent);
+    if (keyCode === 13 || keyName === 'Enter') { // the enter key
+      e.preventDefault();
+      return false;
+    }
   }
 
   function getCurrentPathLocale () {
@@ -145,12 +141,13 @@
     })
   }
 
-  function searchHandler() {
+  function searchHandler(e) {
+    if (disableEnterKey(e) === false || e.defaultPrevented) return; // ignore the entre key
+
     document.querySelector("#search-results").innerHTML = ''; // reset search results
 
     getResults(this.value).then(results => {
       if (!results || !results.length) return;
-
       results.forEach(appendResultToPage);
     });
   }
@@ -180,8 +177,7 @@
     }
 
     loadSearchData();
-
-    disableEnterKeyPress(searchField);
+    searchField.addEventListener('keypress', disableEnterKey);
     searchField.addEventListener('input', searchHandler);
   });
 })(document, window);
