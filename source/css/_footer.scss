@@ -118,6 +118,7 @@ footer#footer {
     display: block;
 
     @media (min-width: 610px) and (max-width: $screen-xs-max) {
+      max-width: 139px; // match the marketing site's size and don't go to 100% width
       width: auto;
     }
   }
