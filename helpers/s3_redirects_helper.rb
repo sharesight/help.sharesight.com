@@ -8,7 +8,7 @@ module S3RedirectsHelper
 
   BASE_DIR_STUFF_TO_IGNORE = [
     ".", "..", "index.html", "sitemapindex.xml", "sitemap.xml", "contents.json", "robots.txt", "humans.txt",
-    "index.html.gz", "js", "fonts", "favicon.ico", "img", "css"
+    "index.html.gz", "js", "fonts", "favicon.ico", "favicon-16x16.png", "favicon-32x32.png", "img", "css"
   ]
 
   def self.make_s3_redirects(dry_run = false)
