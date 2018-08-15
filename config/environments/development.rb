@@ -8,8 +8,4 @@ module ApplicationConfig
 	module GoogleAnalytics
 		TAG_MANAGER_CONTAINER = 'GTM-P2DH5X'
 	end
-
-	module Optimizely
-		ID = 5854941356
-	end
 end

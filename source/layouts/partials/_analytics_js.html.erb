@@ -22,10 +22,6 @@
   </script>
 <% end %>
 
-<% if ApplicationConfig.const_defined?(:Optimizely) && ApplicationConfig::Optimizely::ID %>
-  <script src="https://cdn.optimizely.com/js/<%= ApplicationConfig::Optimizely::ID %>.js" async></script>
-<% end %>
-
 <% if ApplicationConfig.const_defined?(:Intercom) && ApplicationConfig::Intercom::APP_ID %>
   <script>
     window.intercomSettings = { app_id: '<%= ApplicationConfig::Intercom::APP_ID %>' };

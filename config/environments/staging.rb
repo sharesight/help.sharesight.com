@@ -17,10 +17,6 @@ module ApplicationConfig
 		APP_ID = 't2bi7urt'
 	end
 
-	module Optimizely
-		ID = 5854941356
-	end
-
 	module S3
 		BUCKET = 'sharesight-help-staging'
 		ACCESS_ID = ENV['AWS_DEPLOY_ACCESS_ID']
