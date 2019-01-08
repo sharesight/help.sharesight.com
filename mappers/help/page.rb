@@ -1,5 +1,5 @@
-# This normalizes the data coming from contentful, so a user enters ' Great   Title!' and it becomes 'Great Title!'
-# Adds url slugs.
+# This normalizes the data coming from contentful.
+
 class HelpPageMapper < ContentfulMiddleman::Mapper::Base
   def map(context, entry)
     super
@@ -7,6 +7,20 @@ class HelpPageMapper < ContentfulMiddleman::Mapper::Base
     # Adds a "content available in locales" field to the page; NOTE: 'en' is available in all locales.
     context.content_langs = context&.content&.keys
     context.content_langs = ['en'] if context.content_langs.blank?
+
+    keys = entry.fields_with_locales.keys
+
+    if keys.include?(:content)
+      context.content = map_locales(context.content) do |content|
+        (content || '')
+          .gsub('.png)', '.png?w=917)') # restrict image width
+          .gsub('.jpg)', '.jpg?w=917)')
+          .gsub('//images.contentful.com/', '//images.ctfassets.net/') # redirect old assets
+          .gsub('//assets.contentful.com/', '//assets.ctfassets.net/') # see: https://www.contentful.com/blog/2017/12/08/change-of-the-contentful-asset-domain/
+          .gsub('//downloads.contentful.com/', '//downloads.ctfassets.net/')
+          .gsub('//videos.contentful.com/', '//videos.ctfassets.net/')
+      end rescue entry.try(:content)
+    end
 
     return context
   end
