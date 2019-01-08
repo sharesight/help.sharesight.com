@@ -78,7 +78,8 @@ layout: 'page_layout'
         </small>
       <% end %>
 
-      <%= Kramdown::Document.new(page[:content]&.gsub('.png)', '.png?w=917)').gsub('.jpg)', '.jpg?w=917)')).to_html.html_safe %>
+      <%= Kramdown::Document.new(page[:content]).to_html.html_safe %>
+
 
       <p class="date_modified">Last modified on <%= Date.parse(page[:_meta][:updated_at]).strftime("%B %-d, %Y") %> UTC</p>
     </article>
