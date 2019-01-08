@@ -1,5 +1,5 @@
-# This normalizes the data coming from contentful, so a user enters ' Great   Title!' and it becomes 'Great Title!'
-# Adds url slugs.
+# This normalizes the data coming from contentful.
+
 class HelpPageMapper < ContentfulMiddleman::Mapper::Base
   def map(context, entry)
     super
@@ -8,7 +8,6 @@ class HelpPageMapper < ContentfulMiddleman::Mapper::Base
     context.content_langs = context&.content&.keys
     context.content_langs = ['en'] if context.content_langs.blank?
 
-    # some sanitizing of blog content
     context.content = (context.content || '')
       .gsub('.png)', '.png?w=917)') # restrict image width
       .gsub('.jpg)', '.jpg?w=917)')
