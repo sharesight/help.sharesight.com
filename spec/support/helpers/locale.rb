@@ -1,6 +1,6 @@
 module CapybaraLocaleHelpers
   def locales
-    return Capybara.app.data.locales
+    Capybara.app.data.locales
   end
 
   def default_locale_id
