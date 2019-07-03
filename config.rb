@@ -8,7 +8,6 @@ load 'helpers/middleman/helpers.rb'
 require 'mappers/default'
 
 load 'extensions/routing.rb'
-require 'extensions/s3.rb'
 
 require 'aws/s3'
 require 'rack/rewrite'
@@ -61,7 +60,6 @@ activate :autoprefixer do |autoprefixer_config|
 end
 
 # Custom Middleman Extensions
-activate :init_s3
 activate :routing
 
 # --START Contentful Setup
