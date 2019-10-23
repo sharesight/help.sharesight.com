@@ -73,8 +73,6 @@ jobs:
 
 
     # -------- Run Tests
-    - name: Run Javascript Tests
-      run: yarn run jest --runInBand
     - name: Run Ruby Tests
       run: bundle exec rspec spec -p --format d
 
