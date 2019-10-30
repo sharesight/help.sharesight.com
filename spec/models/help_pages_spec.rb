@@ -66,12 +66,11 @@ describe 'Help Pages', :type => :model do
     skip "Skipping for non-production builds." if Capybara.app.config[:env_name] != 'production'
 
     @collection.each do |model|
-      is_valid = model &&
-        model[:name] && # model[:url_slug] &&
-        model[:content] && model[:content].is_a(String) &&
-        model[:category][:id] rescue false
-
-      expect(is_valid).to be_truthy, "Help Page #{model[:id]} is invalid."
+      expect(model[:title]).to be_truthy, "Help Page #{model[:id]} has a missing title."
+      # expect(model[:url_slug]).to be_truthy, "Help Page #{model[:id]} has a missing url slug." # this is auto-generated as well
+      expect(model[:content]).to be_truthy, "Help Page #{model[:id]} has missing content."
+      expect(model[:content]).to be_kind_of(String), "Help Page #{model[:id]} has invalid content (invalid localization?)."
+      expect(model[:category][:id]).to be_truthy, "Help Page #{model[:id]} has a missing category."
     end
   end
   end
