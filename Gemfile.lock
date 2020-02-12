@@ -357,7 +357,7 @@ GEM
       json (>= 1.8)
       nokogiri (~> 1.5)
       trollop (~> 2.1)
-    redcarpet (3.3.4)
+    redcarpet (3.5.0)
     rouge (2.0.6)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
