@@ -25,6 +25,9 @@ gem 'rails-html-sanitizer', '~> 1.0.4' # 1.0.3 has a CVE
 
 gem 'stopwords-filter', require: 'stopwords'
 
+# ensure we have secure version
+gem 'nokogiri', '>= 1.10.8'
+
 # tests
 group :test do
   gem 'capybara'
