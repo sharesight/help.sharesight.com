@@ -10,7 +10,7 @@ describe 'Help Pages', :type => :model do
       :title, :url_slug, :meta_description, :category, :parent_page, :featured_image, :order
     ]
 
-    @localized = [
+    @localized_fields = [
       :content, :keywords
     ]
   end
@@ -51,13 +51,14 @@ describe 'Help Pages', :type => :model do
   it "should have localization on the data in Production" do
     skip "Skipping for non-production builds." if Capybara.app.config[:env_name] != 'production'
 
-    # This is an array of [key, [sub-keys]]
-    # Primarily used for locale validation, eg. ["name", ["en", "en-NZ"]]
-    schema = @data.map{ |i, x| x.select{ |k, v| v.kind_of?(::Hash) }.map{ |k, v| [k, v.to_h.keys] } }.flatten(1).uniq
-
-    @localized.each do |field|
-      schema.select{ |key, locales| key.to_s == field.to_s }.each do |key, locales|
-        expect(locales).to include('en'), "Missing the `en` localization on #{field}, got locales: #{locales}"
+    # Iterate over every page and ensure that any fields listed in @localized_fields that are localized have an `en` locale.
+    @data.each do |id, model|
+      model.select do |field_name, raw_value|
+        # Only grab localized fields that are hashes, eg. should be like: {'en' => 'Something', 'en-AU' => 'Somethoing'}
+        @localized_fields.include?(field_name.to_sym) && raw_value.kind_of?(::Hash)
+      end.each do |field_name, raw_value|
+        locales = raw_value.to_h.keys
+        expect(locales).to include('en'), "Missing the 'en' localization for field='#{field_name}' for page id='#{id}'; got locales='#{locales}'."
       end
     end
   end
