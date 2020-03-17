@@ -51,8 +51,7 @@ describe 'Help Pages', :type => :model do
   it "should have localization on the data in Production" do
     skip "Skipping for non-production builds." if Capybara.app.config[:env_name] != 'production'
 
-    # This is an array of [key, [sub-keys]]
-    # Primarily used for locale validation, eg. ["name", ["en", "en-NZ"]]
+    # Iterate over every page and ensure that any fields listed in @localized_fields that are localized have an `en` locale.
     @data.each do |id, model|
       model.select do |field_name, raw_value|
         # Only grab localized fields that are hashes, eg. should be like: {'en' => 'Something', 'en-AU' => 'Somethoing'}
