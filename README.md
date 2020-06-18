@@ -32,3 +32,11 @@ https://github.com/sharesight/help.sharesight.com/settings/secrets
  - CONTENTFUL_MASTER_TOKEN - for pulling published content from [Contentful]( https://app.contentful.com/spaces/kw7pc879iryd/api/keys)
  - CONTENTFUL_PREVIEW_TOKEN	- for pulling draft content from [Contentful]( https://app.contentful.com/spaces/kw7pc879iryd/api/keys)
  - SLACK_WEBHOOK_URL - for posting into Slack notifications/etc
+
+
+Example local `.envrc` file for development—using direnv (https://direnv.net/):
+```
+# .envrc
+export CONTENTFUL_MASTER_TOKEN=DELIVERY_TOKEN_HERE
+export CONTENTFUL_PREVIEW_TOKEN=PREVIEW_TOKEN_HERE
+```
