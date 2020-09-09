@@ -51,26 +51,26 @@
         </li>
 
         <li role="menuitem">
-          <a href="<%= localize_url('about-sharesight', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="About Us | Sharesight">
-            About Us
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= localize_url('pricing', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Pricing | Sharesight">
-            Pricing
-          </a>
-        </li>
-
-        <li role="menuitem">
           <a href="<%= localize_url('faq', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Frequently Asked Questions | Sharesight">
             FAQ
           </a>
         </li>
 
         <li role="menuitem">
+          <a href="<%= localize_url('about-sharesight', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="About Us | Sharesight">
+            About Us
+          </a>
+        </li>
+
+        <li role="menuitem">
           <a href="<%= unlocalized_url('blog', base_url: config[:marketing_url]) %>" class="footer__link" title="Sharesight Blog">
             Blog
+          </a>
+        </li>
+
+        <li role="menuitem">
+          <a href="<%= localize_url('pricing', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Pricing | Sharesight">
+            Pricing
           </a>
         </li>
 
