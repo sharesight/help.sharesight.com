@@ -7,6 +7,7 @@ describe 'Footer', type: :feature do
       /^About Us/,
       /^Pricing/,
       /^Reviews/,
+      /^Affiliates/,
       /^FAQ/,
       /^Blog/,
       /^Partners/,
