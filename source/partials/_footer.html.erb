@@ -1,7 +1,47 @@
-<% index_page_title = locale_page(page: 'index', locale_obj: locale_obj)[:page_title] %>
+<%
+  index_page_title = locale_page(page: 'index', locale_obj: locale_obj)[:page_title]
 
-<%# if hide_global_footer_cta is set to true (typically from a layout file), we don't show the notice %>
-<% hide_global_footer_cta = locals[:hide_global_footer_cta] || current_page.data.hide_global_footer_cta %>
+  # if hide_global_footer_cta is set to true (typically from a layout file), we don't show the notice
+  hide_global_footer_cta = locals[:hide_global_footer_cta] || current_page.data.hide_global_footer_cta
+
+  # NOTE: This should typically be 1:1 with the Marketing Site, just the urls and titles are different.
+  footer_columns_links = {
+    # label => items
+    #   - item: { name, marketing_page, href, title }
+    #   - hreftle can be auto-generated from a `marketing_page`
+    'Company' => [
+      { name: 'www.sharesight.com', marketing_page: '', title: locale_obj[:append_title] },
+      { name: 'Executive Team', href: unlocalized_url('team', base_url: config[:marketing_url]), title: "Executive Team | Sharesight" }, # NOTE: Not a localized page!
+      { name: 'About Us', marketing_page: 'about-sharesight', title: "About Us | #{locale_obj[:append_title]}" },
+      { name: 'FAQ', marketing_page: 'faq', title: "Frequently Asked Questions | #{locale_obj[:append_title]}" },
+      { name: 'Pricing', marketing_page: 'pricing', title: "Pricing | #{locale_obj[:append_title]}" },
+      { name: 'Webinars & Events', marketing_page: 'events', title: "Webinars & Events | #{locale_obj[:append_title]}" }
+    ],
+
+    # This has an empty label—no header, but still space
+    '' => [
+      { name: 'Sharesight Pro', marketing_page: 'pro', title: "Sharesight Pro" },
+      { name: 'Partners', marketing_page: 'partners', title: "Partners | #{locale_obj[:append_title]}" },
+      { name: 'Become a Partner', marketing_page: 'become-a-partner', title: "Partner with Sharesight | #{locale_obj[:append_title]}" },
+      { name: 'Affiliates', marketing_page: 'affiliates', title: "Affiliates | #{locale_obj[:append_title]}" },
+      { name: 'Reviews', marketing_page: 'reviews', title: "Reviews | #{locale_obj[:append_title]}" }
+    ],
+
+    'Resources' => [
+      { name: 'Blog', href: unlocalized_url('blog', base_url: config[:marketing_url]), title: 'Sharesight Blog' },
+      { name: 'API Documentation', href: config[:api_url], title: 'Sharesight Developer API Documentation' },
+      { name: 'Privacy Policy', marketing_page: 'privacy-policy', title: "Privacy Policy | #{locale_obj[:append_title]}" },
+      { name: 'Terms of Use', marketing_page: 'sharesight-terms-of-use', title: "Terms of Use | #{locale_obj[:append_title]}" },
+      { name: 'Pro Terms of Use', marketing_page: 'sharesight-professional-terms-of-use', title: "Terms of Service | Sharesight Pro" }
+    ],
+
+    'Support' => [
+      { name: 'Help', href: localize_url(locale_id: locale_obj[:id]), title: "Help | #{locale_obj[:append_title]}" },
+      { name: 'Community Forum', href: config[:community_url], title: 'Sharesight Community Forum' },
+      { name: 'sales@sharesight.com', href: 'mailto:sales@sharesight.com', title: 'Email the Sales Team' },
+    ]
+  }
+%>
 
 <% if !hide_global_footer_cta %>
   <div class="section notice">
@@ -57,105 +97,25 @@
       </div>
     </div>
 
-    <div class="footer__links_container">
-      <ul class="footer__links footer__links--double-width" id="main-menu" role="menubar" aria-label="Company Links">
-        <li role="none" class="footer__link-header">Company</li>
-        <li role="menuitem">
-          <a href="<%= localize_url(locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Sharesight">
-            www.sharesight.com
-          </a>
-        </li>
+    <div class="footer__links_container" id="main-menu">
+      <% footer_columns_links.each do |label, items| %>
 
-        <li role="menuitem">
-          <a href="<%= localize_url('faq', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Frequently Asked Questions | Sharesight">
-            FAQ
-          </a>
-        </li>
+        <ul class="footer__links footer__links" role="menubar" aria-label="<%= label ? "#{label} Links" : "" %>">
+          <li role="none" class="footer__link-header"><%= label %>&#8203;</li><!-- NOTE: `&#8203;` here is a special space that ensures it always takes up the line-height -->
 
-        <li role="menuitem">
-          <a href="<%= localize_url('about-sharesight', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="About Us | Sharesight">
-            About Us
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= unlocalized_url('blog', base_url: config[:marketing_url]) %>" class="footer__link" title="Sharesight Blog">
-            Blog
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= localize_url('pricing', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Pricing | Sharesight">
-            Pricing
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= localize_url('partners', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Partners | Sharesight">
-            Partners
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= localize_url('reviews', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Reviews | Sharesight">
-            Reviews
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= localize_url('become-a-partner', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Become a Partner | Sharesight">
-            Become a Partner
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= localize_url('affiliates', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Affiliates | Sharesight">
-            Affiliates
-          </a>
-        </li>
-      </ul>
-
-      <ul class="footer__links" id="main-menu" role="menubar" aria-label="Resources Links">
-        <li role="none" class="footer__link-header">Resources</li>
-        <li role="menuitem">
-          <a href="<%= config[:api_url] %>" class="footer__link" title="Sharesight Developer API">
-            Developer API
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= localize_url('privacy-policy', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Privacy Policy | Sharesight">
-            Privacy Policy
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= localize_url('sharesight-terms-of-use', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Terms of Service | Sharesight">
-            Terms of Use
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= localize_url('sharesight-professional-terms-of-use', locale_id: locale_obj[:id], base_url: config[:marketing_url]) %>" class="footer__link" title="Terms of Service | Sharesight Pro">
-            Pro Terms of Use
-          </a>
-        </li>
-      </ul>
-
-      <ul class="footer__links" id="main-menu" role="menubar" aria-label="Support Links">
-        <li role="none" class="footer__link-header">Support</li>
-        <li role="menuitem">
-          <a href="<%= localize_url(locale_id: locale_obj[:id]) %>" class="footer__link" title="<%= locale_obj[:default_title] %>">
-            Help Centre
-          </a>
-        </li>
-
-        <li role="menuitem">
-          <a href="<%= config[:community_url] %>" class="footer__link" title="Sharesight Community Forum">
-            Community Forum
-          </a>
-        </li>
-      </ul>
+          <%
+            items.each do |item|
+              href = item[:href]
+              href ||= localize_url(item[:marketing_page], locale_id: locale_obj[:id], base_url: config[:marketing_url])
+          %>
+            <li role="menuitem">
+              <a href="<%= href %>" class="footer__link" title="<%= item[:title] %>">
+                <%= item[:name] %>
+              </a>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
     </div>
 
     <ul class="footer__regional-links" role="menubar" aria-label="Regional Website Links">
