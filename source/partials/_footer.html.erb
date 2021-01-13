@@ -9,36 +9,32 @@
     # label => items
     #   - item: { name, marketing_page, href, title }
     #   - hreftle can be auto-generated from a `marketing_page`
-    'Company' => [
+    'Sharesight' => [
       { name: 'www.sharesight.com', marketing_page: '', title: locale_obj[:append_title] },
-      { name: 'Executive Team', href: unlocalized_url('team', base_url: config[:marketing_url]), title: "Executive Team | Sharesight" }, # NOTE: Not a localized page!
       { name: 'About Us', marketing_page: 'about-sharesight', title: "About Us | #{locale_obj[:append_title]}" },
+      { name: 'Executive Team', href: unlocalized_url('team', base_url: config[:marketing_url]), title: "Executive Team | Sharesight" }, # NOTE: Not a localized page!
       { name: 'FAQ', marketing_page: 'faq', title: "Frequently Asked Questions | #{locale_obj[:append_title]}" },
       { name: 'Pricing', marketing_page: 'pricing', title: "Pricing | #{locale_obj[:append_title]}" },
-      { name: 'Webinars & Events', marketing_page: 'events', title: "Webinars & Events | #{locale_obj[:append_title]}" }
+      { name: 'Reviews', marketing_page: 'reviews', title: "Reviews | #{locale_obj[:append_title]}" },
     ],
 
     # This has an empty label—no header, but still space
-    '' => [
+    'Partners' => [
       { name: 'Sharesight Pro', marketing_page: 'pro', title: "Sharesight Pro" },
-      { name: 'Partners', marketing_page: 'partners', title: "Partners | #{locale_obj[:append_title]}" },
+      { name: 'Partner Directory', marketing_page: 'partners', title: "Partner Directory | #{locale_obj[:append_title]}" },
       { name: 'Become a Partner', marketing_page: 'become-a-partner', title: "Partner with Sharesight | #{locale_obj[:append_title]}" },
-      { name: 'Affiliates', marketing_page: 'affiliates', title: "Affiliates | #{locale_obj[:append_title]}" },
-      { name: 'Reviews', marketing_page: 'reviews', title: "Reviews | #{locale_obj[:append_title]}" }
+      { name: 'Become an Affiliate', marketing_page: 'affiliates', title: "Become an Affiliate | #{locale_obj[:append_title]}" },
+      { name: 'Sharesight API', href: config[:api_url], title: 'Sharesight API Documentation' },
+      { name: 'sales@sharesight.com', href: 'mailto:sales@sharesight.com', title: 'Email the Sales Team' },
     ],
 
     'Resources' => [
+      { name: 'Help Centre', href: localize_url(locale_id: locale_obj[:id]), title: "Help Centre | #{locale_obj[:append_title]}" },
       { name: 'Blog', href: unlocalized_url('blog', base_url: config[:marketing_url]), title: 'Sharesight Blog' },
-      { name: 'API Documentation', href: config[:api_url], title: 'Sharesight Developer API Documentation' },
+      { name: 'Webinars & Events', marketing_page: 'events', title: "Webinars & Events | #{locale_obj[:append_title]}" },
       { name: 'Privacy Policy', marketing_page: 'privacy-policy', title: "Privacy Policy | #{locale_obj[:append_title]}" },
       { name: 'Terms of Use', marketing_page: 'sharesight-terms-of-use', title: "Terms of Use | #{locale_obj[:append_title]}" },
-      { name: 'Pro Terms of Use', marketing_page: 'sharesight-professional-terms-of-use', title: "Terms of Service | Sharesight Pro" }
-    ],
-
-    'Support' => [
-      { name: 'Help', href: localize_url(locale_id: locale_obj[:id]), title: "Help | #{locale_obj[:append_title]}" },
-      { name: 'Community Forum', href: config[:community_url], title: 'Sharesight Community Forum' },
-      { name: 'sales@sharesight.com', href: 'mailto:sales@sharesight.com', title: 'Email the Sales Team' },
+      { name: 'Pro Terms of Use', marketing_page: 'sharesight-professional-terms-of-use', title: "Terms of Service | Sharesight Pro" },
     ]
   }
 %>

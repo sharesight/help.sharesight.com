@@ -8,32 +8,29 @@ describe 'Footer', type: :feature do
     expected_links = [
       # text, href
 
-      # Company:
+      # Sharesight:
       ["www.sharesight.com", Capybara.app.config[:marketing_url]],
-      ["Executive Team", base_url("/team/", base_url: Capybara.app.config[:marketing_url])],
       ["About Us", base_url("/about-sharesight/", base_url: Capybara.app.config[:marketing_url])],
+      ["Executive Team", base_url("/team/", base_url: Capybara.app.config[:marketing_url])],
       ["FAQ", base_url("/faq/", base_url: Capybara.app.config[:marketing_url])],
       ["Pricing", base_url("/pricing/", base_url: Capybara.app.config[:marketing_url])],
-      ["Webinars & Events", base_url("/events/", base_url: Capybara.app.config[:marketing_url])],
-
-      # Company pt2:
-      ["Sharesight Pro", base_url("/pro/", base_url: Capybara.app.config[:marketing_url])],
-      ["Become a Partner", base_url("/become-a-partner/", base_url: Capybara.app.config[:marketing_url])],
-      ["Partners", base_url("/partners/", base_url: Capybara.app.config[:marketing_url])],
-      ["Affiliates", base_url("/affiliates/", base_url: Capybara.app.config[:marketing_url])],
       ["Reviews", base_url("/reviews/", base_url: Capybara.app.config[:marketing_url])],
 
+      # Partners:
+      ["Sharesight Pro", base_url("/pro/", base_url: Capybara.app.config[:marketing_url])],
+      ["Partner Directory", base_url("/partners/", base_url: Capybara.app.config[:marketing_url])],
+      ["Become a Partner", base_url("/become-a-partner/", base_url: Capybara.app.config[:marketing_url])],
+      ["Become an Affiliate", base_url("/affiliates/", base_url: Capybara.app.config[:marketing_url])],
+      ["Sharesight API", Capybara.app.config[:api_url]],
+      ["sales@sharesight.com", 'mailto:sales@sharesight.com'],
+
       # Resources:
+      ["Help Centre", Capybara.app.config[:help_url]],
       ["Blog", base_url("/blog/", base_url: Capybara.app.config[:marketing_url])],
-      ["API Documentation", Capybara.app.config[:api_url]],
+      ["Webinars & Events", base_url("/events/", base_url: Capybara.app.config[:marketing_url])],
       ["Privacy Policy", base_url("/privacy-policy/", base_url: Capybara.app.config[:marketing_url])],
       ["Terms of Use", base_url("/sharesight-terms-of-use/", base_url: Capybara.app.config[:marketing_url])],
       ["Pro Terms of Use", base_url("/sharesight-professional-terms-of-use/", base_url: Capybara.app.config[:marketing_url])],
-
-      # Support:
-      ["Help", Capybara.app.config[:help_url]],
-      ["Community Forum", Capybara.app.config[:community_url]],
-      ["sales@sharesight.com", 'mailto:sales@sharesight.com'],
 
       # locales:
       ["Global", base_url('/')],
