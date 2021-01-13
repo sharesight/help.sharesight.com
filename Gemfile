@@ -16,7 +16,6 @@ gem 'middleman-syntax'
 # support re-writing in the middleman configuration
 gem 'rack-rewrite'
 gem 'string-urlize'
-gem 'redcarpet'
 gem 'aws-s3'
 gem 'middleman-remover'
 
