@@ -357,7 +357,6 @@ GEM
       json (>= 1.8)
       nokogiri (~> 1.5)
       trollop (~> 2.1)
-    redcarpet (3.3.4)
     rouge (2.0.6)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
@@ -435,7 +434,6 @@ DEPENDENCIES
   rack-rewrite
   rails-html-sanitizer (~> 1.0.4)
   rake
-  redcarpet
   rspec
   stopwords-filter
   string-urlize
