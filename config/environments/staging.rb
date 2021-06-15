@@ -3,7 +3,7 @@ module ApplicationConfig
 	BASE_URL = 'https://staging-help.sharesight.com'
 	PORTFOLIO_URL = 'https://test-portfolio.sharesight.com'
 	MARKETING_URL = 'https://staging-www.sharesight.com'
-	COMMUNITY_URL = 'https://community.sharesight.com'
+	COMMUNITY_URL = 'https://test-community.sharesight.com'
 
 	module GoogleAnalytics
 		TAG_MANAGER_CONTAINER = 'GTM-P2DH5X'
