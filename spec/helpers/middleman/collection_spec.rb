@@ -56,6 +56,18 @@ describe 'Collection Middleman Helper', :type => :helper do
       end
     end
 
+    it "filters out the Miscellaneous category" do
+      # Does exist in the raw data…
+      raw_categories = @app.data.help.categories.map{ |tuple| tuple[1] }.map{ |c| c[:name][:en] }
+      expect(raw_categories).to include('Miscellaneous')
+
+      # Does not exist in the categories_collection
+      categories = @app.categories_collection().map{ |c| c[:name] }
+      expect(categories).not_to include('Miscellaneous')
+
+      expect(raw_categories.length).to be > categories.length
+    end
+
     it "should include pages when associations are requested" do
       data = @app.categories_collection(with_associations: true)
       expect(data).to be_kind_of(Array)

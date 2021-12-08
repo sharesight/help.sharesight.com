@@ -77,13 +77,17 @@ describe 'Help Pages', :type => :feature do
 
     pages_in_this_locale = get_pages(locale)
 
-    pages_in_this_locale.each do |_page|
+    pages_in_this_locale.select do |_page| 
       # if the page has multiple parents, it doesn't show; navigation only goes one layer deep
-      has_multiple_parents = true if _page[:parent_page] && _page[:parent_page][:parent_page]
-      unless has_multiple_parents
-        page_url = Capybara.app.page_url(_page, locale_id: locale[:id])
-        expect(page).to have_css("a[href='#{page_url}']", text: _page[:title].strip, visible: false) # visible or not
-      end
+      return false if _page[:parent_page] && _page[:parent_page][:parent_page]
+
+      # We hide this category…
+      return false if _page[:category][:name] === 'Miscellaneous'
+
+      return true
+    end.each do |_page|
+      page_url = Capybara.app.page_url(_page, locale_id: locale[:id])
+      expect(page).to have_css("a[href='#{page_url}']", text: _page[:title].strip, visible: false) # visible or not
     end
   end
 
