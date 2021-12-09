@@ -35,7 +35,9 @@ module CapybaraCollectionHelpers
       category
     end
 
-    categories = categories.select{|category| Capybara.app.is_valid_category_model?(category)}
+    categories = categories
+      .select{|category| Capybara.app.is_valid_category_model?(category)}
+      .reject{ |category| category[:name] === 'Miscellaneous' } # Filter out the "Miscellaneous" category:
 
     categories
   end

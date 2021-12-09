@@ -30,6 +30,11 @@ describe 'Index Page', :type => :feature do
     end
   end
 
+  it "should not have a Miscellaneous help topic" do
+    visit '/'
+    expect(page).not_to have_css("a", text: "Miscellaneous")
+  end
+
   it "should have a community and videos section" do
     locales.each do |locale|
       visit locale.path

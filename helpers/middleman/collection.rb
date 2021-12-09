@@ -58,8 +58,9 @@ module MiddlemanCollectionHelpers
 
     collection = data.help.categories
       .map{ |tuple| tuple[1] }
-      .map{ |model| localize_entry(model, lang, default_locale_obj[:lang]) }
-      .select{ |model| is_valid_category_model?(model) }
+      .map{ |category| localize_entry(category, lang, default_locale_obj[:lang]) }
+      .select{ |category| is_valid_category_model?(category) }
+      .reject{ |category| category[:name] === 'Miscellaneous' } # Filter out the "Miscellaneous" category:
 
     # add associated pages, with children
     if with_associations
