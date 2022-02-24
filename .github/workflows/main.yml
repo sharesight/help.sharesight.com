@@ -64,7 +64,7 @@ jobs:
 
     # -------- JS & Dependencies
     - name: Install Node
-      uses: actions/setup-node@v2.5.0
+      uses: actions/setup-node@v3.0.0
       with:
         node-version: '10.x'
     - name: Install Javascript Dependencies
