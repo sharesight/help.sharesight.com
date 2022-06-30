@@ -9,10 +9,6 @@ module ApplicationConfig
 		TAG_MANAGER_CONTAINER = 'GTM-P2DH5X'
 	end
 
-	module Bugsnag
-		API_KEY = ENV['BUGSNAG_API_KEY']
-	end
-
 	module Intercom
 		APP_ID = 't2bi7urt'
 	end
