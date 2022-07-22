@@ -35,7 +35,3 @@ group :test do
   gem 'rspec'
   gem 'guard-rspec', require: false
 end
-
-group :development, :test do
-  gem "bundler-audit"
-end
