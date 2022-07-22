@@ -396,7 +396,7 @@ GEM
     thread_safe (0.3.6)
     tilt (1.4.1)
     trollop (2.1.2)
-    tzinfo (1.2.2)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     uber (0.0.15)
     uglifier (2.7.2)
