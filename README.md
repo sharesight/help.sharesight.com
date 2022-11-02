@@ -28,7 +28,6 @@ To run locally, something like `.envrc` is suggested.
 https://github.com/sharesight/help.sharesight.com/settings/secrets
  - AWS_DEPLOY_ACCESS_ID	- for deploying to AWS S3 on user help_deploy
  - AWS_DEPLOY_SECRET_KEY	- for deploying to AWS S3 on user help_deploy
- - BUGSNAG_API_KEY	– for posting releases to Bugsnag
  - CONTENTFUL_MASTER_TOKEN - for pulling published content from [Contentful]( https://app.contentful.com/spaces/kw7pc879iryd/api/keys)
  - CONTENTFUL_PREVIEW_TOKEN	- for pulling draft content from [Contentful]( https://app.contentful.com/spaces/kw7pc879iryd/api/keys)
  - SLACK_WEBHOOK_URL - for posting into Slack notifications/etc
