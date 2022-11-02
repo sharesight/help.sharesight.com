@@ -25,11 +25,7 @@
   }
 
   .container {position:relative;}
-  .help {
-    margin-left: 90px;
-    display:inline-block; position:absolute; left:0; width:38px; background-color:$colour_banner_accent; text-transform:uppercase; border-radius:3px; font-size:0.625rem; top:0; color:#fff; text-align:center; padding: 2px 0; font-weight:bold;
-    pointer-events: none;
-  }
+
   .hamburger {width:65px; height:80px;background-color:$colour_banner_primary; display:inline-block; position:absolute; top:0; right:0; background: #20242b image-url('icons/hamburger.svg') no-repeat center;
     @media(min-width:640px){display:none;}
   }
