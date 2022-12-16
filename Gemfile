@@ -1,8 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rake'
-gem 'dotenv'
-gem 'middleman', '~> 3'
+gem 'middleman', '~> 3.4.1'
 gem 'middleman-livereload'
 gem 'middleman-s3_sync'
 gem 'middleman-cloudfront'
@@ -11,7 +10,7 @@ gem 'middleman-minify-html'
 gem 'middleman-sprockets'
 gem "middleman-es6", git: "https://github.com/vast/middleman-es6"
 gem 'uglifier'
-gem "contentful_middleman", '~> 3'
+gem "contentful_middleman", '~> 2.1.2'
 gem 'middleman-syntax'
 
 # support re-writing in the middleman configuration

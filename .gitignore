@@ -24,7 +24,6 @@ yarn-error.log
 # Ignore personal files
 .ruby-gemset
 .envrc
-.direnv
 
 # Ignore gems installed in local directory
 /vendor/bundle/
