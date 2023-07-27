@@ -11,8 +11,14 @@ module MiddlemanCollectionHelpers
     localize_url(path, locale_id: locale_id, base_url: base_url)
   end
 
+  def static_page_url(page, locale_id: default_locale_id)
+    path = page[:static_url_slug]
+
+    localize_url(path, locale_id: locale_id, base_url: config[:marketing_url])
+  end
+
   def page_path(page, locale_id: default_locale_id)
-    page_url(page, locale_id: locale_id, base_url: '')
+    page_url(page, locale_id: locale_id, base_url: config[:base_url])
   end
 
   def category_url(category, locale_id: default_locale_id, base_url: config[:base_url])
