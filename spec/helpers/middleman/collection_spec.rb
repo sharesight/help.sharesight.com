@@ -16,6 +16,45 @@ describe 'Collection Middleman Helper', :type => :helper do
     end
   end
 
+  # static_page_url test
+  context "static_page_url" do
+    # This is a proxy to other tested helpers.
+    it "should return a string" do
+      get_pages().each do |_page|
+        _page.static_url_slug = 'supported-stock-exchanges-managed-funds-mutual-funds'
+        expect(@app.static_page_url(_page)).to be_kind_of(::String)
+      end
+    end
+
+    it "returns expected url" do
+      get_pages().each do |_page|
+        _page.static_url_slug = 'supported-stock-exchanges-managed-funds-mutual-funds'
+        expect(@app.static_page_url(_page)).to eq("https://www.sharesight.com/supported-stock-exchanges-managed-funds-mutual-funds/")
+      end
+    end
+  end
+
+  # new_content_url test
+
+  context "new_content_url" do
+    # This is a proxy to other tested helpers.
+    it "returns full helpsite url when static_url_slug is not present" do
+      get_pages().each do |_page|
+        _page.static_url_slug = nil
+        expect(@app.new_content_url(_page)).to be_kind_of(::String)
+        expect(@app.new_content_url(_page)).to include("http://localhost:4567/")
+      end
+    end
+
+    it "returns full static url when static_url_slug present" do
+      get_pages().each do |_page|
+        _page.static_url_slug = 'supported-stock-exchanges-managed-funds-mutual-funds'
+        expect(@app.new_content_url(_page)).to be_kind_of(::String)
+        expect(@app.new_content_url(_page)).to eq("https://www.sharesight.com/supported-stock-exchanges-managed-funds-mutual-funds/")
+      end
+    end
+  end
+
   context "category_url and category_path" do
     # This is a proxy to other tested helpers.
     it "should return a string" do
@@ -97,7 +136,7 @@ describe 'Collection Middleman Helper', :type => :helper do
         locale_ids = page_locales.map{|l| l[:id]}
 
         expect(page_locales).to be_kind_of(Array)
-        expect(this_page && this_page[:id]).to eq(id), "Page not found for #{id} – has this page been deleted or is invalid?"
+        expect(this_page && this_page[:id]).to eq(id), "Page not found for #{id} – has this page been deleted or is invalid?"
         expect(locale_ids).to eq(expectation), "Locales did not match expectation for id: #{this_page[:id]}, got #{locale_ids}, expected #{expectation}"
       end
     end
