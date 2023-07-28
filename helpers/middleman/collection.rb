@@ -28,7 +28,7 @@ module MiddlemanCollectionHelpers
       return static_page_url(page, locale_id: locale_id)
     end
 
-    return  page_url(page, locale_id: locale_id, base_url: config[:base_url])
+    page_url(page, locale_id: locale_id, base_url: config[:base_url])
   end
 
   def category_url(category, locale_id: default_locale_id, base_url: config[:base_url])
