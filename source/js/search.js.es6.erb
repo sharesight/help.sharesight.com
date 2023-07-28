@@ -109,11 +109,12 @@
   };
 
 
-  const renderResult = ({ title, path }) => {
+  const renderResult = ({ title, url }) => {
+    console.log(url, '@@@');
     const li = document.createElement('li');
     const link = document.createElement('a');
 
-    link.href = path;
+    link.href = url;
     link.innerText = title;
 
     li.appendChild(link);
@@ -121,8 +122,9 @@
   }
 
   const appendResultToPage = (result) => {
+    console.log(result,'@@result');
     document.querySelector("#search-results").appendChild(
-      renderResult({ title: result.title, path: result.path })
+      renderResult({ title: result.title, url: result.url })
     );
   }
 
