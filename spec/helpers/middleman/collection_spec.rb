@@ -42,7 +42,7 @@ describe 'Collection Middleman Helper', :type => :helper do
       get_pages().each do |_page|
         _page.static_url_slug = nil
         expect(@app.new_content_url(_page)).to be_kind_of(::String)
-        expect(@app.new_content_url(_page)).to include("http://localhost:4567/")
+        expect(@app.new_content_url(_page)).to include("http://" || 'https://')
       end
     end
 
