@@ -11,8 +11,24 @@ module MiddlemanCollectionHelpers
     localize_url(path, locale_id: locale_id, base_url: base_url)
   end
 
+  def static_page_url(page, locale_id: default_locale_id)
+    path = page[:static_url_slug]
+
+    localize_url(path, locale_id: locale_id, base_url: config[:marketing_url])
+  end
+
   def page_path(page, locale_id: default_locale_id)
     page_url(page, locale_id: locale_id, base_url: '')
+  end
+
+  # During the migration of help content over to static-www,
+  # some of the help links will now be replaced with static-www urls
+  def new_content_url(page, locale_id: default_locale_id)
+    if page[:static_url_slug]
+      return static_page_url(page, locale_id: locale_id)
+    end
+
+    page_url(page, locale_id: locale_id, base_url: config[:base_url])
   end
 
   def category_url(category, locale_id: default_locale_id, base_url: config[:base_url])
