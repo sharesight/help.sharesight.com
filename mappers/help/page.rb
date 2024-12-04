@@ -5,8 +5,12 @@ class HelpPageMapper < ContentfulMiddleman::Mapper::Base
     super
 
     # Adds a "content available in locales" field to the page; NOTE: 'en' is available in all locales.
-    context.content_langs = context&.content&.keys
-    context.content_langs = ['en'] if context.content_langs.blank?
+    begin
+      context.content_langs = context&.content&.keys
+      context.content_langs = ['en'] if context.content_langs.blank?
+    rescue KeyError
+      context.content_langs = ['en']
+    end
 
     keys = entry.fields_with_locales.keys
 
