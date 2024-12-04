@@ -38,6 +38,7 @@ gem 'nokogiri', '>= 1.10.8'
 # tests
 group :test do
   gem 'capybara'
+  gem 'ffi', '~> 1.16.3'
   gem 'selenium-webdriver', '~> 3.0'
   gem 'capybara-selenium'
   gem 'chromedriver-helper' # for headless chrome

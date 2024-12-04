@@ -83,7 +83,7 @@ GEM
     eventmachine (1.2.0.1)
     excon (0.71.0)
     execjs (2.7.0)
-    ffi (1.17.0)
+    ffi (1.16.3)
     ffi-compiler (1.3.2)
       ffi (>= 1.15.5)
       rake
@@ -420,6 +420,7 @@ DEPENDENCIES
   chromedriver-helper
   contentful (~> 2.13.0)
   contentful_middleman (~> 2.1.2)
+  ffi (~> 1.16.3)
   guard-rspec
   middleman (~> 3.4.1)
   middleman-autoprefixer
