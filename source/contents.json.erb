@@ -15,8 +15,9 @@
         path:                  page_path(page, locale_id: locale_obj[:id]),
         description:           page[:meta_description],
         category_name:         page[:category][:name],
+        url:                   new_content_url(page, locale_id: locale_obj[:id]),
 
-        # reduce the amount of data downloaded in browsers – only keep the first 400 characters of contents.json
+        # reduce the amount of data downloaded in browsers – only keep the first 400 characters of contents.json
         content:               SearchHelper::condense_content(page[:content].to_s.gsub(%r{[\[\]#\*<>\/]}, ' '))[0..400],
         keywords:              page[:keywords]&.to_s
       }
