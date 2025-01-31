@@ -48,23 +48,18 @@ jobs:
 
 
     # -------- Github Checkout
-    - uses: actions/checkout@v3.0.2
+    - uses: actions/checkout@v3
 
 
     # -------- Ruby & Dependencies
     - name: Install Ruby
-      uses: actions/setup-ruby@v1.1.3
+      uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '2.6.x'
-    - name: Install Ruby Dependencies
-      run: |
-        gem install bundler -v "<2"
-        bundle install --jobs 4 --retry 3
-
+        bundler-cache: true
 
     # -------- JS & Dependencies
     - name: Install Node
-      uses: actions/setup-node@v3.3.0
+      uses: actions/setup-node@v3
       with:
         node-version: '10.x'
     - name: Install Javascript Dependencies

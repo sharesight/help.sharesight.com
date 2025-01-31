@@ -15,6 +15,7 @@ Built with Middleman, Contentful, and Lunr.js search.
 ### To Deploy Locally:
  - Be able to run locally first.
  - Run tests: `$ bundle exec rspec spec`
+   - Those will only work fully after having downloaded content (via `middleman contentful` below and building the site via `middleman build` below)
  - Set `APP_ENV` to either `production` or `staging` with your target; defaults to `staging`.
  - Download from Contentful: `$ bundle exec middleman contentful`
  - Build Static HTML to deploy: `$ bundle exec middleman build --verbose`
