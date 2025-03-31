@@ -17,7 +17,7 @@ describe 'Footer', type: :feature do
       ["Reviews", base_url("/reviews/", base_url: Capybara.app.config[:marketing_url])],
 
       # Partners:
-      ["Sharesight Pro", base_url("/pro/", base_url: Capybara.app.config[:marketing_url])],
+      ["Sharesight Business", base_url("/business/", base_url: Capybara.app.config[:marketing_url])],
       ["Partner Directory", base_url("/partners/", base_url: Capybara.app.config[:marketing_url])],
       ["Become a Partner", base_url("/become-a-partner/", base_url: Capybara.app.config[:marketing_url])],
       ["Become an Affiliate", base_url("/affiliates/", base_url: Capybara.app.config[:marketing_url])],
@@ -31,7 +31,7 @@ describe 'Footer', type: :feature do
       ["Webinars & Events", base_url("/events/", base_url: Capybara.app.config[:marketing_url])],
       ["Privacy Policy", base_url("/privacy-policy/", base_url: Capybara.app.config[:marketing_url])],
       ["Terms of Use", base_url("/sharesight-terms-of-use/", base_url: Capybara.app.config[:marketing_url])],
-      ["Pro Terms of Use", base_url("/sharesight-professional-terms-of-use/", base_url: Capybara.app.config[:marketing_url])],
+      ["Business Terms of Use", base_url("/sharesight-professional-terms-of-use/", base_url: Capybara.app.config[:marketing_url])],
 
       # locales:
       ["Global", base_url('/')],
