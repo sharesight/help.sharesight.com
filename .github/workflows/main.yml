@@ -24,6 +24,11 @@ env:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      id-token: write
+      # This is required for the aws-actions/configure-aws-credentials@v4 action to assume a role.
+      # See
     runs-on: ubuntu-latest
 
     steps:
