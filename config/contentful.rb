@@ -20,3 +20,11 @@ module ContentfulConfig
 		]
 	end
 end
+
+# monkey-patch to get around this warning with Ruby 2.7
+#   lib/middleman-core/util.rb:71: warning: URI.unescape is obsolete
+module URI
+  def self.unescape(string)
+    CGI.escape(string)
+  end
+end
