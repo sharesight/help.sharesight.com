@@ -74,9 +74,9 @@ jobs:
 
     # -------- Build Static Files
     - name: Download Data from Contentful
-      run: bundle exec middleman contentful
+      run: RUBYOPT="-W0" bundle exec middleman contentful
     - name: Build Static HTML
-      run: bundle exec middleman build --verbose
+      run: RUBYOPT="-W0" bundle exec middleman build --verbose
 
 
     # -------- Run Tests
