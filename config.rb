@@ -103,6 +103,7 @@ if ApplicationConfig.const_defined?(:S3) && ['staging', 'production'].include?(e
     s3_sync.region                     = 'us-east-1'     # The AWS region for your bucket.
     s3_sync.aws_access_key_id          = ApplicationConfig::S3::ACCESS_ID
     s3_sync.aws_secret_access_key      = ApplicationConfig::S3::SECRET_KEY
+    s3_sync.aws_session_token          = ApplicationConfig::S3::SESSION_TOKEN
 
     s3_sync.delete                     = true # This deletes files that are not built, rather than strictly appending new files.
     s3_sync.after_build                = false # WARNING: NEVER SET TO TRUE!  This breaks the plugin entirely.

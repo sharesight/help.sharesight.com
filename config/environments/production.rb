@@ -17,6 +17,7 @@ module ApplicationConfig
     BUCKET = 'sharesight-help'
 		ACCESS_ID = ENV['AWS_ACCESS_KEY_ID']
 		SECRET_KEY = ENV['AWS_SECRET_ACCESS_KEY']
+		SESSION_TOKEN = ENV['AWS_SESSION_TOKEN']
     CLOUDFRONT_DIST_ID = 'E1BFZMZ0P2YA59'
   end
 end
