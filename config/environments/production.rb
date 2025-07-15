@@ -15,8 +15,8 @@ module ApplicationConfig
 
   module S3
     BUCKET = 'sharesight-help'
-    ACCESS_ID = ENV['AWS_DEPLOY_ACCESS_ID']
-    SECRET_KEY = ENV['AWS_DEPLOY_SECRET_KEY']
+		ACCESS_ID = ENV['AWS_ACCESS_KEY_ID']
+		SECRET_KEY = ENV['AWS_SECRET_ACCESS_KEY']
     CLOUDFRONT_DIST_ID = 'E1BFZMZ0P2YA59'
   end
 end
