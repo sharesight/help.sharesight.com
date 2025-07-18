@@ -1,0 +1,8 @@
+# Contentful Configuration
+export CONTENTFUL_HELP_SPACE_ID=kw7pc879iryd
+export CONTENTFUL_HELP_ACCESS_TOKEN=your_delivery_token_here
+export CONTENTFUL_HELP_PREVIEW_ACCESS_TOKEN=your_preview_token_here
+export CONTENTFUL_ENVIRONMENT=master
+
+# Site Configuration
+export NODE_ENV=development

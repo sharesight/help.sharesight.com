@@ -4,9 +4,9 @@
 # or operating system, you probably want to add a global ignore instead:
 # git config --global core.excludesfile ~/.gitignore_global
 
-# Ignore bundler config
-/.bundle
+# Ignore node Modules
 /node_modules
+.envrc
 
 # Ignore the build directory
 /build
@@ -34,3 +34,4 @@ data/help/
 # old contentful directories
 data/help_categories/
 data/help_pages/
+public/
