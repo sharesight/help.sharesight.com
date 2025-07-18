@@ -1,0 +1,42 @@
+# Build outputs
+public/
+.cache/
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# Old Middleman files
+source/
+spec/
+helpers/
+mappers/
+extensions/
+config/
+Gemfile*
+Rakefile
+Guardfile
+
+# Generated files
+*.config.js
+jest.setup.js
+jest-preprocess.js
+
+# Environment files
+.env*
+.envrc*
+
+# Package files
+package-lock.json
+yarn.lock
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

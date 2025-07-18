@@ -1,0 +1,8 @@
+# Contentful Configuration
+CONTENTFUL_HELP_SPACE_ID=kw7pc879iryd
+CONTENTFUL_HELP_ACCESS_TOKEN=your_delivery_token_here
+CONTENTFUL_HELP_PREVIEW_ACCESS_TOKEN=your_preview_token_here
+CONTENTFUL_ENVIRONMENT=master
+
+# Site Configuration
+NODE_ENV=development

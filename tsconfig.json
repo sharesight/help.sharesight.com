@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "types/*": ["types/*"],
+      "lib/*": ["lib/*"],
+      "data/*": ["data/*"],
+      "components/*": ["src/components/*"],
+      "helpers/*": ["src/helpers/*"],
+      "hooks/*": ["src/hooks/*"],
+      "images/*": ["src/images/*"],
+      "pages/*": ["src/pages/*"],
+      "styled/*": ["src/styled/*"],
+      "page-data/*": ["src/page-data/*"]
+    }
+  },
+  "include": [
+    "./src/**/*",
+    "./gatsby-node.ts",
+    "./gatsby-config.ts",
+    "./gatsby-browser.tsx",
+    "./gatsby-ssr.tsx",
+    "./lib/**/*",
+    "./types/**/*"
+  ],
+  "exclude": ["node_modules", "public", ".cache"]
+}

@@ -1,0 +1,82 @@
+name: Gatsby Build and Deploy
+
+on:
+  deployment:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+      - develop
+
+env:
+  APP_ENV: ${{ (github.event_name == 'deployment' && github.event.deployment.environment) || (github.ref == 'refs/heads/master' && 'production') || 'staging' }}
+  SHOULD_DEPLOY: ${{ github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && 'true' || 'false' }}
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Convert Environment to Output
+      id: env
+      run: |
+        echo "app_env=$APP_ENV" >> $GITHUB_OUTPUT
+        echo "should_deploy=$SHOULD_DEPLOY" >> $GITHUB_OUTPUT
+
+    - name: DEBUG Calculated Environment
+      run: |
+        echo "app_env=${{ steps.env.outputs.app_env }}"
+        echo "should_deploy=${{ steps.env.outputs.should_deploy }}"
+
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'yarn'
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::104220322948:role/github-actions-static-sites-help-deploy
+        aws-region: us-east-1
+
+    - name: Build Gatsby site
+      env:
+        CONTENTFUL_HELP_SPACE_ID: ${{ secrets.CONTENTFUL_HELP_SPACE_ID }}
+        CONTENTFUL_HELP_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_HELP_ACCESS_TOKEN }}
+        CONTENTFUL_HELP_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_HELP_PREVIEW_ACCESS_TOKEN }}
+        CONTENTFUL_ENVIRONMENT: master
+        NODE_ENV: production
+      run: yarn build
+
+    - name: Run tests
+      run: yarn test:ci
+
+    - name: Run linting
+      run: yarn lint:ci
+
+    - name: Update deployment status to pending
+      uses: 'deliverybot/deployment-status@v1.1.1'
+      if: github.event_name == 'deployment' && success() && steps.env.outputs.should_deploy == 'true'
+      with:
+        state: 'pending'
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Deploy to S3
+      if: success() && steps.env.outputs.should_deploy == 'true'
+      run: |
+        aws s3 sync public/ s3://${{ steps.env.outputs.app_env == 'production' && 'sharesight-help' || 'sharesight-help-staging' }} --delete
+        aws cloudfront create-invalidation --distribution-id ${{ steps.env.outputs.app_env == 'production' && 'E1BFZMZ0P2YA59' || 'EXA3OX5JP2617' }} --paths "/*"
